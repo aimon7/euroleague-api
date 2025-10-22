@@ -7,7 +7,7 @@ import {
   GetTeamStatsRangeSeasonsDto,
 } from './dto/get-team-stats.dto';
 
-@ApiTags('team-stats')
+@ApiTags('Team Statistics')
 @Controller('team-stats')
 export class TeamStatsController {
   constructor(private readonly teamStatsService: TeamStatsService) {}

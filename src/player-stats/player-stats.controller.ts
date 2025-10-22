@@ -8,7 +8,7 @@ import {
   GetPlayerStatsLeadersDto,
 } from './dto/get-player-stats.dto';
 
-@ApiTags('player-stats')
+@ApiTags('Player Statistics')
 @Controller('player-stats')
 export class PlayerStatsController {
   constructor(private readonly playerStatsService: PlayerStatsService) {}

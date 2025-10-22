@@ -3,7 +3,7 @@ import { BoxscoreService } from './boxscore.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetBoxscoreDto, GetSeasonBoxscoreDto } from './dto/get-boxscore.dto';
 
-@ApiTags('boxscore')
+@ApiTags('Boxscore')
 @Controller('boxscore')
 export class BoxscoreController {
   constructor(private readonly boxscoreService: BoxscoreService) {}

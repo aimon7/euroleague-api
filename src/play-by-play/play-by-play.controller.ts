@@ -6,7 +6,7 @@ import {
   GetSeasonPlayByPlayDto,
 } from './dto/get-play-by-play.dto';
 
-@ApiTags('play-by-play')
+@ApiTags('Play-by-Play')
 @Controller('play-by-play')
 export class PlayByPlayController {
   constructor(private readonly playByPlayService: PlayByPlayService) {}

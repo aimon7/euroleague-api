@@ -30,14 +30,14 @@ async function bootstrap() {
         'Get game stats, player stats, team stats, standings, shot data, play-by-play, and more.',
     )
     .setVersion('0.0.1')
-    .addTag('Game Statistics', 'Access game-level statistics and reports')
-    .addTag('Player Statistics', 'Player performance statistics')
-    .addTag('Team Statistics', 'Team performance statistics')
-    .addTag('Standings', 'League standings and rankings')
-    .addTag('Shot Data', 'Shot-level data and analytics')
-    .addTag('Play-by-Play', 'Play-by-play game events')
     .addTag('Boxscore', 'Boxscore information')
     .addTag('Game Metadata', 'Game metadata (stadium, referees, etc.)')
+    .addTag('Game Statistics', 'Access game-level statistics and reports')
+    .addTag('Play-by-Play', 'Play-by-play game events')
+    .addTag('Player Statistics', 'Player performance statistics')
+    .addTag('Shot Data', 'Shot-level data and analytics')
+    .addTag('Standings', 'League standings and rankings')
+    .addTag('Team Statistics', 'Team performance statistics')
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);

@@ -3,7 +3,7 @@ import { GameMetadataService } from './game-metadata.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetGameMetadataDto } from './dto/get-game-metadata.dto';
 
-@ApiTags('game-metadata')
+@ApiTags('Game Metadata')
 @Controller('game-metadata')
 export class GameMetadataController {
   constructor(private readonly gameMetadataService: GameMetadataService) {}

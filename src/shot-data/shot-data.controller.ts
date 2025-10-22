@@ -3,7 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ShotDataService } from './shot-data.service';
 import { GetShotDataDto, GetSeasonShotDataDto } from './dto/get-shot-data.dto';
 
-@ApiTags('shot-data')
+@ApiTags('Shot Data')
 @Controller('shot-data')
 export class ShotDataController {
   constructor(private readonly shotDataService: ShotDataService) {}

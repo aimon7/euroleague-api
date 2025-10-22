@@ -8,7 +8,7 @@ import {
   GetStandingsCalendarDto,
 } from './dto/get-standings.dto';
 
-@ApiTags('standings')
+@ApiTags('Standings')
 @Controller('standings')
 export class StandingsController {
   constructor(private readonly standingsService: StandingsService) {}
