@@ -10,6 +10,7 @@ import { ShotDataModule } from './shot-data/shot-data.module';
 import { PlayByPlayModule } from './play-by-play/play-by-play.module';
 import { BoxscoreModule } from './boxscore/boxscore.module';
 import { GameMetadataModule } from './game-metadata/game-metadata.module';
+import { ClubsModule } from './clubs/clubs.module';
 
 /**
  * App Module for Development Server
@@ -31,6 +32,7 @@ import { GameMetadataModule } from './game-metadata/game-metadata.module';
     PlayByPlayModule,
     BoxscoreModule,
     GameMetadataModule,
+    ClubsModule,
   ],
   controllers: [],
   providers: [],

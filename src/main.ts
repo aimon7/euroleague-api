@@ -31,6 +31,7 @@ async function bootstrap() {
     )
     .setVersion('0.0.1')
     .addTag('Boxscore', 'Boxscore information')
+    .addTag('Clubs', 'Club information')
     .addTag('Game Metadata', 'Game metadata (stadium, referees, etc.)')
     .addTag('Game Statistics', 'Access game-level statistics and reports')
     .addTag('Play-by-Play', 'Play-by-play game events')
