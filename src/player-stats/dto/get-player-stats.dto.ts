@@ -1,15 +1,10 @@
-import {
-  IsInt,
-  IsOptional,
-  IsEnum,
-  Min,
-  IsString,
-  IsIn,
-} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { SeasonMode } from 'src/common/enums/season-mode.enum';
+import { SortDirection } from 'src/common/enums/sort-direction.enum';
+import { Statistic } from 'src/common/enums/statistic.enum';
 import { PhaseType } from '../../common/enums/phase-type.enum';
 import { StatisticMode } from '../../common/enums/statistic-mode.enum';
-import { Type } from 'class-transformer';
 
 /**
  * Available player stats endpoints
@@ -21,32 +16,18 @@ export enum PlayerStatsEndpoint {
   SCORING = 'scoring',
 }
 
-/**
- * DTO for getting player stats for a single season
- */
-export class GetPlayerStatsSingleSeasonDto {
+export class GetPlayerStatisticsDto {
   @ApiProperty({
     description: 'The type of player stats to fetch',
     enum: PlayerStatsEndpoint,
-    example: PlayerStatsEndpoint.TRADITIONAL,
+    default: PlayerStatsEndpoint.TRADITIONAL,
   })
   @IsEnum(PlayerStatsEndpoint)
   endpoint: PlayerStatsEndpoint;
 
-  @ApiProperty({
-    description: 'The start year of the season',
-    example: 2023,
-    minimum: 2000,
-  })
-  @IsInt()
-  @Min(2000)
-  @Type(() => Number)
-  season: number;
-
   @ApiPropertyOptional({
     description: 'The phase of the season',
     enum: PhaseType,
-    example: PhaseType.REGULAR_SEASON,
   })
   @IsOptional()
   @IsEnum(PhaseType)
@@ -55,162 +36,133 @@ export class GetPlayerStatsSingleSeasonDto {
   @ApiPropertyOptional({
     description: 'The aggregation mode for statistics',
     enum: StatisticMode,
-    example: StatisticMode.PER_GAME,
-    default: StatisticMode.PER_GAME,
   })
   @IsOptional()
   @IsEnum(StatisticMode)
-  statisticMode?: StatisticMode = StatisticMode.PER_GAME;
+  statisticMode?: StatisticMode;
+
+  @ApiPropertyOptional({
+    description: 'The aggregation mode for statistics',
+    enum: StatisticMode,
+  })
+  @IsOptional()
+  @IsEnum(StatisticMode)
+  statisticSortMode?: StatisticMode;
+
+  @ApiPropertyOptional({
+    description: 'The aggregation mode for statistics',
+    enum: Statistic,
+  })
+  @IsOptional()
+  @IsEnum(Statistic)
+  statistic?: Statistic;
+
+  @ApiPropertyOptional({
+    description: 'The direction to sort the results',
+    enum: SortDirection,
+  })
+  @IsOptional()
+  @IsEnum(SortDirection)
+  sortDirection?: SortDirection;
+
+  @ApiPropertyOptional({
+    description: 'Offset for pagination of results',
+    minimum: 0,
+    default: 0,
+  })
+  @IsOptional()
+  offset?: number;
+
+  @ApiPropertyOptional({
+    description: 'Limit the number of returned records',
+    minimum: 1,
+    default: 100,
+  })
+  @IsOptional()
+  limit?: number;
 }
 
 /**
  * DTO for getting player stats for all seasons
  */
-export class GetPlayerStatsAllSeasonsDto {
+export class GetPlayerStatsAllSeasonsDto extends GetPlayerStatisticsDto {}
+
+/**
+ * DTO for getting player stats for a single season
+ */
+export class GetPlayerStatsSingleSeasonDto extends GetPlayerStatisticsDto {
   @ApiProperty({
-    description: 'The type of player stats to fetch',
-    enum: PlayerStatsEndpoint,
-    example: PlayerStatsEndpoint.TRADITIONAL,
+    description: 'The season code representing the season (e.g., E2025)',
+    example: 'E2025',
   })
-  @IsEnum(PlayerStatsEndpoint)
-  endpoint: PlayerStatsEndpoint;
-
-  @ApiPropertyOptional({
-    description: 'The phase of the season',
-    enum: PhaseType,
-  })
-  @IsOptional()
-  @IsEnum(PhaseType)
-  phaseTypeCode?: PhaseType;
-
-  @ApiPropertyOptional({
-    description: 'The aggregation mode for statistics',
-    enum: StatisticMode,
-    default: StatisticMode.PER_GAME,
-  })
-  @IsOptional()
-  @IsEnum(StatisticMode)
-  statisticMode?: StatisticMode = StatisticMode.PER_GAME;
+  @IsString()
+  SeasonCode: string;
 }
 
 /**
  * DTO for getting player stats for a range of seasons
  */
-export class GetPlayerStatsRangeSeasonsDto {
+export class GetPlayerStatsRangeSeasonsDto extends GetPlayerStatisticsDto {
   @ApiProperty({
-    description: 'The type of player stats to fetch',
-    enum: PlayerStatsEndpoint,
-    example: PlayerStatsEndpoint.TRADITIONAL,
+    description: 'The starting season code for the range (e.g., E2020)',
+    example: 'E2020',
   })
-  @IsEnum(PlayerStatsEndpoint)
-  endpoint: PlayerStatsEndpoint;
-
-  @ApiProperty({
-    description: 'The start year of the first season in the range',
-    example: 2020,
-    minimum: 2000,
-  })
-  @IsInt()
-  @Min(2000)
-  @Type(() => Number)
-  startSeason: number;
+  @IsString()
+  FromSeasonCode: string;
 
   @ApiProperty({
-    description: 'The start year of the last season in the range',
-    example: 2023,
-    minimum: 2000,
+    description: 'The ending season code for the range (e.g., E2025)',
+    example: 'E2025',
   })
-  @IsInt()
-  @Min(2000)
-  @Type(() => Number)
-  endSeason: number;
-
-  @ApiPropertyOptional({
-    description: 'The phase of the season',
-    enum: PhaseType,
-  })
-  @IsOptional()
-  @IsEnum(PhaseType)
-  phaseTypeCode?: PhaseType;
-
-  @ApiPropertyOptional({
-    description: 'The aggregation mode for statistics',
-    enum: StatisticMode,
-    default: StatisticMode.PER_GAME,
-  })
-  @IsOptional()
-  @IsEnum(StatisticMode)
-  statisticMode?: StatisticMode = StatisticMode.PER_GAME;
+  @IsString()
+  ToSeasonCode: string;
 }
-
-/**
- * Available stat categories for player leaders
- */
-export const STAT_CATEGORIES = [
-  'Valuation',
-  'Score',
-  'TotalRebounds',
-  'OffensiveRebounds',
-  'Assistances',
-  'Steals',
-  'BlocksFavour',
-  'BlocksAgainst',
-  'Turnovers',
-  'FoulsReceived',
-  'FoulsCommited',
-  'FreeThrowsMade',
-  'FreeThrowsAttempted',
-  'FreeThrowsPercent',
-  'FieldGoalsMade2',
-  'FieldGoalsAttempted2',
-  'FieldGoals2Percent',
-  'FieldGoalsMade3',
-  'FieldGoalsAttempted3',
-  'FieldGoals3Percent',
-  'FieldGoalsMadeTotal',
-  'FieldGoalsAttemptedTotal',
-  'FieldGoalsPercent',
-] as const;
 
 /**
  * DTO for getting player stats leaders
  */
 export class GetPlayerStatsLeadersDto {
-  @ApiProperty({
-    description: 'The statistical category for ranking players',
-    example: 'Score',
-    enum: STAT_CATEGORIES,
+  @ApiPropertyOptional({
+    description: 'The season mode for the statistic leaders',
+    enum: SeasonMode,
   })
-  @IsString()
-  @IsIn(STAT_CATEGORIES)
-  statCategory: string;
+  @IsOptional()
+  @IsEnum(SeasonMode)
+  SeasonMode?: SeasonMode;
 
   @ApiPropertyOptional({
-    description: 'Number of top players to return',
-    example: 200,
-    default: 200,
+    description: 'The season code representing the season (e.g., E2025)',
+    example: 'E2025',
+  })
+  @IsOptional()
+  SeasonCode?: string;
+
+  @ApiPropertyOptional({
+    description: 'The starting season code for the range (e.g., E2020)',
+    example: 'E2020',
+  })
+  @IsOptional()
+  FromSeasonCode?: string;
+
+  @ApiPropertyOptional({
+    description: 'The ending season code for the range (e.g., E2025)',
+    example: 'E2025',
+  })
+  @IsOptional()
+  ToSeasonCode?: string;
+
+  @ApiPropertyOptional({
+    description: 'The team code representing the team (e.g., OLY)',
+    example: 'OLY',
+  })
+  @IsOptional()
+  teamCode?: string;
+
+  @ApiPropertyOptional({
+    description: 'Limit the number of returned records',
     minimum: 1,
+    example: 100,
   })
   @IsOptional()
-  @IsInt()
-  @Min(1)
-  @Type(() => Number)
-  topN?: number = 200;
-
-  @ApiPropertyOptional({
-    description: 'The phase of the season',
-    enum: PhaseType,
-  })
-  @IsOptional()
-  @IsEnum(PhaseType)
-  phaseTypeCode?: PhaseType;
-
-  @ApiPropertyOptional({
-    description: 'The aggregation mode for statistics',
-    enum: StatisticMode,
-    default: StatisticMode.PER_GAME,
-  })
-  @IsOptional()
-  @IsEnum(StatisticMode)
-  statisticMode?: StatisticMode = StatisticMode.PER_GAME;
+  limit?: number;
 }

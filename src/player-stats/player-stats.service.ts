@@ -1,16 +1,16 @@
 import { Injectable, Optional } from '@nestjs/common';
-import { EuroleagueBaseService } from '../core/euroleague-base.service';
-import { EuroleagueHttpService } from '../core/euroleague-http.service';
+import { SeasonMode } from 'src/common/enums/season-mode.enum';
 import { Competition } from '../common/enums/competition.enum';
-import {
-  PlayerStatsEndpoint,
-  GetPlayerStatsSingleSeasonDto,
-  GetPlayerStatsAllSeasonsDto,
-  GetPlayerStatsRangeSeasonsDto,
-  GetPlayerStatsLeadersDto,
-} from './dto/get-player-stats.dto';
 import { PhaseType } from '../common/enums/phase-type.enum';
 import { StatisticMode } from '../common/enums/statistic-mode.enum';
+import { EuroleagueBaseService } from '../core/euroleague-base.service';
+import {
+  GetPlayerStatsAllSeasonsDto,
+  GetPlayerStatsRangeSeasonsDto,
+  GetPlayerStatsSingleSeasonDto,
+  PlayerStatsEndpoint,
+} from './dto/get-player-stats.dto';
+import { EuroleagueHttpService } from 'src/core/euroleague-http.service';
 
 @Injectable()
 export class PlayerStatsService extends EuroleagueBaseService {
@@ -30,31 +30,33 @@ export class PlayerStatsService extends EuroleagueBaseService {
    * @returns Promise with player stats data
    */
   async getPlayerStats(
+    competitionCode: Competition,
     endpoint: PlayerStatsEndpoint,
     params: Record<string, string | number> = {},
-    phaseTypeCode?: PhaseType,
     statisticMode: StatisticMode = StatisticMode.PER_GAME,
+    phaseTypeCode?: PhaseType,
   ): Promise<any> {
-    this.validateEndpoint(endpoint, Object.values(PlayerStatsEndpoint));
-
-    if (phaseTypeCode) {
-      this.validatePhaseType(phaseTypeCode, Object.values(PhaseType));
-    }
-
-    const url = `${this.url_v2}/competitiondata/playerstat/${endpoint}`;
+    let url = `${this.url_v3}/competitions/${competitionCode}/statistics/players/${endpoint}`;
 
     const queryParams = {
-      limit: 500,
       ...params,
-      ...(phaseTypeCode && { PhaseTypeCode: phaseTypeCode }),
-      StatisticMode: statisticMode,
-      SeasonCode: this.competition,
+      phaseTypeCode,
+      statisticMode,
     };
 
-    this.logger.log(
-      `Fetching player stats - Endpoint: ${endpoint}, Params: ${JSON.stringify(queryParams)}`,
-    );
-    return await this.httpService.get(url, queryParams);
+    if (Object.keys(queryParams).length > 0) {
+      url =
+        url +
+        '?' +
+        Object.entries(queryParams)
+          .filter(([, value]) => value !== undefined)
+          .map(([key, value]) => `${key}=${value}`)
+          .join('&');
+    }
+
+    this.logger.log(`Fetching player stats - Endpoint: ${url}`);
+
+    return await this.httpService.get(url);
   }
 
   /**
@@ -63,14 +65,18 @@ export class PlayerStatsService extends EuroleagueBaseService {
    * @returns Promise with player stats data
    */
   async getPlayerStatsAllSeasons(
+    competitionCode: Competition,
     dto: GetPlayerStatsAllSeasonsDto,
   ): Promise<any> {
-    const params = { SeasonMode: 'All' };
+    const { endpoint, phaseTypeCode, statisticMode, ...rest } = dto;
+    const params = { SeasonMode: SeasonMode.ALL, ...rest };
+
     return await this.getPlayerStats(
-      dto.endpoint,
+      competitionCode,
+      endpoint,
       params,
-      dto.phaseTypeCode,
-      dto.statisticMode || StatisticMode.PER_GAME,
+      statisticMode,
+      phaseTypeCode,
     );
   }
 
@@ -80,17 +86,21 @@ export class PlayerStatsService extends EuroleagueBaseService {
    * @returns Promise with player stats data
    */
   async getPlayerStatsSingleSeason(
+    competitionCode: Competition,
     dto: GetPlayerStatsSingleSeasonDto,
   ): Promise<any> {
+    const { endpoint, phaseTypeCode, statisticMode, ...rest } = dto;
+
     const params = {
-      SeasonMode: 'Single',
-      SeasonCode: `${this.competition}${dto.season}`,
+      SeasonMode: SeasonMode.SINGLE,
+      ...rest,
     };
     return await this.getPlayerStats(
-      dto.endpoint,
+      competitionCode,
+      endpoint,
       params,
-      dto.phaseTypeCode,
-      dto.statisticMode || StatisticMode.PER_GAME,
+      statisticMode,
+      phaseTypeCode,
     );
   }
 
@@ -100,67 +110,70 @@ export class PlayerStatsService extends EuroleagueBaseService {
    * @returns Promise with player stats data
    */
   async getPlayerStatsRangeSeasons(
+    competitionCode: Competition,
     dto: GetPlayerStatsRangeSeasonsDto,
   ): Promise<any> {
+    const { endpoint, phaseTypeCode, statisticMode, ...rest } = dto;
+
     const params = {
-      SeasonMode: 'Range',
-      FromSeasonCode: `${this.competition}${dto.startSeason}`,
-      ToSeasonCode: `${this.competition}${dto.endSeason}`,
+      SeasonMode: SeasonMode.RANGE,
+      ...rest,
     };
     return await this.getPlayerStats(
-      dto.endpoint,
+      competitionCode,
+      endpoint,
       params,
-      dto.phaseTypeCode,
-      dto.statisticMode || StatisticMode.PER_GAME,
+      statisticMode,
+      phaseTypeCode,
     );
   }
 
-  /**
-   * Get player stats leaders (top performers) for a specific season
-   * @param season - The start year of the season
-   * @param dto - DTO with stat category, top N, phase type, and statistic mode
-   * @returns Promise with player leaders data
-   */
-  async getPlayerStatsLeaders(
-    season: number,
-    dto: GetPlayerStatsLeadersDto,
-  ): Promise<any> {
-    const url = `${this.url_v3}/seasondata/${this.competition}${season}/playersLeaders`;
+  // /**
+  //  * Get player stats leaders (top performers) for a specific season
+  //  * @param season - The start year of the season
+  //  * @param dto - DTO with stat category, top N, phase type, and statistic mode
+  //  * @returns Promise with player leaders data
+  //  */
+  // async getPlayerStatsLeaders(
+  //   season: number,
+  //   dto: GetPlayerStatsLeadersDto,
+  // ): Promise<any> {
+  //   const url = `${this.url_v3}/seasondata/${this.competition}${season}/playersLeaders`;
 
-    const queryParams = {
-      limit: dto.topN || 200,
-      StatCategory: dto.statCategory,
-      ...(dto.phaseTypeCode && { PhaseTypeCode: dto.phaseTypeCode }),
-      StatisticMode: dto.statisticMode || StatisticMode.PER_GAME,
-    };
+  //   const queryParams = {
+  //     limit: dto.topN || 200,
+  //     StatCategory: dto.statCategory,
+  //     ...(dto.phaseTypeCode && { PhaseTypeCode: dto.phaseTypeCode }),
+  //     StatisticMode: dto.statisticMode || StatisticMode.PER_GAME,
+  //   };
 
-    this.logger.log(
-      `Fetching player leaders - Season: ${season}, Category: ${dto.statCategory}`,
-    );
-    return await this.httpService.get(url, queryParams);
-  }
+  //   this.logger.log(
+  //     `Fetching player leaders - Season: ${season}, Category: ${dto.statCategory}`,
+  //   );
+  //   return await this.httpService.get(url, queryParams);
+  // }
 
-  /**
-   * Get player stats leaders for all seasons
-   * @param dto - DTO with stat category, top N, phase type, and statistic mode
-   * @returns Promise with player leaders data
-   */
-  async getPlayerStatsLeadersAllSeasons(
-    dto: GetPlayerStatsLeadersDto,
-  ): Promise<any> {
-    const url = `${this.url_v3}/playersLeaders`;
+  // /**
+  //  * Get player stats leaders for all seasons
+  //  * @param dto - DTO with stat category, top N, phase type, and statistic mode
+  //  * @returns Promise with player leaders data
+  //  */
+  // async getPlayerStatsLeadersAllSeasons(
+  //   dto: GetPlayerStatsLeadersDto,
+  // ): Promise<any> {
+  //   const url = `${this.url_v3}/playersLeaders`;
 
-    const queryParams = {
-      limit: dto.topN || 200,
-      StatCategory: dto.statCategory,
-      ...(dto.phaseTypeCode && { PhaseTypeCode: dto.phaseTypeCode }),
-      StatisticMode: dto.statisticMode || StatisticMode.PER_GAME,
-      SeasonCode: this.competition,
-    };
+  //   const queryParams = {
+  //     limit: dto.topN || 200,
+  //     StatCategory: dto.statCategory,
+  //     ...(dto.phaseTypeCode && { PhaseTypeCode: dto.phaseTypeCode }),
+  //     StatisticMode: dto.statisticMode || StatisticMode.PER_GAME,
+  //     SeasonCode: this.competition,
+  //   };
 
-    this.logger.log(
-      `Fetching player leaders for all seasons - Category: ${dto.statCategory}`,
-    );
-    return await this.httpService.get(url, queryParams);
-  }
+  //   this.logger.log(
+  //     `Fetching player leaders for all seasons - Category: ${dto.statCategory}`,
+  //   );
+  //   return await this.httpService.get(url, queryParams);
+  // }
 }
