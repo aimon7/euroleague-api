@@ -11,6 +11,7 @@ import { PlayByPlayModule } from './play-by-play/play-by-play.module';
 import { BoxscoreModule } from './boxscore/boxscore.module';
 import { GameMetadataModule } from './game-metadata/game-metadata.module';
 import { ClubsModule } from './clubs/clubs.module';
+import { CoachesModule } from './coaches/coaches.module';
 
 /**
  * App Module for Development Server
@@ -33,6 +34,7 @@ import { ClubsModule } from './clubs/clubs.module';
     BoxscoreModule,
     GameMetadataModule,
     ClubsModule,
+    CoachesModule,
   ],
   controllers: [],
   providers: [],

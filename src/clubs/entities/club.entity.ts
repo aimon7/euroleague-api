@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import type { Nullable } from 'src/shared/types/nullable';
-import { Country } from './country.entity';
-import { Venue } from './venue.entity';
+import { Country } from '../../countries/entities/country.entity';
+import { Venue } from '../../venues/entities/venue.entity';
 
 export class Club {
   @ApiProperty({
