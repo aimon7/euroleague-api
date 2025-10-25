@@ -39,29 +39,26 @@ export class EuroleagueHttpService {
 
     this.logger.debug(`GET ${fullUrl}`, params ? { params } : '');
 
-    try {
-      const response = await firstValueFrom(
-        this.httpService
-          .get<T>(fullUrl, {
-            params,
-            headers: {
-              Accept: 'application/json',
-            },
-            timeout: 60000,
-          })
-          .pipe(
-            catchError((error: AxiosError) => {
-              this.logger.error(`Error fetching ${fullUrl}`, error.message);
-              this.handleError(error);
-            }),
-          ),
-      );
+    const response = await firstValueFrom(
+      this.httpService
+        .get<T>(fullUrl, {
+          params,
+          headers: {
+            Accept: 'application/json',
+          },
+          timeout: 60000,
+        })
+        .pipe(
+          catchError((error: AxiosError) => {
+            this.logger.error(
+              `Error fetching ${fullUrl} with status of ${error.status} and message: ${error.message}`,
+            );
+            this.handleError(error);
+          }),
+        ),
+    );
 
-      return response.data;
-    } catch (error) {
-      this.logger.error(`Failed to fetch from ${fullUrl}`, error);
-      throw error;
-    }
+    return response.data;
   }
 
   /**
