@@ -6,21 +6,21 @@ import { Venue } from './venue.entity';
 export class Club {
   @ApiProperty({
     description: 'Club code',
-    example: 'BAR',
+    example: 'OLY',
     nullable: true,
   })
   code: Nullable<string>;
 
   @ApiProperty({
     description: 'Club name',
-    example: 'FC Barcelona',
+    example: 'Olympiacos Piraeus',
     nullable: true,
   })
   name: Nullable<string>;
 
   @ApiProperty({
     description: 'Club alias',
-    example: 'Barcelona',
+    example: 'Olympiacos',
     nullable: true,
   })
   alias: Nullable<string>;
@@ -39,42 +39,43 @@ export class Club {
 
   @ApiPropertyOptional({
     description: 'Club address',
-    example: "C. d'Aristides Maillol, s/n",
+    example:
+      'Ethnarchou Makariou 1  Av., 18547  Neo Faliro /  Piraeus - Greece',
     nullable: true,
   })
   address: Nullable<string>;
 
   @ApiPropertyOptional({
     description: 'Club website URL',
-    example: 'https://www.fcbarcelona.com',
+    example: 'http://www.olympiacosbc.gr',
     nullable: true,
   })
   website: Nullable<string>;
 
   @ApiPropertyOptional({
     description: 'Tickets URL',
-    example: 'https://tickets.fcbarcelona.com',
+    example: 'https://www.olympiacosbc.gr/el/tickets-el.html',
     nullable: true,
   })
   ticketsUrl: Nullable<string>;
 
   @ApiPropertyOptional({
     description: 'Twitter account handle',
-    example: '@FCBbasket',
+    example: 'Olympiacos_BC',
     nullable: true,
   })
   twitterAccount: Nullable<string>;
 
   @ApiPropertyOptional({
     description: 'Instagram account handle',
-    example: '@fcbbasket',
+    example: 'olympiacosbc/',
     nullable: true,
   })
   instagramAccount: Nullable<string>;
 
   @ApiPropertyOptional({
     description: 'Facebook account handle',
-    example: 'fcbasket',
+    example: 'olympiacosbc',
     nullable: true,
   })
   facebookAccount: Nullable<string>;
@@ -94,42 +95,47 @@ export class Club {
 
   @ApiPropertyOptional({
     description: 'National competition code',
-    example: 'ACB',
+    example: 'GBL',
     nullable: true,
   })
   nationalCompetitionCode: Nullable<string>;
 
   @ApiPropertyOptional({
     description: 'City name',
-    example: 'Barcelona',
+    example: 'PIRAIEUS',
     nullable: true,
   })
   city: Nullable<string>;
 
   @ApiPropertyOptional({
     description: 'Club president name',
-    example: 'Joan Laporta',
+    example: 'Panagiotis and Georgios Angelopoulos',
     nullable: true,
   })
   president: Nullable<string>;
 
   @ApiPropertyOptional({
     description: 'Contact phone number',
-    example: '+34 902 189 900',
+    example: '+30 210 452 7600',
     nullable: true,
   })
   phone: Nullable<string>;
 
   @ApiPropertyOptional({
     description: 'Contact fax number',
-    example: '+34 93 411 22 19',
+    example: '+30 210 452 7600',
     nullable: true,
   })
   fax: Nullable<string>;
 
   @ApiProperty({
     description: 'Club images by size/type',
-    example: { logo: 'https://...', banner: 'https://...' },
+    example: {
+      crest:
+        'https://media-cdn.incrowdsports.com/789423ac-3cdf-4b89-b11c-b458aa5f59a6.png',
+      logo: 'https://...',
+      banner: 'https://...',
+    },
     nullable: true,
   })
   images: Nullable<{ [key: string]: string }>;

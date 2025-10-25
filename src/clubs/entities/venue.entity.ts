@@ -4,28 +4,28 @@ import type { Nullable } from 'src/shared/types/nullable';
 export class Venue {
   @ApiPropertyOptional({
     description: 'Venue name',
-    example: 'Palau Blaugrana',
+    example: 'PEACE AND FRIENDSHIP STADIUM',
     nullable: true,
   })
   name: Nullable<string>;
 
   @ApiPropertyOptional({
     description: 'Venue code',
-    example: 'PALAU',
+    example: 'ASF6',
     nullable: true,
   })
   code: Nullable<string>;
 
   @ApiPropertyOptional({
     description: 'Venue capacity',
-    example: 7585,
+    example: 12700,
     nullable: true,
   })
   capacity: Nullable<number>;
 
   @ApiPropertyOptional({
     description: 'Venue address',
-    example: 'Avinguda de Joan XXIII, s/n',
+    example: 'Ethnarchou Makariou Av., Piraeus',
     nullable: true,
   })
   address: Nullable<string>;
