@@ -9,21 +9,21 @@ export class Club {
     example: 'BAR',
     nullable: true,
   })
-  code: string;
+  code: Nullable<string>;
 
   @ApiProperty({
     description: 'Club name',
     example: 'FC Barcelona',
     nullable: true,
   })
-  name: string;
+  name: Nullable<string>;
 
   @ApiProperty({
     description: 'Club alias',
     example: 'Barcelona',
     nullable: true,
   })
-  alias: string;
+  alias: Nullable<string>;
 
   @ApiProperty({
     description: 'Whether the club is virtual',
@@ -132,5 +132,5 @@ export class Club {
     example: { logo: 'https://...', banner: 'https://...' },
     nullable: true,
   })
-  images: { [key: string]: string };
+  images: Nullable<{ [key: string]: string }>;
 }

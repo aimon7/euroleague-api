@@ -35,7 +35,7 @@ export class Venue {
     example: { large: 'https://...', medium: 'https://...' },
     nullable: true,
   })
-  images: { [key: string]: string };
+  images: Nullable<{ [key: string]: string }>;
 
   @ApiProperty({
     description: 'Whether the venue is active',
