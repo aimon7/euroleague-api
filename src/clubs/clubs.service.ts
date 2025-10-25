@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EuroleagueHttpService } from 'src/core/euroleague-http.service';
 import { GetAllRegisteredClubsParamsDto } from './dto/get-all-registered-clubs-params.dto';
 import { PaginatedClubResponseDto } from './dto/paginated-club-response.dto';
@@ -32,14 +32,6 @@ export class ClubsService {
   }
 
   async getClubByCode(code: string): Promise<Club> {
-    try {
-      const club = await this.httpService.get<Club>(`/v3/clubs/${code}`);
-      return club;
-    } catch (error) {
-      throw new NotFoundException({
-        description: `Club not found with the provided code: ${code}`,
-        cause: JSON.stringify(error),
-      });
-    }
+    return await this.httpService.get<Club>(`/v3/clubs/${code}`);
   }
 }

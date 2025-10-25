@@ -1,4 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  BadRequestException,
+  UnauthorizedException,
+  NotFoundException,
+  ForbiddenException,
+  RequestTimeoutException,
+  ConflictException,
+  InternalServerErrorException,
+  BadGatewayException,
+  ServiceUnavailableException,
+  GatewayTimeoutException,
+  HttpException,
+} from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
@@ -38,7 +52,7 @@ export class EuroleagueHttpService {
           .pipe(
             catchError((error: AxiosError) => {
               this.logger.error(`Error fetching ${fullUrl}`, error.message);
-              throw this.handleError(error);
+              this.handleError(error);
             }),
           ),
       );
@@ -52,20 +66,73 @@ export class EuroleagueHttpService {
 
   /**
    * Handle HTTP errors and provide meaningful error messages
+   * Maps HTTP status codes to appropriate NestJS exceptions
    */
-  private handleError(error: AxiosError): Error {
+  private handleError(error: AxiosError): never {
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
       const status = error.response.status;
-      const message = error.response.data || error.message;
-      return new Error(`HTTP ${status}: ${JSON.stringify(message)}`);
+      const responseData = error.response.data as
+        | { title?: string; detail?: string; message?: string }
+        | undefined;
+
+      // Extract meaningful error message from the API response
+      const errorMessage =
+        responseData?.title ??
+        responseData?.detail ??
+        responseData?.message ??
+        error.message;
+
+      // Build error options with cause for logging purposes
+      const errorOptions = {
+        cause: error,
+        description: responseData?.detail ?? errorMessage,
+      };
+
+      // Map HTTP status codes to appropriate NestJS exceptions
+      if (status === 400) {
+        throw new BadRequestException(errorMessage, errorOptions);
+      } else if (status === 401) {
+        throw new UnauthorizedException(errorMessage, errorOptions);
+      } else if (status === 403) {
+        throw new ForbiddenException(errorMessage, errorOptions);
+      } else if (status === 404) {
+        throw new NotFoundException(errorMessage, errorOptions);
+      } else if (status === 408) {
+        throw new RequestTimeoutException(errorMessage, errorOptions);
+      } else if (status === 409) {
+        throw new ConflictException(errorMessage, errorOptions);
+      } else if (status === 500) {
+        throw new InternalServerErrorException(errorMessage, errorOptions);
+      } else if (status === 502) {
+        throw new BadGatewayException(errorMessage, errorOptions);
+      } else if (status === 503) {
+        throw new ServiceUnavailableException(errorMessage, errorOptions);
+      } else if (status === 504) {
+        throw new GatewayTimeoutException(errorMessage, errorOptions);
+      } else {
+        // For any other status codes, throw a generic HttpException
+        throw new HttpException(
+          errorMessage || 'An error occurred',
+          status,
+          errorOptions,
+        );
+      }
     } else if (error.request) {
       // The request was made but no response was received
-      return new Error('No response received from Euroleague API');
+      this.logger.error('No response received from Euroleague API', error);
+      throw new ServiceUnavailableException(
+        'No response received from Euroleague API',
+        { cause: error },
+      );
     } else {
       // Something happened in setting up the request that triggered an Error
-      return new Error(`Request error: ${error.message}`);
+      this.logger.error('Request setup error', error.message);
+      throw new InternalServerErrorException(
+        `Request error: ${error.message}`,
+        { cause: error },
+      );
     }
   }
 
