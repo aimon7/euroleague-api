@@ -24,6 +24,7 @@ export class ClubsController {
   @ApiResponse({
     status: 200,
     description: 'Clubs data retrieved successfully',
+    type: PaginatedClubResponseDto,
   })
   async getAllRegisteredClubs(
     @Query() query: GetAllRegisteredClubsParamsDto,
@@ -44,6 +45,7 @@ export class ClubsController {
   @ApiResponse({
     status: 200,
     description: 'Club data retrieved successfully',
+    type: Club,
   })
   @ApiNotFoundResponse({
     description: 'Club not found with the provided code',
