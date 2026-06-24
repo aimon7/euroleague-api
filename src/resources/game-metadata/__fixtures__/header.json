@@ -1,0 +1,17 @@
+{
+  "Live": false,
+  "Round": "1",
+  "CodeTeamA": "MAD",
+  "CodeTeamB": "BAR",
+  "TeamA": "Real Madrid",
+  "TeamB": "FC Barcelona",
+  "ScoreA": "80",
+  "ScoreB": "75",
+  "CoachA": "Mateo, Chus",
+  "CoachB": "Grimau, Roger",
+  "Date": "2023-10-05",
+  "Hour": "21:00",
+  "Stadium": "WiZink Center",
+  "Capacity": "15000",
+  "Referees": "Lottermoser, Javor, Pastusiak"
+}

@@ -2,6 +2,44 @@ export type { ApiHosts, Competition, EuroleagueClientOptions } from "./core/conf
 export { EuroleagueApiError, EuroleagueSchemaError, EuroleagueValidationError } from "./core/errors";
 export { euroleague, EuroleagueClient } from "./euroleague-client";
 export type {
+  Boxscore,
+  BoxscoreGameParams,
+  BoxscoreRoundParams,
+  BoxscoreSeasonParams,
+  BoxscoreSeasonsParams,
+  PlayerBoxscore,
+  QuarterScore,
+  QuarterScoresGameParams,
+  QuarterScoresRoundParams,
+  QuarterScoresSeasonParams,
+  QuarterScoresSeasonsParams,
+  QuarterScoreType
+} from "./resources/boxscore";
+export type {
+  GameMetadata,
+  GameMetadataGameParams,
+  GameMetadataRoundParams,
+  GameMetadataSeasonParams,
+  GameMetadataSeasonsParams
+} from "./resources/game-metadata";
+export type {
+  GameRef,
+  GameReport,
+  GameRoundParams,
+  GameSeasonParams,
+  GameSeasonsParams,
+  GameStats,
+  GameTeamsComparison
+} from "./resources/games";
+export type {
+  PlayByPlayEvent,
+  PlayByPlayGameParams,
+  PlayByPlayLineup,
+  PlayByPlayRoundParams,
+  PlayByPlaySeasonParams,
+  PlayByPlaySeasonsParams
+} from "./resources/play-by-play";
+export type {
   PhaseTypeCode,
   PlayerLeader,
   PlayerLeadersAllSeasonsParams,
@@ -14,3 +52,30 @@ export type {
   PlayerStatsRangeParams,
   PlayerStatsType
 } from "./resources/players";
+export type {
+  ScheduleGame,
+  ScheduleRoundParams,
+  ScheduleSeasonParams,
+  ScheduleSeasonsParams
+} from "./resources/schedule";
+export type {
+  ShotEvent,
+  ShotGameParams,
+  ShotRoundParams,
+  ShotSeasonParams,
+  ShotSeasonsParams
+} from "./resources/shots";
+export type { Standing, StandingsRoundParams, StandingsType } from "./resources/standings";
+export type {
+  TeamLeader,
+  TeamLeadersAllSeasonsParams,
+  TeamLeadersParams,
+  TeamLeadersRangeParams,
+  TeamPhaseTypeCode,
+  TeamStat,
+  TeamStatsAllSeasonsParams,
+  TeamStatsMode,
+  TeamStatsParams,
+  TeamStatsRangeParams,
+  TeamStatsType
+} from "./resources/teams";

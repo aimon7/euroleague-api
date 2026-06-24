@@ -1,0 +1,20 @@
+{
+  "teams": [
+    {
+      "position": "1",
+      "club.name": "Real Madrid",
+      "club.code": "MAD",
+      "gamesPlayed": "10",
+      "gamesWon": "9",
+      "gamesLost": "1"
+    },
+    {
+      "position": "2",
+      "club.name": "Olympiacos",
+      "club.code": "OLY",
+      "gamesPlayed": "10",
+      "gamesWon": "8",
+      "gamesLost": "2"
+    }
+  ]
+}

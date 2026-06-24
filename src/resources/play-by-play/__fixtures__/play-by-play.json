@@ -1,0 +1,45 @@
+{
+  "CodeTeamA": "MAD",
+  "CodeTeamB": "BAR",
+  "FirstQuarter": [
+    {
+      "NUMBEROFPLAY": "1",
+      "CODETEAM": "MAD ",
+      "PLAYER_ID": "P001 ",
+      "PLAYER": "Tavares, Edy",
+      "PLAYTYPE": "2FGM",
+      "MARKERTIME": "09:30",
+      "POINTS_A": "2",
+      "POINTS_B": "0"
+    },
+    {
+      "NUMBEROFPLAY": "2",
+      "CODETEAM": "BAR ",
+      "PLAYER_ID": "P101 ",
+      "PLAYER": "Vesely, Jan",
+      "PLAYTYPE": "OUT",
+      "MARKERTIME": "08:00"
+    },
+    {
+      "NUMBEROFPLAY": "3",
+      "CODETEAM": "BAR ",
+      "PLAYER_ID": "P106 ",
+      "PLAYER": "Laprovittola, Nicolas",
+      "PLAYTYPE": "IN",
+      "MARKERTIME": "08:00"
+    }
+  ],
+  "SecondQuarter": [
+    {
+      "NUMBEROFPLAY": "4",
+      "CODETEAM": "MAD ",
+      "PLAYER_ID": "P002 ",
+      "PLAYER": "Llull, Sergio",
+      "PLAYTYPE": "AST",
+      "MARKERTIME": "05:00"
+    }
+  ],
+  "ThirdQuarter": [],
+  "ForthQuarter": [],
+  "ExtraTime": []
+}

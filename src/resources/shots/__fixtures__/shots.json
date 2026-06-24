@@ -1,0 +1,28 @@
+{
+  "Rows": [
+    {
+      "NUM_ANOT": "1",
+      "TEAM": "MAD ",
+      "ID_PLAYER": "P001 ",
+      "PLAYER": "James, Mike",
+      "ID_ACTION": "2FGM",
+      "ACTION": "Two Pointer",
+      "POINTS": "2",
+      "COORD_X": "-120",
+      "COORD_Y": "240",
+      "ZONE": "C"
+    },
+    {
+      "NUM_ANOT": "2",
+      "TEAM": "BAR ",
+      "ID_PLAYER": "P002 ",
+      "PLAYER": "Vesely, Jan",
+      "ID_ACTION": "3FGA",
+      "ACTION": "Missed Three Pointer",
+      "POINTS": "0",
+      "COORD_X": "300",
+      "COORD_Y": "500",
+      "ZONE": "J"
+    }
+  ]
+}

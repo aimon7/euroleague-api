@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "gameCode": 1,
+      "round": 1,
+      "played": true,
+      "phaseType": { "code": "RS" },
+      "local": { "club": { "name": "Real Madrid", "tvCode": "MAD" } },
+      "road": { "club": { "name": "FC Barcelona", "tvCode": "BAR" } },
+      "date": "2023-10-05"
+    },
+    {
+      "gameCode": 2,
+      "round": 1,
+      "played": false,
+      "phaseType": { "code": "RS" },
+      "local": { "club": { "name": "Olympiacos", "tvCode": "OLY" } },
+      "road": { "club": { "name": "Panathinaikos", "tvCode": "PAO" } },
+      "date": "2023-10-06"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "Stats": [
+    {
+      "Team": "Real Madrid",
+      "PlayersStats": [
+        { "Player_ID": "P001", "Player": "Tavares, Edy" },
+        { "Player_ID": "P002", "Player": "Llull, Sergio" },
+        { "Player_ID": "P003", "Player": "Hezonja, Mario" },
+        { "Player_ID": "P004", "Player": "Rodriguez, Sergio" },
+        { "Player_ID": "P005", "Player": "Yabusele, Guerschon" },
+        { "Player_ID": "P006", "Player": "Musa, Dzanan" }
+      ]
+    },
+    {
+      "Team": "FC Barcelona",
+      "PlayersStats": [
+        { "Player_ID": "P101", "Player": "Vesely, Jan" },
+        { "Player_ID": "P102", "Player": "Satoransky, Tomas" },
+        { "Player_ID": "P103", "Player": "Kalinic, Nikola" },
+        { "Player_ID": "P104", "Player": "Higgins, Cory" },
+        { "Player_ID": "P105", "Player": "Abrines, Alex" },
+        { "Player_ID": "P106", "Player": "Laprovittola, Nicolas" }
+      ]
+    }
+  ]
+}

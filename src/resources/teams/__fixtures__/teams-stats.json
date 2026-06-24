@@ -1,0 +1,19 @@
+{
+  "total": 2,
+  "teams": [
+    {
+      "team.name": "Real Madrid",
+      "team.code": "MAD",
+      "gamesPlayed": "34",
+      "pointsScored": "85.4",
+      "valuation": "98.7"
+    },
+    {
+      "team.name": "Panathinaikos",
+      "team.code": "PAO",
+      "gamesPlayed": "34",
+      "pointsScored": "82.1",
+      "valuation": "94.2"
+    }
+  ]
+}

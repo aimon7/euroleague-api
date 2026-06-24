@@ -1,0 +1,33 @@
+{
+  "Referees": "Lottermoser, Javor, Pastusiak",
+  "Attendance": 10250,
+  "ByQuarter": [
+    { "Team": "Real Madrid", "Quarter1": 20, "Quarter2": 18, "Quarter3": 22, "Quarter4": 20 },
+    { "Team": "FC Barcelona", "Quarter1": 19, "Quarter2": 21, "Quarter3": 17, "Quarter4": 18 }
+  ],
+  "EndOfQuarter": [
+    { "Team": "Real Madrid", "Quarter1": 20, "Quarter2": 38, "Quarter3": 60, "Quarter4": 80 },
+    { "Team": "FC Barcelona", "Quarter1": 19, "Quarter2": 40, "Quarter3": 57, "Quarter4": 75 }
+  ],
+  "Stats": [
+    {
+      "Team": "Real Madrid",
+      "Coach": "Mateo, Chus",
+      "PlayersStats": [
+        { "Player_ID": "P001", "Player": "Tavares, Edy", "Dorsal": "22", "Minutes": "28:30", "Points": "16" },
+        { "Player_ID": "P002", "Player": "Llull, Sergio", "Dorsal": "23", "Minutes": "24:10", "Points": "12" }
+      ],
+      "tmr": { "Player": "Team", "Points": "0" },
+      "totr": { "Player": "Total", "Points": "80" }
+    },
+    {
+      "Team": "FC Barcelona",
+      "Coach": "Grimau, Roger",
+      "PlayersStats": [
+        { "Player_ID": "P101", "Player": "Vesely, Jan", "Dorsal": "24", "Minutes": "26:45", "Points": "14" }
+      ],
+      "tmr": { "Player": "Team", "Points": "0" },
+      "totr": { "Player": "Total", "Points": "75" }
+    }
+  ]
+}
