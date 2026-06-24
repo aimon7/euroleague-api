@@ -1,0 +1,69 @@
+import { BaseResource } from "../../core/base-resource";
+import { seasonCode } from "../../core/config";
+import type { HttpClient } from "../../core/http-client";
+
+import type {
+  PlayerLeadersAllSeasonsParams,
+  PlayerLeadersParams,
+  PlayerLeadersRangeParams,
+  PlayerStatsAllSeasonsParams,
+  PlayerStatsParams,
+  PlayerStatsRangeParams
+} from "./players.dto";
+import { type PlayerLeader, PlayerLeaderSchema, type PlayerStat, PlayerStatSchema } from "./players.schema";
+
+const DEFAULT_STATS_TYPE = "traditional";
+const DEFAULT_STATS_MODE = "PerGame";
+const DEFAULT_LIMIT = 400;
+
+export class PlayersService extends BaseResource {
+  constructor(http: HttpClient) {
+    super(http);
+  }
+
+  async getStats(params: PlayerStatsParams): Promise<PlayerStat[]> {
+    const type = params.type ?? DEFAULT_STATS_TYPE;
+    const endpoint = `/statistics/players/${type}`;
+    const data = await this.http.getApi("v3", endpoint, {
+      limit: params.limit ?? DEFAULT_LIMIT,
+      phaseTypeCode: params.phase,
+      seasonCode: seasonCode(this.http.competition, params.season),
+      statisticMode: params.mode ?? DEFAULT_STATS_MODE
+    });
+
+    return this.parseArray(PlayerStatSchema, data, endpoint);
+  }
+
+  async getStatsRange(params: PlayerStatsRangeParams): Promise<PlayerStat[]> {
+    const { from, to, ...rest } = params;
+
+    return this.collectSeasonRange(from, to, (season) => this.getStats({ ...rest, season }));
+  }
+
+  async getStatsAllSeasons(params: PlayerStatsAllSeasonsParams = {}): Promise<PlayerStat[]> {
+    return this.collectAllSeasons((season) => this.getStats({ ...params, season }));
+  }
+
+  async getLeaders(params: PlayerLeadersParams): Promise<PlayerLeader[]> {
+    const type = params.type ?? DEFAULT_STATS_TYPE;
+    const endpoint = `/statistics/players/${type}/leaders`;
+    const data = await this.http.getApi("v2", endpoint, {
+      limit: params.limit ?? DEFAULT_LIMIT,
+      phaseTypeCode: params.phase,
+      seasonCode: seasonCode(this.http.competition, params.season),
+      statisticMode: params.mode ?? DEFAULT_STATS_MODE
+    });
+
+    return this.parseArray(PlayerLeaderSchema, data, endpoint);
+  }
+
+  async getLeadersRange(params: PlayerLeadersRangeParams): Promise<PlayerLeader[]> {
+    const { from, to, ...rest } = params;
+
+    return this.collectSeasonRange(from, to, (season) => this.getLeaders({ ...rest, season }));
+  }
+
+  async getLeadersAllSeasons(params: PlayerLeadersAllSeasonsParams = {}): Promise<PlayerLeader[]> {
+    return this.collectAllSeasons((season) => this.getLeaders({ ...params, season }));
+  }
+}

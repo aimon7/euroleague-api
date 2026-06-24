@@ -1,0 +1,71 @@
+{
+  "name": "euroleague-api",
+  "version": "0.1.0",
+  "description": "A strongly typed TypeScript SDK for the Euroleague and EuroCup public APIs.",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup",
+    "check:pkg": "publint && attw --pack .",
+    "example": "tsx",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "gen:resource": "tsx scripts/gen-resource.ts",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm test && npm run build && npm run check:pkg",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "euroleague",
+    "eurocup",
+    "basketball",
+    "sdk",
+    "typescript"
+  ],
+  "author": "Ioannis Antoniou <ioannis@iantoniou.gr>",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "latest",
+    "@eslint/js": "latest",
+    "@types/node": "latest",
+    "@vitest/coverage-v8": "latest",
+    "eslint": "latest",
+    "eslint-config-prettier": "latest",
+    "eslint-plugin-prettier": "latest",
+    "eslint-plugin-simple-import-sort": "latest",
+    "globals": "latest",
+    "prettier": "latest",
+    "publint": "latest",
+    "tsup": "latest",
+    "tsx": "latest",
+    "typescript": "latest",
+    "typescript-eslint": "latest",
+    "vitest": "latest"
+  }
+}

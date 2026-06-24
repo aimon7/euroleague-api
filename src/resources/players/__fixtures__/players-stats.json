@@ -1,0 +1,18 @@
+{
+  "Rows": [
+    {
+      "Player": "Mike James",
+      "Team": "Monaco",
+      "GamesPlayed": "39",
+      "Points": "17.9",
+      "Assists": "5.1"
+    },
+    {
+      "Player": "Kendrick Nunn",
+      "Team": "Panathinaikos",
+      "GamesPlayed": "35",
+      "Points": "16.0",
+      "Assists": "3.0"
+    }
+  ]
+}
