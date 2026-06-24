@@ -9,6 +9,12 @@ permissions:
   contents: read
   id-token: write
 
+# Never run two releases for the same ref at once, and never cancel an
+# in-progress publish (a half-finished publish should always complete).
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
