@@ -63,6 +63,25 @@ describe("PlayersService", () => {
     expect(new URL(calls[1] ?? "").searchParams.get("seasonCode")).toBe("E2022");
   });
 
+  it("aggregates leaders across ranges and every season", async () => {
+    const leaders = createFetch(leadersFixture);
+    const client = new EuroleagueClient({ fetch: leaders.fetch });
+
+    const range = await client.players.getLeadersRange({ from: 2021, to: 2022 });
+    expect(range).toHaveLength(2);
+
+    const stats = createFetch(statsFixture);
+    const statsClient = new EuroleagueClient({ fetch: stats.fetch });
+    const all = await statsClient.players.getStatsAllSeasons();
+    expect(stats.calls.length).toBeGreaterThan(1);
+    expect(all).toHaveLength(stats.calls.length * 2);
+
+    const allLeaders = createFetch(leadersFixture);
+    const leadersClient = new EuroleagueClient({ fetch: allLeaders.fetch });
+    const everySeason = await leadersClient.players.getLeadersAllSeasons();
+    expect(everySeason).toHaveLength(allLeaders.calls.length);
+  });
+
   it("throws EuroleagueSchemaError when the response row shape is invalid", async () => {
     const { fetch } = createFetch({ Rows: [null] });
     const client = new EuroleagueClient({ fetch });
