@@ -80,15 +80,7 @@ export abstract class BaseResource {
     to: number,
     loadGame: (season: number, gameCode: number) => Promise<T[]>
   ): Promise<T[]> {
-    assertValidSeasonRange(from, to);
-
-    const output: T[] = [];
-
-    for (let season = from; season <= to; season += 1) {
-      output.push(...(await this.collectSeasonGames(season, loadGame)));
-    }
-
-    return output;
+    return this.collectSeasonRange(from, to, (season) => this.collectSeasonGames(season, loadGame));
   }
 
   private async collectGameCodes<T>(
