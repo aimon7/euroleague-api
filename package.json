@@ -48,6 +48,14 @@
   ],
   "author": "Ioannis Antoniou <ioannis@iantoniou.gr>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aimon7/euroleague-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aimon7/euroleague-api/issues"
+  },
+  "homepage": "https://github.com/aimon7/euroleague-api#readme",
   "dependencies": {
     "zod": "^4.0.0"
   },

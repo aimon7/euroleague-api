@@ -20,8 +20,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: npm
-          node-version: 20
+          node-version: 24
           registry-url: https://registry.npmjs.org
+
+      - name: Upgrade npm (trusted publishing requires npm >= 11.5.1)
+        run: npm install -g npm@latest
 
       - name: Install dependencies
         run: npm ci
@@ -29,7 +32,7 @@ jobs:
       - name: Verify
         run: npm run prepublishOnly
 
-      - name: Publish
+      # No NODE_AUTH_TOKEN: auth is via OIDC trusted publishing.
+      # Requires a Trusted Publisher configured on npmjs.com for this repo + workflow filename.
+      - name: Publish (OIDC trusted publishing)
         run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
