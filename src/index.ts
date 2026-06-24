@@ -1,5 +1,12 @@
 export type { ApiHosts, Competition, EuroleagueClientOptions } from "./core/config";
-export { EuroleagueApiError, EuroleagueSchemaError, EuroleagueValidationError } from "./core/errors";
+export {
+  EuroleagueApiError,
+  EuroleagueNetworkError,
+  EuroleagueParseError,
+  EuroleagueSchemaError,
+  EuroleagueTimeoutError,
+  EuroleagueValidationError
+} from "./core/errors";
 export { euroleague, EuroleagueClient } from "./euroleague-client";
 export type {
   Boxscore,

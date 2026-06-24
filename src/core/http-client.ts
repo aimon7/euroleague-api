@@ -8,7 +8,15 @@ import {
   mergeHosts,
   seasonCode
 } from "./config";
-import { EuroleagueApiError, EuroleagueValidationError } from "./errors";
+import {
+  EuroleagueApiError,
+  EuroleagueNetworkError,
+  EuroleagueParseError,
+  EuroleagueTimeoutError,
+  EuroleagueValidationError
+} from "./errors";
+
+const BODY_SNIPPET_LIMIT = 200;
 
 type QueryValue = boolean | number | string | null | undefined;
 
@@ -67,11 +75,7 @@ export class HttpClient {
       } catch (error) {
         lastError = error;
 
-        if (error instanceof EuroleagueApiError && error.status < 500) {
-          throw error;
-        }
-
-        if (attempt === this.retries) {
+        if (!isRetryable(error) || attempt === this.retries) {
           throw error;
         }
 
@@ -86,34 +90,74 @@ export class HttpClient {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
 
+    let response: Response;
+    let body: string;
+
     try {
-      const response = await this.#fetch(url, {
+      response = await this.#fetch(url, {
         headers: {
           accept: "application/json"
         },
         signal: controller.signal
       });
 
-      const body = await response.text();
-
-      if (!response.ok) {
-        throw new EuroleagueApiError(
-          `Euroleague API returned ${response.status} for ${url}`,
-          response.status,
-          url,
-          body
-        );
-      }
-
-      if (body.length === 0) {
-        return undefined;
-      }
-
-      return JSON.parse(body) as unknown;
+      body = await response.text();
+    } catch (error) {
+      throw toTransportError(error, url, controller.signal.aborted);
     } finally {
       clearTimeout(timeout);
     }
+
+    if (!response.ok) {
+      throw new EuroleagueApiError(`Euroleague API returned ${response.status} for ${url}`, response.status, url, body);
+    }
+
+    if (body.length === 0) {
+      return undefined;
+    }
+
+    return parseJsonBody(body, url, response.status);
   }
+}
+
+function isRetryable(error: unknown): boolean {
+  if (error instanceof EuroleagueApiError) {
+    return error.status >= 500;
+  }
+
+  if (error instanceof EuroleagueParseError) {
+    return false;
+  }
+
+  return true;
+}
+
+function toTransportError(error: unknown, url: string, aborted: boolean): EuroleagueNetworkError {
+  if (aborted || (error instanceof Error && error.name === "AbortError")) {
+    return new EuroleagueTimeoutError(`Euroleague API request to ${url} timed out.`, url, { cause: error });
+  }
+
+  return new EuroleagueNetworkError(`Euroleague API request to ${url} failed.`, url, { cause: error });
+}
+
+function parseJsonBody(body: string, url: string, status: number): unknown {
+  try {
+    return JSON.parse(body) as unknown;
+  } catch (error) {
+    throw new EuroleagueParseError(
+      `Euroleague API returned a non-JSON response (${status}) for ${url}`,
+      url,
+      status,
+      bodySnippet(body),
+      { cause: error }
+    );
+  }
+}
+
+function bodySnippet(body: string): string {
+  const trimmed = body.trim();
+
+  return trimmed.length > BODY_SNIPPET_LIMIT ? `${trimmed.slice(0, BODY_SNIPPET_LIMIT)}...` : trimmed;
 }
 
 function buildUrl(input: string, query?: QueryParams): string {

@@ -137,10 +137,20 @@ const shots = await client.shots.getGame({ season: 2023, gameCode: 1, validate: 
 ## Errors
 
 ```ts
-import { EuroleagueApiError, EuroleagueSchemaError, EuroleagueValidationError } from "euroleague-api";
+import {
+  EuroleagueApiError,
+  EuroleagueNetworkError,
+  EuroleagueParseError,
+  EuroleagueSchemaError,
+  EuroleagueTimeoutError,
+  EuroleagueValidationError
+} from "euroleague-api";
 ```
 
 - `EuroleagueApiError` — a non-2xx HTTP response (`status`, `url`, `body`).
+- `EuroleagueParseError` — a 2xx response whose body is not valid JSON (`url`, `status`, `bodySnippet`, original error as `cause`). Deterministic, so it is never retried.
+- `EuroleagueNetworkError` — a transport-level failure such as a refused connection or DNS error (`url`, original error as `cause`). Retried per the `retries` option.
+- `EuroleagueTimeoutError` — the request was aborted after `timeoutMs` (`url`, original error as `cause`). Subclass of `EuroleagueNetworkError`; retried per the `retries` option.
 - `EuroleagueSchemaError` — the response failed validation (`endpoint`, Zod `issues`).
 - `EuroleagueValidationError` — invalid input params (e.g. a bad season/competition).
 
