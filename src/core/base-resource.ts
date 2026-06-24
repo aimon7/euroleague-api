@@ -9,19 +9,11 @@ export abstract class BaseResource {
   protected constructor(protected readonly http: HttpClient) {}
 
   protected parseArray<T>(schema: z.ZodType<T>, data: unknown, endpoint: string): T[] {
-    const rows = extractRows(data);
-    const parsedRows = rows.map((row) => schema.safeParse(row));
-    const failed = parsedRows.find((result) => !result.success);
+    const parsed: T[] = [];
 
-    if (failed && !failed.success) {
-      throw new EuroleagueSchemaError(
-        `Euroleague API response did not match the expected schema for ${endpoint}.`,
-        endpoint,
-        failed.error.issues
-      );
-    }
+    for (const row of extractRows(data)) {
+      const result = schema.safeParse(row);
 
-    return parsedRows.map((result) => {
       if (!result.success) {
         throw new EuroleagueSchemaError(
           `Euroleague API response did not match the expected schema for ${endpoint}.`,
@@ -30,8 +22,10 @@ export abstract class BaseResource {
         );
       }
 
-      return result.data;
-    });
+      parsed.push(result.data);
+    }
+
+    return parsed;
   }
 
   protected parseRecord<T>(schema: z.ZodType<T>, data: unknown, endpoint: string): T {
