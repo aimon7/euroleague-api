@@ -1,6 +1,6 @@
 import { BaseResource } from "../../core/base-resource";
 import type { HttpClient } from "../../core/http-client";
-import { normalizeApiRecordDeep } from "../../core/normalize";
+import { isRecord, normalizeApiRecordDeep } from "../../core/normalize";
 
 import type {
   PlayByPlayGameParams,
@@ -182,8 +182,4 @@ function teamSide(code: string, codeTeamA: string, codeTeamB: string): "away" | 
 
 function text(value: unknown): string {
   return typeof value === "string" ? value.trim() : value === undefined || value === null ? "" : String(value);
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }

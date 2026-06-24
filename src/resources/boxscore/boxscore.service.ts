@@ -1,5 +1,6 @@
 import { BaseResource } from "../../core/base-resource";
 import type { HttpClient } from "../../core/http-client";
+import { isRecord } from "../../core/normalize";
 
 import type {
   BoxscoreGameParams,
@@ -120,8 +121,4 @@ function buildPlayerRows(data: unknown): Record<string, unknown>[] {
   }
 
   return rows;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }

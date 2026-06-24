@@ -4,6 +4,10 @@ export type NormalizedRecord = Record<string, NormalizedValue>;
 
 export type JsonValue = boolean | number | string | null | JsonValue[] | { [key: string]: JsonValue };
 
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 export function normalizeApiRecord(input: Record<string, unknown>): NormalizedRecord {
   return Object.fromEntries(
     Object.entries(input).map(([key, value]) => [toCamelCase(key), normalizeValue(value)])
