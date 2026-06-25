@@ -1,0 +1,83 @@
+name: Bug report
+description: Report incorrect behavior, a thrown error, or a mismatch with the upstream API.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report! Please include enough detail to reproduce the issue.
+        If the upstream API shape changed, consider the "Schema drift / new resource" template instead.
+  - type: input
+    id: sdk-version
+    attributes:
+      label: SDK version
+      description: The `euroleague-api` version you are using (`npm ls euroleague-api`).
+      placeholder: e.g. 0.1.3
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version
+      description: Output of `node --version` (the SDK requires Node >= 20).
+      placeholder: e.g. v20.11.0
+    validations:
+      required: true
+  - type: dropdown
+    id: competition
+    attributes:
+      label: Competition
+      options:
+        - euroleague
+        - eurocup
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: The resource, method, and params you called. A minimal code snippet is ideal.
+      placeholder: |
+        const client = new EuroleagueClient({ competition: "euroleague" });
+        await client.standings.getRound({ season: 2023, round: 10 });
+      render: ts
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: error-class
+    attributes:
+      label: Error class (if one was thrown)
+      description: See `src/core/errors.ts` for the full list.
+      options:
+        - "Not applicable / no error thrown"
+        - EuroleagueApiError
+        - EuroleagueParseError
+        - EuroleagueNetworkError
+        - EuroleagueTimeoutError
+        - EuroleagueSchemaError
+        - EuroleagueValidationError
+        - Other / unknown
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / stack trace
+      description: Paste any error output or stack trace. This is automatically formatted as code.
+      render: shell
+    validations:
+      required: false
