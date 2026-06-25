@@ -1,6 +1,6 @@
 {
   "name": "euroleague-api",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A strongly typed TypeScript SDK for the Euroleague and EuroCup public APIs.",
   "type": "module",
   "sideEffects": false,
