@@ -375,6 +375,189 @@ Wrap your `app/layout.tsx` body in `<Providers>`. The prefetched query key must 
 (`getSeason`, `getSeasons`) fan out into many requests, so prefer prefetching those on the server with a longer
 `staleTime`.
 
+## Using with Vue (TanStack Query)
+
+The same browser/CORS and read-only notes apply. The `lib/euroleague.ts` client, the `lib/euroleague-keys.ts`
+factory, and the `PlayerRow` interface + `toPlayerRow` mapper from the React section above are plain TypeScript —
+extract the mapper into `lib/player-row.ts` and reuse all three across frameworks.
+
+```sh
+npm install euroleague-api @tanstack/vue-query
+```
+
+### 1. Install the plugin
+
+```ts
+// src/main.ts
+import { createApp } from "vue";
+import { VueQueryPlugin } from "@tanstack/vue-query";
+
+import App from "./App.vue";
+
+createApp(App).use(VueQueryPlugin).mount("#app");
+```
+
+### 2. A typed composable
+
+```ts
+// src/composables/usePlayerStats.ts
+import { useQuery } from "@tanstack/vue-query";
+import type { PlayerStatsParams } from "euroleague-api";
+
+import { euroleagueClient } from "../lib/euroleague";
+import { euroleagueKeys } from "../lib/euroleague-keys";
+import { toPlayerRow } from "../lib/player-row";
+
+export function usePlayerStats(params: PlayerStatsParams) {
+  return useQuery({
+    queryKey: euroleagueKeys.playerStats(params),
+    queryFn: () => euroleagueClient.players.getStats(params),
+    select: (rows) => rows.map(toPlayerRow),
+    staleTime: 1000 * 60 * 60
+  });
+}
+```
+
+### 3. Use it in a component
+
+```vue
+<!-- src/components/PlayerStatsTable.vue -->
+<script setup lang="ts">
+import { EuroleagueApiError, EuroleagueSchemaError } from "euroleague-api";
+
+import { usePlayerStats } from "../composables/usePlayerStats";
+
+const { data, isPending, isError, error } = usePlayerStats({
+  season: 2023,
+  type: "traditional",
+  mode: "PerGame"
+});
+
+function errorMessage(err: unknown): string {
+  if (err instanceof EuroleagueApiError) return `Euroleague API responded ${err.status}`;
+  if (err instanceof EuroleagueSchemaError) return "The API returned an unexpected shape";
+  return "Something went wrong";
+}
+</script>
+
+<template>
+  <p v-if="isPending">Loading player stats…</p>
+  <p v-else-if="isError" role="alert">{{ errorMessage(error) }}</p>
+  <table v-else-if="data">
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Team</th>
+        <th>GP</th>
+        <th>PPG</th>
+        <th>APG</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="p in data" :key="`${p.player}-${p.team}`">
+        <td>{{ p.player }}</td>
+        <td>{{ p.team }}</td>
+        <td>{{ p.gamesPlayed }}</td>
+        <td>{{ p.points }}</td>
+        <td>{{ p.assists }}</td>
+      </tr>
+    </tbody>
+  </table>
+</template>
+```
+
+`data`, `isPending`, and `error` are reactive refs (auto-unwrapped in the template). Pass refs/computed as the
+`params` if you need the query to react to user input.
+
+## Using with Angular (TanStack Query)
+
+Uses the Angular adapter, which exposes results as **signals**. It is officially experimental, so pin the
+version. The same `lib/euroleague.ts`, `lib/euroleague-keys.ts`, and `lib/player-row.ts` files are reused.
+
+```sh
+npm install euroleague-api @tanstack/angular-query-experimental
+```
+
+### 1. Provide the QueryClient
+
+```ts
+// src/app/app.config.ts
+import { type ApplicationConfig } from "@angular/core";
+import { provideTanStackQuery, QueryClient } from "@tanstack/angular-query-experimental";
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideTanStackQuery(new QueryClient())]
+};
+```
+
+### 2. A component with `injectQuery`
+
+`injectQuery` returns signals, so the template calls `query.data()`, `query.isPending()`, etc.
+
+```ts
+// src/app/player-stats-table.component.ts
+import { Component } from "@angular/core";
+import { injectQuery } from "@tanstack/angular-query-experimental";
+import { EuroleagueApiError, EuroleagueSchemaError } from "euroleague-api";
+
+import { euroleagueClient } from "../lib/euroleague";
+import { euroleagueKeys } from "../lib/euroleague-keys";
+import { toPlayerRow } from "../lib/player-row";
+
+const PARAMS = { season: 2023, type: "traditional", mode: "PerGame" } as const;
+
+@Component({
+  selector: "app-player-stats-table",
+  standalone: true,
+  template: `
+    @if (query.isPending()) {
+      <p>Loading player stats…</p>
+    } @else if (query.isError()) {
+      <p role="alert">{{ errorMessage(query.error()) }}</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Team</th>
+            <th>GP</th>
+            <th>PPG</th>
+            <th>APG</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of query.data(); track p.player + p.team) {
+            <tr>
+              <td>{{ p.player }}</td>
+              <td>{{ p.team }}</td>
+              <td>{{ p.gamesPlayed }}</td>
+              <td>{{ p.points }}</td>
+              <td>{{ p.assists }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  `
+})
+export class PlayerStatsTableComponent {
+  query = injectQuery(() => ({
+    queryKey: euroleagueKeys.playerStats(PARAMS),
+    queryFn: () => euroleagueClient.players.getStats(PARAMS),
+    select: (rows) => rows.map(toPlayerRow)
+  }));
+
+  errorMessage(err: unknown): string {
+    if (err instanceof EuroleagueApiError) return `Euroleague API responded ${err.status}`;
+    if (err instanceof EuroleagueSchemaError) return "The API returned an unexpected shape";
+    return "Something went wrong";
+  }
+}
+```
+
+For params driven by user input, expose them as signals and read them inside the `injectQuery` callback so the
+query refetches automatically when they change.
+
 ## Development
 
 ```sh
