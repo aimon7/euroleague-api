@@ -159,6 +159,222 @@ import {
 - `EuroleagueSchemaError` — the response failed validation (`endpoint`, Zod `issues`).
 - `EuroleagueValidationError` — invalid input params (e.g. a bad season/competition).
 
+## Using with React (TanStack Query)
+
+The SDK calls the API with the standard `fetch`, and both Euroleague hosts send `Access-Control-Allow-Origin: *`,
+so it runs **directly in the browser** — no proxy or backend required. The API is read-only, so everything is a
+`useQuery`; there are no mutations.
+
+Install the peer dependency alongside the SDK:
+
+```sh
+npm install euroleague-api @tanstack/react-query
+```
+
+### 1. Provide the QueryClient
+
+```tsx
+// src/main.tsx (Vite / CRA entry)
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import { App } from "./App";
+
+const queryClient = new QueryClient();
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+  </StrictMode>
+);
+```
+
+### 2. Share one client instance
+
+`EuroleagueClient` is stateless, so create it once and import it everywhere.
+
+```ts
+// src/lib/euroleague.ts
+import { EuroleagueClient, type Competition } from "euroleague-api";
+
+export const COMPETITION: Competition = "euroleague";
+
+export const euroleagueClient = new EuroleagueClient({
+  competition: COMPETITION,
+  retries: 2
+});
+```
+
+### 3. A query-key factory
+
+Keep keys in one place and always include the competition, so Euroleague and EuroCup never collide in the cache.
+
+```ts
+// src/lib/euroleague-keys.ts
+import type { PlayerStatsParams, ShotGameParams, StandingsRoundParams } from "euroleague-api";
+
+import { COMPETITION } from "./euroleague";
+
+export const euroleagueKeys = {
+  root: ["euroleague", COMPETITION] as const,
+  playerStats: (params: PlayerStatsParams) => [...euroleagueKeys.root, "players", "stats", params] as const,
+  standingsRound: (params: StandingsRoundParams) => [...euroleagueKeys.root, "standings", "round", params] as const,
+  gameShots: (params: ShotGameParams) => [...euroleagueKeys.root, "shots", "game", params] as const
+};
+```
+
+### 4. A reusable, typed hook
+
+Responses are normalized records (`Record<string, string | number | boolean | null>`) whose keys are the
+camelCased upstream fields. Use TanStack Query's `select` to map them into a shape your component owns:
+
+```ts
+// src/hooks/usePlayerStats.ts
+import { useQuery } from "@tanstack/react-query";
+import type { PlayerStat, PlayerStatsParams } from "euroleague-api";
+
+import { euroleagueClient } from "../lib/euroleague";
+import { euroleagueKeys } from "../lib/euroleague-keys";
+
+export interface PlayerRow {
+  player: string;
+  team: string;
+  gamesPlayed: number;
+  points: number;
+  assists: number;
+}
+
+function toPlayerRow(row: PlayerStat): PlayerRow {
+  return {
+    player: String(row.player ?? ""),
+    team: String(row.team ?? ""),
+    gamesPlayed: Number(row.gamesPlayed ?? 0),
+    points: Number(row.points ?? 0),
+    assists: Number(row.assists ?? 0)
+  };
+}
+
+export function usePlayerStats(params: PlayerStatsParams) {
+  return useQuery({
+    queryKey: euroleagueKeys.playerStats(params),
+    queryFn: () => euroleagueClient.players.getStats(params),
+    select: (rows) => rows.map(toPlayerRow),
+    staleTime: 1000 * 60 * 60 // season stats change a few times a week at most
+  });
+}
+```
+
+### 5. Consume it in a component
+
+```tsx
+// src/components/PlayerStatsTable.tsx
+import { EuroleagueApiError, EuroleagueSchemaError } from "euroleague-api";
+
+import { usePlayerStats } from "../hooks/usePlayerStats";
+
+export function PlayerStatsTable() {
+  const { data, isPending, isError, error } = usePlayerStats({
+    season: 2023,
+    type: "traditional",
+    mode: "PerGame"
+  });
+
+  if (isPending) {
+    return <p>Loading player stats…</p>;
+  }
+
+  if (isError) {
+    const message =
+      error instanceof EuroleagueApiError
+        ? `Euroleague API responded ${error.status}`
+        : error instanceof EuroleagueSchemaError
+          ? "The API returned an unexpected shape"
+          : "Something went wrong";
+    return <p role="alert">{message}</p>;
+  }
+
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Team</th>
+          <th>GP</th>
+          <th>PPG</th>
+          <th>APG</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((p) => (
+          <tr key={`${p.player}-${p.team}`}>
+            <td>{p.player}</td>
+            <td>{p.team}</td>
+            <td>{p.gamesPlayed}</td>
+            <td>{p.points}</td>
+            <td>{p.assists}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+```
+
+`data` is fully typed as `PlayerRow[]` thanks to `select`, and errors narrow to the SDK's typed error classes.
+
+### Next.js (App Router) — server prefetch + hydration
+
+In the App Router you can run the SDK on the server and hand a warm cache to the client; the same
+`usePlayerStats` hook works unchanged.
+
+```tsx
+// app/providers.tsx
+"use client";
+
+import { type ReactNode, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+export function Providers({ children }: { children: ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient());
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+}
+```
+
+```tsx
+// app/players/page.tsx (Server Component)
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+
+import { euroleagueClient } from "@/lib/euroleague";
+import { euroleagueKeys } from "@/lib/euroleague-keys";
+import { PlayerStatsTable } from "@/components/PlayerStatsTable";
+
+const params = { season: 2023, type: "traditional", mode: "PerGame" } as const;
+
+export default async function PlayersPage() {
+  const queryClient = new QueryClient();
+
+  // Runs server-side; the dehydrated cache is streamed to the client.
+  await queryClient.prefetchQuery({
+    queryKey: euroleagueKeys.playerStats(params),
+    queryFn: () => euroleagueClient.players.getStats(params)
+  });
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PlayerStatsTable />
+    </HydrationBoundary>
+  );
+}
+```
+
+Wrap your `app/layout.tsx` body in `<Providers>`. The prefetched query key must match the hook's key exactly
+(same params) so the client mounts with data already in cache — no loading flash. The game-feed aggregations
+(`getSeason`, `getSeasons`) fan out into many requests, so prefer prefetching those on the server with a longer
+`staleTime`.
+
 ## Development
 
 ```sh
