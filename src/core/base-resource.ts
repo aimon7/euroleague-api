@@ -91,7 +91,7 @@ export abstract class BaseResource {
     const output: T[] = [];
 
     for (const code of codes) {
-      output.push(...(await loadGame(season, code)));
+      appendAll(output, await loadGame(season, code));
     }
 
     return output;
@@ -107,7 +107,7 @@ export abstract class BaseResource {
     const output: T[] = [];
 
     for (let season = from; season <= to; season += 1) {
-      output.push(...(await loadSeason(season)));
+      appendAll(output, await loadSeason(season));
     }
 
     return output;
@@ -115,6 +115,15 @@ export abstract class BaseResource {
 
   protected async collectAllSeasons<T>(loadSeason: (season: number) => Promise<T[]>): Promise<T[]> {
     return this.collectSeasonRange(FIRST_SUPPORTED_SEASON, currentSeason(), loadSeason);
+  }
+}
+
+// Append items one-by-one instead of `target.push(...items)`: spreading a whole
+// season/range feed (shots, play-by-play, etc.) can exceed the JS argument-count
+// limit and throw a RangeError for large feeds. Iteration order is preserved.
+function appendAll<T>(target: T[], items: readonly T[]): void {
+  for (const item of items) {
+    target.push(item);
   }
 }
 
