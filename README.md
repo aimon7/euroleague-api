@@ -558,15 +558,24 @@ export class PlayerStatsTableComponent {
 For params driven by user input, expose them as signals and read them inside the `injectQuery` callback so the
 query refetches automatically when they change.
 
+## Contributing
+
+Contributions are welcome — especially adding new resources or fixing schema drift when the upstream
+API changes. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full workflow (including the
+step-by-step recipe for adding a resource) and [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md). The short
+version: run `npm run verify` before opening a PR — it mirrors CI exactly.
+
 ## Development
 
 ```sh
 npm install
 npm run typecheck
 npm run lint
+npm run format:check
 npm test          # vitest run --coverage
 npm run build     # tsup -> dist (ESM + CJS + d.ts)
 npm run check:pkg # publint && attw --pack .
+npm run verify    # all of the above, in one command (mirrors CI)
 ```
 
 Run an example with `tsx`:

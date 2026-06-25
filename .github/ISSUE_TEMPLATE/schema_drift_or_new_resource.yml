@@ -1,0 +1,59 @@
+name: Schema drift / new resource
+description: Report that an upstream response shape changed, or request a new API resource.
+title: "[Schema]: "
+labels:
+  - schema
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this when the upstream API returns a shape our Zod schema no longer matches
+        (drift), or when you want to add coverage for an endpoint the SDK doesn't expose yet.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is this?
+      options:
+        - New resource (endpoint not yet supported)
+        - Schema drift (existing resource shape changed)
+    validations:
+      required: true
+  - type: input
+    id: endpoint-url
+    attributes:
+      label: Endpoint URL
+      description: The full upstream URL you observed.
+      placeholder: https://api-live.euroleague.net/v3/competitions/E/seasons/E2023/rounds/10/basicstandings
+    validations:
+      required: true
+  - type: input
+    id: resource-method
+    attributes:
+      label: Resource / method
+      description: The SDK resource and method this maps to (or the proposed name for a new one).
+      placeholder: 'e.g. client.standings.getRound — or "new: rosters.getTeam"'
+    validations:
+      required: true
+  - type: textarea
+    id: sample-json
+    attributes:
+      label: Sample raw JSON
+      description: A trimmed, representative response body. This becomes the test fixture.
+      render: json
+    validations:
+      required: true
+  - type: input
+    id: season-gamecode
+    attributes:
+      label: Season / gameCode
+      description: The season (start year) and gameCode (if applicable) used to fetch the sample.
+      placeholder: e.g. season 2023, gameCode 1
+    validations:
+      required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Anything else relevant — which fields changed, nullability, edge cases, etc.
+    validations:
+      required: false
