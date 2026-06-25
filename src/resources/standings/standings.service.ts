@@ -1,8 +1,9 @@
 import { BaseResource } from "../../core/base-resource";
 import { seasonCode } from "../../core/config";
 import type { HttpClient } from "../../core/http-client";
+import { ensureOneOf } from "../../core/validation";
 
-import type { StandingsRoundParams } from "./standings.dto";
+import { STANDINGS_TYPES, type StandingsRoundParams } from "./standings.dto";
 import { type Standing, StandingSchema } from "./standings.schema";
 
 const DEFAULT_STANDINGS_TYPE = "basicstandings";
@@ -13,7 +14,7 @@ export class StandingsService extends BaseResource {
   }
 
   async getRound(params: StandingsRoundParams): Promise<Standing[]> {
-    const type = params.type ?? DEFAULT_STANDINGS_TYPE;
+    const type = ensureOneOf(params.type ?? DEFAULT_STANDINGS_TYPE, STANDINGS_TYPES, "standings type");
     const endpoint = `/seasons/${seasonCode(this.http.competition, params.season)}/rounds/${params.round}/${type}`;
     const data = await this.http.getApi("v3", endpoint);
 

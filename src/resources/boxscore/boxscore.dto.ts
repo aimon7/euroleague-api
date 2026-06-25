@@ -1,4 +1,5 @@
-export type QuarterScoreType = "ByQuarter" | "EndOfQuarter";
+export const QUARTER_SCORE_TYPES = ["ByQuarter", "EndOfQuarter"] as const;
+export type QuarterScoreType = (typeof QUARTER_SCORE_TYPES)[number];
 
 export interface BoxscoreGameParams {
   gameCode: number;

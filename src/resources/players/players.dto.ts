@@ -1,4 +1,5 @@
-export type PlayerStatsType = "advanced" | "misc" | "scoring" | "traditional";
+export const PLAYER_STATS_TYPES = ["advanced", "misc", "scoring", "traditional"] as const;
+export type PlayerStatsType = (typeof PLAYER_STATS_TYPES)[number];
 export type PlayerStatsMode = "Accumulated" | "PerGame";
 export type PhaseTypeCode = "FF" | "PO" | "RS";
 

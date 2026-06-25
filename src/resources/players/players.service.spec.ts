@@ -1,6 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { EuroleagueApiError, EuroleagueClient, EuroleagueSchemaError } from "../../index";
+import {
+  EuroleagueApiError,
+  EuroleagueClient,
+  EuroleagueSchemaError,
+  EuroleagueValidationError,
+  type PlayerStatsType
+} from "../../index";
 
 import leadersFixture from "./__fixtures__/players-leaders.json";
 import statsFixture from "./__fixtures__/players-stats.json";
@@ -80,6 +86,19 @@ describe("PlayersService", () => {
     const leadersClient = new EuroleagueClient({ fetch: allLeaders.fetch });
     const everySeason = await leadersClient.players.getLeadersAllSeasons();
     expect(everySeason).toHaveLength(allLeaders.calls.length);
+  });
+
+  it("validates the stats type and rejects an injected path segment", async () => {
+    const { calls, fetch } = createFetch(statsFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    await client.players.getStats({ season: 2023, type: "advanced" });
+    expect(new URL(calls[0] ?? "").pathname).toBe("/v3/competitions/E/statistics/players/advanced");
+
+    await expect(
+      client.players.getStats({ season: 2023, type: "../../injected" as unknown as PlayerStatsType })
+    ).rejects.toBeInstanceOf(EuroleagueValidationError);
+    expect(calls).toHaveLength(1);
   });
 
   it("throws EuroleagueSchemaError when the response row shape is invalid", async () => {
