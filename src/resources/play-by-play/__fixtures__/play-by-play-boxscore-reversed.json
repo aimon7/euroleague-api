@@ -1,0 +1,26 @@
+{
+  "Stats": [
+    {
+      "Team": "FC Barcelona",
+      "PlayersStats": [
+        { "Player_ID": "P101", "Player": "Vesely, Jan", "Team": "BAR" },
+        { "Player_ID": "P102", "Player": "Satoransky, Tomas", "Team": "BAR" },
+        { "Player_ID": "P103", "Player": "Kalinic, Nikola", "Team": "BAR" },
+        { "Player_ID": "P104", "Player": "Higgins, Cory", "Team": "BAR" },
+        { "Player_ID": "P105", "Player": "Abrines, Alex", "Team": "BAR" },
+        { "Player_ID": "P106", "Player": "Laprovittola, Nicolas", "Team": "BAR" }
+      ]
+    },
+    {
+      "Team": "Real Madrid",
+      "PlayersStats": [
+        { "Player_ID": "P001", "Player": "Tavares, Edy", "Team": "MAD" },
+        { "Player_ID": "P002", "Player": "Llull, Sergio", "Team": "MAD" },
+        { "Player_ID": "P003", "Player": "Hezonja, Mario", "Team": "MAD" },
+        { "Player_ID": "P004", "Player": "Rodriguez, Sergio", "Team": "MAD" },
+        { "Player_ID": "P005", "Player": "Yabusele, Guerschon", "Team": "MAD" },
+        { "Player_ID": "P006", "Player": "Musa, Dzanan", "Team": "MAD" }
+      ]
+    }
+  ]
+}
