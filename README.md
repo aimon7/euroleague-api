@@ -1,5 +1,10 @@
 # euroleague-api
 
+[![npm version](https://img.shields.io/npm/v/euroleague-api.svg)](https://www.npmjs.com/package/euroleague-api)
+[![npm downloads](https://img.shields.io/npm/dm/euroleague-api.svg)](https://www.npmjs.com/package/euroleague-api)
+[![license](https://img.shields.io/npm/l/euroleague-api.svg)](https://www.npmjs.com/package/euroleague-api)
+[![provenance](https://img.shields.io/badge/provenance-attested-blueviolet)](https://www.npmjs.com/package/euroleague-api#provenance)
+
 A strongly-typed, dependency-light TypeScript SDK for the (undocumented) Euroleague and EuroCup public APIs.
 Works in both **ESM** and **CommonJS** projects, ships its own types, runtime-validates every response with
 [Zod](https://zod.dev), and keeps Zod as the only runtime dependency.
