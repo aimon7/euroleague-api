@@ -1,17 +1,19 @@
 import { BaseResource } from "../../core/base-resource";
 import type { HttpClient } from "../../core/http-client";
 import { isRecord } from "../../core/normalize";
+import { ensureOneOf } from "../../core/validation";
 
-import type {
-  BoxscoreGameParams,
-  BoxscoreRoundParams,
-  BoxscoreSeasonParams,
-  BoxscoreSeasonsParams,
-  QuarterScoresGameParams,
-  QuarterScoresRoundParams,
-  QuarterScoresSeasonParams,
-  QuarterScoresSeasonsParams,
-  QuarterScoreType
+import {
+  type BoxscoreGameParams,
+  type BoxscoreRoundParams,
+  type BoxscoreSeasonParams,
+  type BoxscoreSeasonsParams,
+  QUARTER_SCORE_TYPES,
+  type QuarterScoresGameParams,
+  type QuarterScoresRoundParams,
+  type QuarterScoresSeasonParams,
+  type QuarterScoresSeasonsParams,
+  type QuarterScoreType
 } from "./boxscore.dto";
 import {
   type Boxscore,
@@ -88,6 +90,7 @@ export class BoxscoreService extends BaseResource {
   }
 
   private async loadQuarterScores(season: number, gameCode: number, type: QuarterScoreType): Promise<QuarterScore[]> {
+    ensureOneOf(type, QUARTER_SCORE_TYPES, "quarter score type");
     const data = await this.http.getLiveFeed("Boxscore", { gameCode, season });
     const section = isRecord(data) ? data[type] : undefined;
 

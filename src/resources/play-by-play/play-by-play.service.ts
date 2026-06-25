@@ -23,6 +23,8 @@ const PERIODS: ReadonlyArray<readonly [string, number]> = [
   ["ExtraTime", 5]
 ];
 
+const LINEUP_SIZE = 5;
+
 export class PlayByPlayService extends BaseResource {
   constructor(http: HttpClient) {
     super(http);
@@ -112,8 +114,7 @@ function buildLineups(pbp: unknown, boxscore: unknown): Record<string, unknown>[
   const codeTeamB = isRecord(pbp) ? text(pbp.CodeTeamB) : "";
 
   const teamStats = isRecord(boxscore) && Array.isArray(boxscore.Stats) ? boxscore.Stats : [];
-  const home = starterMap(teamStats[0]);
-  const away = starterMap(teamStats[1]);
+  const { away, home } = assignStarters(teamStats, codeTeamA, codeTeamB);
 
   return events.map((event) => {
     const side = teamSide(text(event.CODETEAM), codeTeamA, codeTeamB);
@@ -128,8 +129,8 @@ function buildLineups(pbp: unknown, boxscore: unknown): Record<string, unknown>[
 
     const enriched = {
       ...event,
-      homeLineup: [...home.values()],
-      awayLineup: [...away.values()]
+      homeLineup: lineupSnapshot(home),
+      awayLineup: lineupSnapshot(away)
     };
 
     if (onCourt && playerId && playType === "OUT") {
@@ -138,6 +139,59 @@ function buildLineups(pbp: unknown, boxscore: unknown): Record<string, unknown>[
 
     return enriched;
   });
+}
+
+// The Boxscore `Stats` order is not guaranteed to follow the PlaybyPlay
+// `CodeTeamA`/`CodeTeamB` order, so each boxscore team is matched to a side by
+// its team code rather than its array position. When a code cannot be resolved
+// the original positional order is used as a fallback.
+function assignStarters(
+  teamStats: unknown[],
+  codeTeamA: string,
+  codeTeamB: string
+): { away: Map<string, string>; home: Map<string, string> } {
+  const byCode = new Map<string, Map<string, string>>();
+
+  for (const teamStat of teamStats) {
+    const code = teamCode(teamStat);
+
+    if (code && !byCode.has(code)) {
+      byCode.set(code, starterMap(teamStat));
+    }
+  }
+
+  return {
+    away: byCode.get(codeTeamB) ?? starterMap(teamStats[1]),
+    home: byCode.get(codeTeamA) ?? starterMap(teamStats[0])
+  };
+}
+
+// The boxscore team code lives on each player's stat row (e.g. "RED"); the
+// team-level `Team` field is the full club name and must not be used here.
+function teamCode(teamStat: unknown): string {
+  if (!isRecord(teamStat) || !Array.isArray(teamStat.PlayersStats)) {
+    return "";
+  }
+
+  for (const player of teamStat.PlayersStats) {
+    if (isRecord(player)) {
+      const code = text(player.Team ?? player.CODETEAM ?? player.CodeTeam);
+
+      if (code) {
+        return code;
+      }
+    }
+  }
+
+  return "";
+}
+
+// A lineup can never have more than five players on court. Guard the snapshot
+// so an `IN` event that precedes its paired `OUT` (the leaving player has not
+// been removed yet) can never momentarily report a sixth player. Normally
+// ordered data never exceeds five entries, so the output is unchanged.
+function lineupSnapshot(onCourt: Map<string, string>): string[] {
+  return [...onCourt.values()].slice(-LINEUP_SIZE);
 }
 
 function starterMap(teamStat: unknown): Map<string, string> {

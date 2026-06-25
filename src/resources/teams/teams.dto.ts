@@ -1,4 +1,5 @@
-export type TeamStatsType = "advanced" | "opponentsAdvanced" | "opponentsTraditional" | "traditional";
+export const TEAM_STATS_TYPES = ["advanced", "opponentsAdvanced", "opponentsTraditional", "traditional"] as const;
+export type TeamStatsType = (typeof TEAM_STATS_TYPES)[number];
 export type TeamStatsMode = "Accumulated" | "PerGame";
 export type TeamPhaseTypeCode = "FF" | "PO" | "RS";
 

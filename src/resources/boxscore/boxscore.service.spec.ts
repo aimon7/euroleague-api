@@ -1,6 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { EuroleagueApiError, EuroleagueClient, EuroleagueSchemaError } from "../../index";
+import {
+  EuroleagueApiError,
+  EuroleagueClient,
+  EuroleagueSchemaError,
+  EuroleagueValidationError,
+  type QuarterScoreType
+} from "../../index";
 
 import boxscoreFixture from "./__fixtures__/boxscore.json";
 
@@ -78,6 +84,16 @@ describe("BoxscoreService", () => {
     );
     expect(await client.boxscore.getPlayerStatsSeason({ season: 2023 })).toHaveLength(6);
     expect(await client.boxscore.getPlayerStatsSeasons({ from: 2022, to: 2023 })).toHaveLength(12);
+  });
+
+  it("validates the quarter score type and rejects an injected feed key", async () => {
+    const { calls, fetch } = createFetch(boxscoreFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    await expect(
+      client.boxscore.getQuarterScores({ gameCode: 1, season: 2023, type: "__proto__" as unknown as QuarterScoreType })
+    ).rejects.toBeInstanceOf(EuroleagueValidationError);
+    expect(calls).toHaveLength(0);
   });
 
   it("throws EuroleagueSchemaError on invalid quarter rows", async () => {

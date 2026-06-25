@@ -1,14 +1,16 @@
 import { BaseResource } from "../../core/base-resource";
 import { seasonCode } from "../../core/config";
 import type { HttpClient } from "../../core/http-client";
+import { ensureOneOf } from "../../core/validation";
 
-import type {
-  PlayerLeadersAllSeasonsParams,
-  PlayerLeadersParams,
-  PlayerLeadersRangeParams,
-  PlayerStatsAllSeasonsParams,
-  PlayerStatsParams,
-  PlayerStatsRangeParams
+import {
+  PLAYER_STATS_TYPES,
+  type PlayerLeadersAllSeasonsParams,
+  type PlayerLeadersParams,
+  type PlayerLeadersRangeParams,
+  type PlayerStatsAllSeasonsParams,
+  type PlayerStatsParams,
+  type PlayerStatsRangeParams
 } from "./players.dto";
 import { type PlayerLeader, PlayerLeaderSchema, type PlayerStat, PlayerStatSchema } from "./players.schema";
 
@@ -22,7 +24,7 @@ export class PlayersService extends BaseResource {
   }
 
   async getStats(params: PlayerStatsParams): Promise<PlayerStat[]> {
-    const type = params.type ?? DEFAULT_STATS_TYPE;
+    const type = ensureOneOf(params.type ?? DEFAULT_STATS_TYPE, PLAYER_STATS_TYPES, "player stats type");
     const endpoint = `/statistics/players/${type}`;
     const data = await this.http.getApi("v3", endpoint, {
       limit: params.limit ?? DEFAULT_LIMIT,
@@ -45,7 +47,7 @@ export class PlayersService extends BaseResource {
   }
 
   async getLeaders(params: PlayerLeadersParams): Promise<PlayerLeader[]> {
-    const type = params.type ?? DEFAULT_STATS_TYPE;
+    const type = ensureOneOf(params.type ?? DEFAULT_STATS_TYPE, PLAYER_STATS_TYPES, "player stats type");
     const endpoint = `/statistics/players/${type}/leaders`;
     const data = await this.http.getApi("v2", endpoint, {
       limit: params.limit ?? DEFAULT_LIMIT,

@@ -1,6 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { EuroleagueApiError, EuroleagueClient, EuroleagueSchemaError } from "../../index";
+import {
+  EuroleagueApiError,
+  EuroleagueClient,
+  EuroleagueSchemaError,
+  EuroleagueValidationError,
+  type StandingsType
+} from "../../index";
 
 import standingsFixture from "./__fixtures__/standings.json";
 
@@ -28,6 +34,19 @@ describe("StandingsService", () => {
     expect(url.origin + url.pathname).toBe(
       "https://api-live.euroleague.net/v3/competitions/U/seasons/U2022/rounds/5/streaks"
     );
+  });
+
+  it("validates the standings type and rejects an injected path segment", async () => {
+    const { calls, fetch } = createFetch(standingsFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    await client.standings.getRound({ round: 5, season: 2023, type: "margins" });
+    expect(new URL(calls[0] ?? "").pathname).toBe("/v3/competitions/E/seasons/E2023/rounds/5/margins");
+
+    await expect(
+      client.standings.getRound({ round: 5, season: 2023, type: "../../injected" as unknown as StandingsType })
+    ).rejects.toBeInstanceOf(EuroleagueValidationError);
+    expect(calls).toHaveLength(1);
   });
 
   it("throws EuroleagueSchemaError on invalid rows", async () => {
