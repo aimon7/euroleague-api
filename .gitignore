@@ -7,3 +7,6 @@ coverage/
 !.env.example
 .DS_Store
 .npmrc
+
+# Local-only docs (kept on disk, not published to GitHub)
+docs/
