@@ -1,10 +1,15 @@
 import * as z from "zod";
 
-import { ClubRefSchema, CountrySchema, ImagesSchema, PersonSchema, SeasonRefSchema } from "../../core/api-objects";
-
-const OptionalApiStringSchema = z.string().nullable().optional();
-const OptionalApiNumberSchema = z.number().nullable().optional();
-const OptionalApiBooleanSchema = z.boolean().nullable().optional();
+import {
+  ClubRefSchema,
+  CountrySchema,
+  ImagesSchema,
+  OptionalApiBooleanSchema,
+  OptionalApiNumberSchema,
+  OptionalApiStringSchema,
+  PersonSchema,
+  SeasonRefSchema
+} from "../../core/api-objects";
 
 export const ClubSchema = z
   .object({

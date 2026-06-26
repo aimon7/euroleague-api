@@ -1,8 +1,8 @@
 import * as z from "zod";
 
-const OptionalApiStringSchema = z.string().nullable().optional();
-const OptionalApiNumberSchema = z.number().nullable().optional();
-const OptionalApiBooleanSchema = z.boolean().nullable().optional();
+export const OptionalApiStringSchema = z.string().nullable().optional();
+export const OptionalApiNumberSchema = z.number().nullable().optional();
+export const OptionalApiBooleanSchema = z.boolean().nullable().optional();
 
 export const ImagesSchema = z
   .object({
