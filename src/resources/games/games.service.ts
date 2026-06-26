@@ -36,6 +36,18 @@ export class GamesService extends BaseResource {
     return this.parseRecord(GameInfoSchema, data, endpoint);
   }
 
+  async getGameRound({ round, season }: GameRoundParams): Promise<GameInfo[]> {
+    return this.collectRoundGames(season, round, (s, code) => this.loadGameInfoAsArray(s, code));
+  }
+
+  async getGameSeason({ season }: GameSeasonParams): Promise<GameInfo[]> {
+    return this.collectSeasonGames(season, (s, code) => this.loadGameInfoAsArray(s, code));
+  }
+
+  async getGameSeasons({ from, to }: GameSeasonsParams): Promise<GameInfo[]> {
+    return this.collectSeasonsGames(from, to, (s, code) => this.loadGameInfoAsArray(s, code));
+  }
+
   async getPointsBreakdown({ gameCode, season }: GameRef): Promise<PointsBreakdown> {
     const data = await this.http.getLiveFeed("ShootingGraphic", { gameCode, season });
 
@@ -113,6 +125,10 @@ export class GamesService extends BaseResource {
 
   private async loadGameAsArray(season: number, gameCode: number, type: GameEndpoint): Promise<GameReport[]> {
     return [await this.loadGame(season, gameCode, type)];
+  }
+
+  private async loadGameInfoAsArray(season: number, gameCode: number): Promise<GameInfo[]> {
+    return [await this.getGame({ gameCode, season })];
   }
 }
 

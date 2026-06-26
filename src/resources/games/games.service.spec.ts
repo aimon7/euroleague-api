@@ -32,6 +32,19 @@ describe("GamesService", () => {
     expect(game.referee1?.code).toBe("OJFC");
   });
 
+  it("aggregates single-game info across a round", async () => {
+    const { calls, fetch } = createGameInfoRouter();
+    const client = new EuroleagueClient({ fetch });
+
+    const games = await client.games.getGameRound({ round: 1, season: 2023 });
+
+    const indexCall = new URL(calls[0] ?? "");
+    expect(indexCall.pathname).toBe("/v2/competitions/E/seasons/E2023/games");
+    expect(indexCall.searchParams.get("roundNumber")).toBe("1");
+    expect(games).toHaveLength(2);
+    expect(games[0]?.gameCode).toBe(1);
+  });
+
   it("rejects a non-integer gameCode before making a request", async () => {
     const { calls, fetch } = createFetch(gameFixture);
     const client = new EuroleagueClient({ fetch });
@@ -172,6 +185,24 @@ function createRouter(): { calls: string[]; fetch: typeof globalThis.fetch } {
     const url = String(input);
     calls.push(url);
     const payload = /\/games\/\d+\//.test(url) ? gameReportFixture : gamesIndexFixture;
+
+    return new Response(JSON.stringify(payload), {
+      headers: { "content-type": "application/json" },
+      status: 200
+    });
+  });
+
+  return { calls, fetch };
+}
+
+// Routes the bare v2 single-game info endpoint (/games/{n}) to the game fixture
+// and the round index (/games?roundNumber=) to the games index.
+function createGameInfoRouter(): { calls: string[]; fetch: typeof globalThis.fetch } {
+  const calls: string[] = [];
+  const fetch = vi.fn<typeof globalThis.fetch>().mockImplementation(async (input) => {
+    const url = String(input);
+    calls.push(url);
+    const payload = /\/games\/\d+$/.test(new URL(url).pathname) ? gameFixture : gamesIndexFixture;
 
     return new Response(JSON.stringify(payload), {
       headers: { "content-type": "application/json" },
