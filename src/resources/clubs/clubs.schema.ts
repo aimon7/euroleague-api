@@ -1,14 +1,12 @@
 import * as z from "zod";
 
 import {
-  ClubRefSchema,
   CountrySchema,
   ImagesSchema,
   OptionalApiBooleanSchema,
-  OptionalApiNumberSchema,
   OptionalApiStringSchema,
-  PersonSchema,
-  SeasonRefSchema
+  type Registration,
+  RegistrationSchema
 } from "../../core/api-objects";
 
 export const ClubSchema = z
@@ -35,26 +33,7 @@ export const ClubSchema = z
   })
   .catchall(z.unknown());
 
-export const ClubRosterMemberSchema = z
-  .object({
-    active: OptionalApiBooleanSchema,
-    club: ClubRefSchema,
-    dorsal: OptionalApiStringSchema,
-    dorsalRaw: OptionalApiStringSchema,
-    endDate: OptionalApiStringSchema,
-    externalId: OptionalApiNumberSchema,
-    images: ImagesSchema.nullable().optional(),
-    lastTeam: OptionalApiStringSchema,
-    order: OptionalApiNumberSchema,
-    person: PersonSchema,
-    position: OptionalApiNumberSchema,
-    positionName: OptionalApiStringSchema,
-    season: SeasonRefSchema,
-    startDate: OptionalApiStringSchema,
-    type: z.string(),
-    typeName: OptionalApiStringSchema
-  })
-  .catchall(z.unknown());
+export const ClubRosterMemberSchema = RegistrationSchema;
 
 export type Club = z.infer<typeof ClubSchema>;
-export type ClubRosterMember = z.infer<typeof ClubRosterMemberSchema>;
+export type ClubRosterMember = Registration;

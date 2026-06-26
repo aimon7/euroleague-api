@@ -2,36 +2,18 @@ import * as z from "zod";
 
 import {
   ClubRefSchema,
-  ImagesSchema,
   OptionalApiBooleanSchema,
   OptionalApiNumberSchema,
   OptionalApiStringSchema,
   PersonSchema,
+  type Registration,
+  RegistrationSchema,
   SeasonRefSchema
 } from "../../core/api-objects";
 
 export const PersonProfileSchema = PersonSchema;
 
-export const PersonRegistrationSchema = z
-  .object({
-    active: OptionalApiBooleanSchema,
-    club: ClubRefSchema,
-    dorsal: OptionalApiStringSchema,
-    dorsalRaw: OptionalApiStringSchema,
-    endDate: OptionalApiStringSchema,
-    externalId: OptionalApiNumberSchema,
-    images: ImagesSchema.nullable().optional(),
-    lastTeam: OptionalApiStringSchema,
-    order: OptionalApiNumberSchema,
-    person: PersonSchema,
-    position: OptionalApiNumberSchema,
-    positionName: OptionalApiStringSchema,
-    season: SeasonRefSchema,
-    startDate: OptionalApiStringSchema,
-    type: z.string(),
-    typeName: OptionalApiStringSchema
-  })
-  .catchall(z.unknown());
+export const PersonRegistrationSchema = RegistrationSchema;
 
 const PhaseTypeSchema = z
   .object({
@@ -149,7 +131,7 @@ export const PersonRecordSchema = z
   .catchall(z.unknown());
 
 export type PersonProfile = z.infer<typeof PersonProfileSchema>;
-export type PersonRegistration = z.infer<typeof PersonRegistrationSchema>;
+export type PersonRegistration = Registration;
 export type PersonGame = z.infer<typeof PersonGameSchema>;
 export type PersonStatsLine = z.infer<typeof PersonStatsLineSchema>;
 export type PersonGameStat = z.infer<typeof PersonGameStatSchema>;

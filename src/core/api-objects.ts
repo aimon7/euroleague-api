@@ -68,8 +68,35 @@ export const PersonSchema = z
   })
   .catchall(z.unknown());
 
+/**
+ * A person's club registration for a season. The same upstream shape backs both
+ * a club roster member (`/clubs/{code}/people`) and a person's career rows
+ * (`/people/{code}`), so both resources alias this single canonical schema.
+ */
+export const RegistrationSchema = z
+  .object({
+    active: OptionalApiBooleanSchema,
+    club: ClubRefSchema,
+    dorsal: OptionalApiStringSchema,
+    dorsalRaw: OptionalApiStringSchema,
+    endDate: OptionalApiStringSchema,
+    externalId: OptionalApiNumberSchema,
+    images: ImagesSchema.nullable().optional(),
+    lastTeam: OptionalApiStringSchema,
+    order: OptionalApiNumberSchema,
+    person: PersonSchema,
+    position: OptionalApiNumberSchema,
+    positionName: OptionalApiStringSchema,
+    season: SeasonRefSchema,
+    startDate: OptionalApiStringSchema,
+    type: z.string(),
+    typeName: OptionalApiStringSchema
+  })
+  .catchall(z.unknown());
+
 export type Images = z.infer<typeof ImagesSchema>;
 export type Country = z.infer<typeof CountrySchema>;
 export type ClubRef = z.infer<typeof ClubRefSchema>;
 export type SeasonRef = z.infer<typeof SeasonRefSchema>;
 export type Person = z.infer<typeof PersonSchema>;
+export type Registration = z.infer<typeof RegistrationSchema>;
