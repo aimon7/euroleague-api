@@ -60,8 +60,6 @@ export class PlayersService extends BaseResource {
   }
 
   async getLeadersAllSeasons(params: PlayerLeadersAllSeasonsParams): Promise<PlayerLeader[]> {
-    const { statistic, ...rest } = params;
-
-    return this.collectAllSeasons((season) => this.getLeaders({ ...rest, season, statistic }));
+    return this.collectAllSeasons((season) => this.getLeaders({ ...params, season }));
   }
 }

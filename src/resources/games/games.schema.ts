@@ -112,6 +112,10 @@ export const GameInfoSchema = z
   })
   .catchall(z.unknown());
 
+// Live per-game feeds (live.euroleague.net/api). Unlike the v2/v3 JSON objects
+// above, these feeds are NOT run through the camelCase normalizer, so the keys
+// are preserved verbatim as the API returns them — PascalCase, plus a few
+// Spanish names (`minutoActual`, `puntosMaxLead*`).
 export const PointsBreakdownSchema = z
   .object({
     FastbreakPointsA: OptionalApiNumberSchema,
