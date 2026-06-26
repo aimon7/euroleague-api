@@ -1,0 +1,119 @@
+[
+  {
+    "person": {
+      "code": "012878",
+      "name": "WRIGHT, MOSES",
+      "alias": "WRIGHT, MOSES ANTHONY",
+      "aliasRaw": "WRIGHT, MOSES ANTHONY",
+      "passportName": "MOSES ANTHONY",
+      "passportSurname": "WRIGHT",
+      "jerseyName": "WRIGHT",
+      "abbreviatedName": "",
+      "country": {
+        "code": "USA",
+        "name": "United States of America"
+      },
+      "height": 207,
+      "weight": 106,
+      "birthDate": "1998-12-23T00:00:00",
+      "birthCountry": {
+        "code": "USA",
+        "name": "United States of America"
+      },
+      "twitterAccount": "",
+      "instagramAccount": "",
+      "facebookAccount": "",
+      "isReferee": false,
+      "images": {}
+    },
+    "type": "J",
+    "typeName": "Player",
+    "active": true,
+    "startDate": "2024-01-29T20:44:05.031",
+    "endDate": "2024-06-30T00:00:00",
+    "order": 0,
+    "dorsal": "2",
+    "dorsalRaw": "2",
+    "position": 3,
+    "positionName": "Center",
+    "lastTeam": "MERKEZEFENDI",
+    "externalId": 47803,
+    "images": {
+      "headshot": "https://media-cdn.incrowdsports.com/36db5b63-85eb-47e3-824e-47e741a71c7a.png",
+      "action": "https://media-cdn.incrowdsports.com/36db5b63-85eb-47e3-824e-47e741a71c7a.png"
+    },
+    "club": {
+      "code": "OLY",
+      "name": "Olympiacos Piraeus",
+      "abbreviatedName": "Olympiacos",
+      "editorialName": "Olympiacos",
+      "tvCode": "OLY",
+      "isVirtual": false,
+      "images": {
+        "crest": "https://media-cdn.incrowdsports.com/789423ac-3cdf-4b89-b11c-b458aa5f59a6.png"
+      }
+    },
+    "season": {
+      "name": "EuroLeague 2023-24",
+      "code": "E2023",
+      "alias": "2023-24",
+      "competitionCode": "E",
+      "year": 2023,
+      "startDate": "2023-06-29T00:00:00"
+    }
+  },
+  {
+    "person": {
+      "code": "012652",
+      "name": "KRANIOTIS, KONSTANTINOS",
+      "alias": "KRANIOTIS, KONSTANTINOS",
+      "aliasRaw": "KRANIOTIS, KONSTANTINOS",
+      "passportName": "KONSTANTINOS",
+      "passportSurname": "KRANIOTIS",
+      "jerseyName": null,
+      "abbreviatedName": null,
+      "country": null,
+      "height": null,
+      "weight": null,
+      "birthDate": "1986-10-08T00:00:00",
+      "birthCountry": null,
+      "twitterAccount": null,
+      "instagramAccount": null,
+      "facebookAccount": null,
+      "isReferee": false,
+      "images": {}
+    },
+    "type": "Z",
+    "typeName": "Unified_Score_Crew",
+    "active": true,
+    "startDate": "2024-03-28T15:31:59.421",
+    "endDate": "2024-06-30T00:00:00",
+    "order": 0,
+    "dorsal": "",
+    "dorsalRaw": "",
+    "position": -1,
+    "positionName": null,
+    "lastTeam": "",
+    "externalId": 48307,
+    "images": {},
+    "club": {
+      "code": "OLY",
+      "name": "Olympiacos Piraeus",
+      "abbreviatedName": "Olympiacos",
+      "editorialName": "Olympiacos",
+      "tvCode": "OLY",
+      "isVirtual": false,
+      "images": {
+        "crest": "https://media-cdn.incrowdsports.com/789423ac-3cdf-4b89-b11c-b458aa5f59a6.png"
+      }
+    },
+    "season": {
+      "name": "EuroLeague 2023-24",
+      "code": "E2023",
+      "alias": "2023-24",
+      "competitionCode": "E",
+      "year": 2023,
+      "startDate": "2023-06-29T00:00:00"
+    }
+  }
+]
