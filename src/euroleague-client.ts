@@ -5,6 +5,7 @@ import { ClubsService } from "./resources/clubs";
 import { GameMetadataService } from "./resources/game-metadata";
 import { GamesService } from "./resources/games";
 import { PeopleService } from "./resources/people";
+import { PhasesService } from "./resources/phases";
 import { PlayByPlayService } from "./resources/play-by-play";
 import { PlayersService } from "./resources/players";
 import { ScheduleService } from "./resources/schedule";
@@ -19,6 +20,7 @@ export class EuroleagueClient {
   readonly gameMetadata: GameMetadataService;
   readonly games: GamesService;
   readonly people: PeopleService;
+  readonly phases: PhasesService;
   readonly playByPlay: PlayByPlayService;
   readonly players: PlayersService;
   readonly schedule: ScheduleService;
@@ -37,6 +39,7 @@ export class EuroleagueClient {
     this.gameMetadata = new GameMetadataService(this.#http);
     this.games = new GamesService(this.#http);
     this.people = new PeopleService(this.#http);
+    this.phases = new PhasesService(this.#http);
     this.playByPlay = new PlayByPlayService(this.#http);
     this.players = new PlayersService(this.#http);
     this.schedule = new ScheduleService(this.#http);

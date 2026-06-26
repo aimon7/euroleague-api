@@ -57,6 +57,7 @@ export type {
   PersonStats,
   PersonStatsLine
 } from "./resources/people";
+export type { Phase, PhaseParams, PhasesListParams, PhaseType } from "./resources/phases";
 export type {
   PlayByPlayEvent,
   PlayByPlayGameParams,
