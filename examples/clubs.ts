@@ -1,14 +1,13 @@
-import { HttpClient } from "../src/core/http-client";
-import { ClubsService } from "../src/resources/clubs";
+import { EuroleagueClient } from "../src";
 
-const clubs = new ClubsService(new HttpClient({ competition: "euroleague" }));
+const client = new EuroleagueClient({ competition: "euroleague" });
 
 const season = 2023;
 const clubCode = "OLY";
 
-const clubList = await clubs.list({ season });
-const club = await clubs.get({ clubCode, season });
-const roster = await clubs.getRoster({ clubCode, season });
+const clubList = await client.clubs.list({ season });
+const club = await client.clubs.get({ clubCode, season });
+const roster = await client.clubs.getRoster({ clubCode, season });
 
 console.log(clubList.slice(0, 5));
 console.log(club);

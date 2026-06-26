@@ -1,8 +1,7 @@
-import { HttpClient } from "../src/core/http-client";
-import { SeasonsService } from "../src/resources/seasons";
+import { EuroleagueClient } from "../src";
 
-const seasons = new SeasonsService(new HttpClient({ competition: "euroleague" }));
+const client = new EuroleagueClient({ competition: "euroleague" });
 
-const allSeasons = await seasons.list();
+const allSeasons = await client.seasons.list();
 
 console.log(allSeasons.slice(0, 5));

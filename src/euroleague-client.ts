@@ -1,22 +1,28 @@
 import { type Competition, type EuroleagueClientOptions } from "./core/config";
 import { HttpClient } from "./core/http-client";
 import { BoxscoreService } from "./resources/boxscore";
+import { ClubsService } from "./resources/clubs";
 import { GameMetadataService } from "./resources/game-metadata";
 import { GamesService } from "./resources/games";
+import { PeopleService } from "./resources/people";
 import { PlayByPlayService } from "./resources/play-by-play";
 import { PlayersService } from "./resources/players";
 import { ScheduleService } from "./resources/schedule";
+import { SeasonsService } from "./resources/seasons";
 import { ShotsService } from "./resources/shots";
 import { StandingsService } from "./resources/standings";
 import { TeamsService } from "./resources/teams";
 
 export class EuroleagueClient {
   readonly boxscore: BoxscoreService;
+  readonly clubs: ClubsService;
   readonly gameMetadata: GameMetadataService;
   readonly games: GamesService;
+  readonly people: PeopleService;
   readonly playByPlay: PlayByPlayService;
   readonly players: PlayersService;
   readonly schedule: ScheduleService;
+  readonly seasons: SeasonsService;
   readonly shots: ShotsService;
   readonly standings: StandingsService;
   readonly teams: TeamsService;
@@ -26,15 +32,18 @@ export class EuroleagueClient {
   constructor(options: EuroleagueClientOptions = {}) {
     const competition: Competition = options.competition ?? "euroleague";
     this.#http = new HttpClient({ ...options, competition });
-    this.players = new PlayersService(this.#http);
-    this.teams = new TeamsService(this.#http);
-    this.standings = new StandingsService(this.#http);
-    this.schedule = new ScheduleService(this.#http);
-    this.games = new GamesService(this.#http);
-    this.shots = new ShotsService(this.#http);
     this.boxscore = new BoxscoreService(this.#http);
-    this.playByPlay = new PlayByPlayService(this.#http);
+    this.clubs = new ClubsService(this.#http);
     this.gameMetadata = new GameMetadataService(this.#http);
+    this.games = new GamesService(this.#http);
+    this.people = new PeopleService(this.#http);
+    this.playByPlay = new PlayByPlayService(this.#http);
+    this.players = new PlayersService(this.#http);
+    this.schedule = new ScheduleService(this.#http);
+    this.seasons = new SeasonsService(this.#http);
+    this.shots = new ShotsService(this.#http);
+    this.standings = new StandingsService(this.#http);
+    this.teams = new TeamsService(this.#http);
   }
 }
 

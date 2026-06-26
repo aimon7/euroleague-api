@@ -75,6 +75,9 @@ schemas stay internal.
 | --------------------- | ---------------------------------------------------------------------------------------------------------- |
 | `client.players`      | `getStats`, `getStatsRange`, `getStatsAllSeasons`, `getLeaders`, `getLeadersRange`, `getLeadersAllSeasons` |
 | `client.teams`        | `getStats`, `getStatsRange`, `getStatsAllSeasons`, `getLeaders`, `getLeadersRange`, `getLeadersAllSeasons` |
+| `client.seasons`      | `list`                                                                                                     |
+| `client.clubs`        | `list`, `get`, `getRoster`                                                                                 |
+| `client.people`       | `getProfile`, `getCareer`, `getSeasonRegistration`, `getCareerStats`, `getSeasonStats`, `getRecords`       |
 | `client.standings`    | `getRound`                                                                                                 |
 | `client.schedule`     | `getSeason`, `getRound`, `getSeasons`                                                                      |
 | `client.games`        | `getReport*`, `getStats*`, `getTeamsComparison*` (single + round/season/seasons)                           |
@@ -109,6 +112,19 @@ const table = await client.standings.getRound({ season: 2023, round: 15, type: "
 ```ts
 const games = await client.schedule.getSeason({ season: 2023 });
 const round = await client.schedule.getRound({ season: 2023, round: 1 });
+```
+
+### Seasons, clubs & people
+
+```ts
+const seasons = await client.seasons.list();
+
+const clubs = await client.clubs.list({ season: 2023 });
+const olympiacos = await client.clubs.get({ season: 2023, clubCode: "OLY" });
+const roster = await client.clubs.getRoster({ season: 2023, clubCode: "OLY" });
+
+const profile = await client.people.getProfile({ personCode: "013380" });
+const seasonStats = await client.people.getSeasonStats({ season: 2024, personCode: "013380", phase: "RS" });
 ```
 
 ### Games, shots, boxscore, play-by-play & metadata
