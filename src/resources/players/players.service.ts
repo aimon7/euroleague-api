@@ -54,12 +54,20 @@ export class PlayersService extends BaseResource {
     return rankByStatistic(rows, statistic);
   }
 
+  /**
+   * Leaders for each season in the range, concatenated. Ranking is applied
+   * per season — this is not a single global ranking across all seasons.
+   */
   async getLeadersRange(params: PlayerLeadersRangeParams): Promise<PlayerLeader[]> {
     const { from, to, ...rest } = params;
 
     return this.collectSeasonRange(from, to, (season) => this.getLeaders({ ...rest, season }));
   }
 
+  /**
+   * Leaders for every season, concatenated. Ranking is applied per season —
+   * this is not a single global ranking across all seasons.
+   */
   async getLeadersAllSeasons(params: PlayerLeadersAllSeasonsParams): Promise<PlayerLeader[]> {
     return this.collectAllSeasons((season) => this.getLeaders({ ...params, season }));
   }

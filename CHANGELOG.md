@@ -49,3 +49,5 @@ notice (see the `/leaders` change below).
   resource; consumers can target it via the existing `hosts` client override.
 - Legacy v1 (XML) endpoints are intentionally not wrapped — each has a v2/v3 JSON
   equivalent, keeping the SDK JSON + Zod only.
+- `getLeadersRange` / `getLeadersAllSeasons` rank **per season** and concatenate
+  the per-season boards; they do not produce a single global ranking across seasons.
