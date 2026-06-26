@@ -2,6 +2,7 @@ import { type Competition, type EuroleagueClientOptions } from "./core/config";
 import { HttpClient } from "./core/http-client";
 import { BoxscoreService } from "./resources/boxscore";
 import { ClubsService } from "./resources/clubs";
+import { CompetitionsService } from "./resources/competitions";
 import { GameMetadataService } from "./resources/game-metadata";
 import { GamesService } from "./resources/games";
 import { PeopleService } from "./resources/people";
@@ -18,6 +19,7 @@ import { TeamsService } from "./resources/teams";
 export class EuroleagueClient {
   readonly boxscore: BoxscoreService;
   readonly clubs: ClubsService;
+  readonly competitions: CompetitionsService;
   readonly gameMetadata: GameMetadataService;
   readonly games: GamesService;
   readonly people: PeopleService;
@@ -38,6 +40,7 @@ export class EuroleagueClient {
     this.#http = new HttpClient({ ...options, competition });
     this.boxscore = new BoxscoreService(this.#http);
     this.clubs = new ClubsService(this.#http);
+    this.competitions = new CompetitionsService(this.#http);
     this.gameMetadata = new GameMetadataService(this.#http);
     this.games = new GamesService(this.#http);
     this.people = new PeopleService(this.#http);
