@@ -2,9 +2,12 @@ import { describe, expect, it, vi } from "vitest";
 
 import { EuroleagueApiError, EuroleagueClient, EuroleagueSchemaError } from "../../index";
 
+import comparisonFixture from "./__fixtures__/comparison.json";
 import gameFixture from "./__fixtures__/game.json";
 import gameReportFixture from "./__fixtures__/game-report.json";
 import gamesIndexFixture from "./__fixtures__/games-index.json";
+import pointsBreakdownFixture from "./__fixtures__/points-breakdown.json";
+import scoreEvolutionFixture from "./__fixtures__/score-evolution.json";
 
 describe("GamesService", () => {
   it("builds the single-game info URL and parses the v2 payload", async () => {
@@ -27,6 +30,41 @@ describe("GamesService", () => {
     expect(game.road?.club).toMatchObject({ code: "TEL" });
     expect(game.venue?.name).toBe("MORACA");
     expect(game.referee1?.code).toBe("OJFC");
+  });
+
+  it("builds the ShootingGraphic live-feed URL and parses the points breakdown", async () => {
+    const { calls, fetch } = createFetch(pointsBreakdownFixture);
+    const client = new EuroleagueClient({ competition: "euroleague", fetch });
+
+    const breakdown = await client.games.getPointsBreakdown({ gameCode: 1, season: 2025 });
+
+    const url = new URL(calls[0] ?? "");
+    expect(url.origin + url.pathname).toBe("https://live.euroleague.net/api/ShootingGraphic");
+    expect(url.searchParams.get("gamecode")).toBe("1");
+    expect(url.searchParams.get("seasoncode")).toBe("E2025");
+    expect(breakdown).toMatchObject({ SecondChancePointsB: 8, TurnoversPointsA: 19 });
+  });
+
+  it("targets the Comparison feed and parses team comparison fields", async () => {
+    const { calls, fetch } = createFetch(comparisonFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    const comparison = await client.games.getComparison({ gameCode: 1, season: 2025 });
+
+    expect(new URL(calls[0] ?? "").pathname).toBe("/api/Comparison");
+    expect(comparison).toMatchObject({ DefensiveReboundsA: 26, isLive: false, prevA: "75-76" });
+  });
+
+  it("targets the Evolution feed and parses the score evolution series", async () => {
+    const { calls, fetch } = createFetch(scoreEvolutionFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    const evolution = await client.games.getScoreEvolution({ gameCode: 1, season: 2025 });
+
+    expect(new URL(calls[0] ?? "").pathname).toBe("/api/Evolution");
+    expect(evolution.PointsList?.[0]).toHaveLength(41);
+    expect(evolution.MinutesList).toHaveLength(41);
+    expect(evolution.ScoreMaxA).toBe("85 - 78");
   });
 
   it("builds the single-game report URL and deep-normalizes the response", async () => {

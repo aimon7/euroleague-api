@@ -5,6 +5,8 @@ import { ensureOneOf } from "../../core/validation";
 
 import type { GameRef, GameRoundParams, GameSeasonParams, GameSeasonsParams } from "./games.dto";
 import {
+  type GameComparison,
+  GameComparisonSchema,
   type GameInfo,
   GameInfoSchema,
   type GameReport,
@@ -12,7 +14,11 @@ import {
   type GameStats,
   GameStatsSchema,
   type GameTeamsComparison,
-  GameTeamsComparisonSchema
+  GameTeamsComparisonSchema,
+  type PointsBreakdown,
+  PointsBreakdownSchema,
+  type ScoreEvolution,
+  ScoreEvolutionSchema
 } from "./games.schema";
 
 const GAME_ENDPOINTS = ["report", "stats", "teamsComparison"] as const;
@@ -28,6 +34,24 @@ export class GamesService extends BaseResource {
     const data = await this.http.getApi("v2", endpoint);
 
     return this.parseRecord(GameInfoSchema, data, endpoint);
+  }
+
+  async getPointsBreakdown({ gameCode, season }: GameRef): Promise<PointsBreakdown> {
+    const data = await this.http.getLiveFeed("ShootingGraphic", { gameCode, season });
+
+    return this.parseRecord(PointsBreakdownSchema, data, "ShootingGraphic");
+  }
+
+  async getComparison({ gameCode, season }: GameRef): Promise<GameComparison> {
+    const data = await this.http.getLiveFeed("Comparison", { gameCode, season });
+
+    return this.parseRecord(GameComparisonSchema, data, "Comparison");
+  }
+
+  async getScoreEvolution({ gameCode, season }: GameRef): Promise<ScoreEvolution> {
+    const data = await this.http.getLiveFeed("Evolution", { gameCode, season });
+
+    return this.parseRecord(ScoreEvolutionSchema, data, "Evolution");
   }
 
   async getReport({ gameCode, season }: GameRef): Promise<GameReport> {

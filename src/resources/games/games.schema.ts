@@ -112,7 +112,77 @@ export const GameInfoSchema = z
   })
   .catchall(z.unknown());
 
+export const PointsBreakdownSchema = z
+  .object({
+    FastbreakPointsA: OptionalApiNumberSchema,
+    FastbreakPointsB: OptionalApiNumberSchema,
+    SecondChancePointsA: OptionalApiNumberSchema,
+    SecondChancePointsB: OptionalApiNumberSchema,
+    TurnoversPointsA: OptionalApiNumberSchema,
+    TurnoversPointsB: OptionalApiNumberSchema
+  })
+  .catchall(z.unknown());
+
+export const GameComparisonSchema = z
+  .object({
+    AssistsBenchA: OptionalApiNumberSchema,
+    AssistsBenchB: OptionalApiNumberSchema,
+    AssistsStartersA: OptionalApiNumberSchema,
+    AssistsStartersB: OptionalApiNumberSchema,
+    DefensiveReboundsA: OptionalApiNumberSchema,
+    DefensiveReboundsB: OptionalApiNumberSchema,
+    OffensiveReboundsA: OptionalApiNumberSchema,
+    OffensiveReboundsB: OptionalApiNumberSchema,
+    PointsBenchA: OptionalApiNumberSchema,
+    PointsBenchB: OptionalApiNumberSchema,
+    PointsStartersA: OptionalApiNumberSchema,
+    PointsStartersB: OptionalApiNumberSchema,
+    StealsBenchA: OptionalApiNumberSchema,
+    StealsBenchB: OptionalApiNumberSchema,
+    StealsStartersA: OptionalApiNumberSchema,
+    StealsStartersB: OptionalApiNumberSchema,
+    TurnoversBenchA: OptionalApiNumberSchema,
+    TurnoversBenchB: OptionalApiNumberSchema,
+    TurnoversStartersA: OptionalApiNumberSchema,
+    TurnoversStartersB: OptionalApiNumberSchema,
+    isLive: OptionalApiBooleanSchema,
+    maxA: OptionalApiNumberSchema,
+    maxB: OptionalApiNumberSchema,
+    maxLeadA: OptionalApiNumberSchema,
+    maxLeadB: OptionalApiNumberSchema,
+    minuteMaxLeadA: OptionalApiNumberSchema,
+    minuteMaxLeadB: OptionalApiNumberSchema,
+    minutePrevA: OptionalApiNumberSchema,
+    minutePrevB: OptionalApiNumberSchema,
+    minuteStrA: OptionalApiNumberSchema,
+    minuteStrB: OptionalApiNumberSchema,
+    minutoActual: OptionalApiNumberSchema,
+    prevA: OptionalApiStringSchema,
+    prevB: OptionalApiStringSchema,
+    puntosMaxLeadA: OptionalApiStringSchema,
+    puntosMaxLeadB: OptionalApiStringSchema,
+    strA: OptionalApiStringSchema,
+    strB: OptionalApiStringSchema
+  })
+  .catchall(z.unknown());
+
+export const ScoreEvolutionSchema = z
+  .object({
+    LargestDifference: z.array(z.array(z.number().nullable())).nullable().optional(),
+    MinuteMaxA: OptionalApiNumberSchema,
+    MinuteMaxB: OptionalApiNumberSchema,
+    MinutesList: z.array(z.number()).nullable().optional(),
+    PointsList: z.array(z.array(z.number())).nullable().optional(),
+    ScoreDiffPerMinute: z.array(z.array(z.number().nullable())).nullable().optional(),
+    ScoreMaxA: OptionalApiStringSchema,
+    ScoreMaxB: OptionalApiStringSchema
+  })
+  .catchall(z.unknown());
+
 export type GameReport = z.infer<typeof GameReportSchema>;
 export type GameStats = z.infer<typeof GameStatsSchema>;
 export type GameTeamsComparison = z.infer<typeof GameTeamsComparisonSchema>;
 export type GameInfo = z.infer<typeof GameInfoSchema>;
+export type PointsBreakdown = z.infer<typeof PointsBreakdownSchema>;
+export type GameComparison = z.infer<typeof GameComparisonSchema>;
+export type ScoreEvolution = z.infer<typeof ScoreEvolutionSchema>;

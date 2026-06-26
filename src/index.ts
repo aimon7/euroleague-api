@@ -37,6 +37,7 @@ export type {
   GameMetadataSeasonsParams
 } from "./resources/game-metadata";
 export type {
+  GameComparison,
   GameInfo,
   GameRef,
   GameReport,
@@ -44,7 +45,9 @@ export type {
   GameSeasonParams,
   GameSeasonsParams,
   GameStats,
-  GameTeamsComparison
+  GameTeamsComparison,
+  PointsBreakdown,
+  ScoreEvolution
 } from "./resources/games";
 export type {
   PeoplePhaseType,
