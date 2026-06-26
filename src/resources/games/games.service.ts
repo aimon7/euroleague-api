@@ -1,7 +1,7 @@
 import { BaseResource } from "../../core/base-resource";
 import { seasonCode } from "../../core/config";
 import type { HttpClient } from "../../core/http-client";
-import { ensureOneOf } from "../../core/validation";
+import { ensureInteger, ensureOneOf } from "../../core/validation";
 
 import type { GameRef, GameRoundParams, GameSeasonParams, GameSeasonsParams } from "./games.dto";
 import {
@@ -30,7 +30,7 @@ export class GamesService extends BaseResource {
   }
 
   async getGame({ gameCode, season }: GameRef): Promise<GameInfo> {
-    const endpoint = `/seasons/${seasonCode(this.http.competition, season)}/games/${gameCode}`;
+    const endpoint = `/seasons/${seasonCode(this.http.competition, season)}/games/${ensureInteger(gameCode, "gameCode")}`;
     const data = await this.http.getApi("v2", endpoint);
 
     return this.parseRecord(GameInfoSchema, data, endpoint);
@@ -104,6 +104,7 @@ export class GamesService extends BaseResource {
 
   private async loadGame(season: number, gameCode: number, type: GameEndpoint): Promise<GameReport> {
     ensureOneOf(type, GAME_ENDPOINTS, "game endpoint");
+    ensureInteger(gameCode, "gameCode");
     const endpoint = `/seasons/${seasonCode(this.http.competition, season)}/games/${gameCode}/${type}`;
     const data = await this.http.getApi("v3", endpoint);
 

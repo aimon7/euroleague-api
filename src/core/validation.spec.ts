@@ -1,7 +1,20 @@
 import { describe, expect, it } from "vitest";
 
 import { EuroleagueValidationError } from "./errors";
-import { ensurePathSegment } from "./validation";
+import { ensureInteger, ensurePathSegment } from "./validation";
+
+describe("ensureInteger", () => {
+  it("returns finite integers unchanged", () => {
+    expect(ensureInteger(1, "gameCode")).toBe(1);
+    expect(ensureInteger(0, "round")).toBe(0);
+  });
+
+  it("rejects non-integers and non-finite values", () => {
+    for (const value of [1.5, Number.NaN, Number.POSITIVE_INFINITY, "1" as unknown as number]) {
+      expect(() => ensureInteger(value, "gameCode")).toThrow(EuroleagueValidationError);
+    }
+  });
+});
 
 describe("ensurePathSegment", () => {
   it("returns safe path segments unchanged", () => {

@@ -2,7 +2,7 @@ import { BaseResource } from "../../core/base-resource";
 import { seasonCode } from "../../core/config";
 import type { HttpClient } from "../../core/http-client";
 import { isRecord } from "../../core/normalize";
-import { ensureOneOf } from "../../core/validation";
+import { ensureInteger, ensureOneOf } from "../../core/validation";
 
 import {
   type BoxscoreGameParams,
@@ -136,6 +136,7 @@ export class BoxscoreService extends BaseResource {
   }
 
   private async loadGameStats(season: number, gameCode: number): Promise<BoxscoreStats> {
+    ensureInteger(gameCode, "gameCode");
     const endpoint = `/seasons/${seasonCode(this.http.competition, season)}/games/${gameCode}/stats`;
     const data = await this.http.getApi("v2", endpoint);
 

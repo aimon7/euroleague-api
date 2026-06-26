@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { EuroleagueApiError, EuroleagueClient, EuroleagueSchemaError } from "../../index";
+import { EuroleagueApiError, EuroleagueClient, EuroleagueSchemaError, EuroleagueValidationError } from "../../index";
 
 import comparisonFixture from "./__fixtures__/comparison.json";
 import gameFixture from "./__fixtures__/game.json";
@@ -30,6 +30,16 @@ describe("GamesService", () => {
     expect(game.road?.club).toMatchObject({ code: "TEL" });
     expect(game.venue?.name).toBe("MORACA");
     expect(game.referee1?.code).toBe("OJFC");
+  });
+
+  it("rejects a non-integer gameCode before making a request", async () => {
+    const { calls, fetch } = createFetch(gameFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    await expect(
+      client.games.getGame({ gameCode: "1/../injected" as unknown as number, season: 2025 })
+    ).rejects.toBeInstanceOf(EuroleagueValidationError);
+    expect(calls).toHaveLength(0);
   });
 
   it("builds the ShootingGraphic live-feed URL and parses the points breakdown", async () => {
