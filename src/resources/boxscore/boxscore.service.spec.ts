@@ -9,6 +9,7 @@ import {
 } from "../../index";
 
 import boxscoreFixture from "./__fixtures__/boxscore.json";
+import gameStatsFixture from "./__fixtures__/game-stats.json";
 
 const gamesIndex = {
   data: [
@@ -86,6 +87,37 @@ describe("BoxscoreService", () => {
     expect(await client.boxscore.getPlayerStatsSeasons({ from: 2022, to: 2023 })).toHaveLength(12);
   });
 
+  it("builds the v2 stats URL and parses the local/road JSON boxscore", async () => {
+    const { calls, fetch } = createFetch(gameStatsFixture);
+    const client = new EuroleagueClient({ competition: "euroleague", fetch });
+
+    const stats = await client.boxscore.getGameStats({ gameCode: 1, season: 2025 });
+
+    const url = new URL(calls[0] ?? "");
+    expect(url.origin + url.pathname).toBe(
+      "https://api-live.euroleague.net/v2/competitions/E/seasons/E2025/games/1/stats"
+    );
+    expect(stats.local.coach?.name).toBe("KOKOSKOV, IGOR");
+    expect(stats.road.coach?.name).toBe("KATTASH, ODED");
+    expect(stats.local.total.points).toBe(85);
+    expect(stats.local.players).toHaveLength(12);
+    expect(stats.local.players[0]?.player.person.name).toBe("BEAUBOIS, RODRIGUE");
+    expect(typeof stats.local.players[0]?.stats.startFive).toBe("boolean");
+  });
+
+  it("aggregates the v2 JSON boxscore stats across a round", async () => {
+    const { calls, fetch } = createStatsRouter();
+    const client = new EuroleagueClient({ fetch });
+
+    const stats = await client.boxscore.getRoundStats({ round: 1, season: 2025 });
+
+    const indexCall = new URL(calls[0] ?? "");
+    expect(indexCall.pathname).toBe("/v2/competitions/E/seasons/E2025/games");
+    expect(indexCall.searchParams.get("roundNumber")).toBe("1");
+    expect(stats).toHaveLength(2);
+    expect(stats[0]?.road.coach?.name).toBe("KATTASH, ODED");
+  });
+
   it("validates the quarter score type and rejects an injected feed key", async () => {
     const { calls, fetch } = createFetch(boxscoreFixture);
     const client = new EuroleagueClient({ fetch });
@@ -133,6 +165,22 @@ function createRouter(): { calls: string[]; fetch: typeof globalThis.fetch } {
     const url = String(input);
     calls.push(url);
     const payload = url.includes("live.euroleague.net/api/") ? boxscoreFixture : gamesIndex;
+
+    return new Response(JSON.stringify(payload), {
+      headers: { "content-type": "application/json" },
+      status: 200
+    });
+  });
+
+  return { calls, fetch };
+}
+
+function createStatsRouter(): { calls: string[]; fetch: typeof globalThis.fetch } {
+  const calls: string[] = [];
+  const fetch = vi.fn<typeof globalThis.fetch>().mockImplementation(async (input) => {
+    const url = String(input);
+    calls.push(url);
+    const payload = /\/games\/\d+\/stats/.test(url) ? gameStatsFixture : gamesIndex;
 
     return new Response(JSON.stringify(payload), {
       headers: { "content-type": "application/json" },

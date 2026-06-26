@@ -9,5 +9,14 @@ export type {
   QuarterScoresSeasonsParams,
   QuarterScoreType
 } from "./boxscore.dto";
-export type { Boxscore, PlayerBoxscore, QuarterScore } from "./boxscore.schema";
+export type {
+  Boxscore,
+  BoxscoreStats,
+  BoxscoreStatsCoach,
+  BoxscoreStatsLine,
+  BoxscoreStatsPlayer,
+  BoxscoreStatsTeam,
+  PlayerBoxscore,
+  QuarterScore
+} from "./boxscore.schema";
 export { BoxscoreService } from "./boxscore.service";
