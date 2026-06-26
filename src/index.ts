@@ -79,6 +79,7 @@ export type {
   PlayerStatsRangeParams,
   PlayerStatsType
 } from "./resources/players";
+export type { Round, RoundParams, RoundsListParams } from "./resources/rounds";
 export type {
   ScheduleGame,
   ScheduleRoundParams,

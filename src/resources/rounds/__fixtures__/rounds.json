@@ -1,0 +1,475 @@
+{
+  "data": [
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "FF",
+      "round": 47,
+      "index": 2,
+      "name": "Final",
+      "minGameStartDate": "2026-05-23T00:00:00",
+      "maxGameStartDate": "2026-05-25T23:59:59",
+      "datesFormmated": "May 23-25, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "FF",
+      "round": 46,
+      "index": 1,
+      "name": "Semifinal",
+      "minGameStartDate": "2026-05-15T00:00:00",
+      "maxGameStartDate": "2026-05-22T23:59:59",
+      "datesFormmated": "May 15-22, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "PO",
+      "round": 45,
+      "index": 5,
+      "name": "Game 5",
+      "minGameStartDate": "2026-05-11T00:00:00",
+      "maxGameStartDate": "2026-05-17T23:59:59",
+      "datesFormmated": "May 11-17, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "PO",
+      "round": 44,
+      "index": 4,
+      "name": "Game 4",
+      "minGameStartDate": "2026-05-07T00:00:00",
+      "maxGameStartDate": "2026-05-10T23:59:59",
+      "datesFormmated": "May 07-10, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "PO",
+      "round": 43,
+      "index": 3,
+      "name": "Game 3",
+      "minGameStartDate": "2026-05-04T00:00:00",
+      "maxGameStartDate": "2026-05-06T23:59:59",
+      "datesFormmated": "May 04-06, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "PO",
+      "round": 42,
+      "index": 2,
+      "name": "Game 2",
+      "minGameStartDate": "2026-04-30T00:00:00",
+      "maxGameStartDate": "2026-05-03T23:59:59",
+      "datesFormmated": "Apr 30 - May 03, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "PO",
+      "round": 41,
+      "index": 1,
+      "name": "Game 1",
+      "minGameStartDate": "2026-04-25T00:00:00",
+      "maxGameStartDate": "2026-04-29T23:59:59",
+      "datesFormmated": "Apr 25-29, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "PI",
+      "round": 40,
+      "index": 2,
+      "name": "Round 2",
+      "minGameStartDate": "2026-04-22T00:00:00",
+      "maxGameStartDate": "2026-04-24T23:59:59",
+      "datesFormmated": "Apr 22-24, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "PI",
+      "round": 39,
+      "index": 1,
+      "name": "Round 1",
+      "minGameStartDate": "2026-04-18T00:00:00",
+      "maxGameStartDate": "2026-04-21T23:59:59",
+      "datesFormmated": "Apr 18-21, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 38,
+      "index": 38,
+      "name": "Round 38",
+      "minGameStartDate": "2026-04-13T00:00:00",
+      "maxGameStartDate": "2026-04-18T23:59:59",
+      "datesFormmated": "Apr 13-18, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 37,
+      "index": 37,
+      "name": "Round 37",
+      "minGameStartDate": "2026-04-09T00:00:00",
+      "maxGameStartDate": "2026-04-12T23:59:59",
+      "datesFormmated": "Apr 09-12, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 36,
+      "index": 36,
+      "name": "Round 36",
+      "minGameStartDate": "2026-04-06T00:00:00",
+      "maxGameStartDate": "2026-04-08T23:59:59",
+      "datesFormmated": "Apr 06-08, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 35,
+      "index": 35,
+      "name": "Round 35",
+      "minGameStartDate": "2026-03-30T00:00:00",
+      "maxGameStartDate": "2026-04-05T23:59:59",
+      "datesFormmated": "Mar 30 - Apr 05, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 34,
+      "index": 34,
+      "name": "Round 34",
+      "minGameStartDate": "2026-03-26T00:00:00",
+      "maxGameStartDate": "2026-03-29T23:59:59",
+      "datesFormmated": "Mar 26-29, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 33,
+      "index": 33,
+      "name": "Round 33",
+      "minGameStartDate": "2026-03-23T00:00:00",
+      "maxGameStartDate": "2026-03-25T23:59:59",
+      "datesFormmated": "Mar 23-25, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 32,
+      "index": 32,
+      "name": "Round 32",
+      "minGameStartDate": "2026-03-16T00:00:00",
+      "maxGameStartDate": "2026-03-22T23:59:59",
+      "datesFormmated": "Mar 16-22, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 31,
+      "index": 31,
+      "name": "Round 31",
+      "minGameStartDate": "2026-03-09T00:00:00",
+      "maxGameStartDate": "2026-03-15T23:59:59",
+      "datesFormmated": "Mar 09-15, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 30,
+      "index": 30,
+      "name": "Round 30",
+      "minGameStartDate": "2026-03-02T00:00:00",
+      "maxGameStartDate": "2026-03-08T23:59:59",
+      "datesFormmated": "Mar 02-08, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 29,
+      "index": 29,
+      "name": "Round 29",
+      "minGameStartDate": "2026-02-16T00:00:00",
+      "maxGameStartDate": "2026-03-01T23:59:59",
+      "datesFormmated": "Feb 16 - Mar 01, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 28,
+      "index": 28,
+      "name": "Round 28",
+      "minGameStartDate": "2026-02-09T00:00:00",
+      "maxGameStartDate": "2026-02-15T23:59:59",
+      "datesFormmated": "Feb 09-15, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 27,
+      "index": 27,
+      "name": "Round 27",
+      "minGameStartDate": "2026-02-05T00:00:00",
+      "maxGameStartDate": "2026-02-08T23:59:59",
+      "datesFormmated": "Feb 05-08, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 26,
+      "index": 26,
+      "name": "Round 26",
+      "minGameStartDate": "2026-02-02T00:00:00",
+      "maxGameStartDate": "2026-02-04T23:59:59",
+      "datesFormmated": "Feb 02-04, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 25,
+      "index": 25,
+      "name": "Round 25",
+      "minGameStartDate": "2026-01-26T00:00:00",
+      "maxGameStartDate": "2026-02-01T23:59:59",
+      "datesFormmated": "Jan 26 - Feb 01, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 24,
+      "index": 24,
+      "name": "Round 24",
+      "minGameStartDate": "2026-01-22T00:00:00",
+      "maxGameStartDate": "2026-01-25T23:59:59",
+      "datesFormmated": "Jan 22-25, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 23,
+      "index": 23,
+      "name": "Round 23",
+      "minGameStartDate": "2026-01-19T00:00:00",
+      "maxGameStartDate": "2026-01-21T23:59:59",
+      "datesFormmated": "Jan 19-21, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 22,
+      "index": 22,
+      "name": "Round 22",
+      "minGameStartDate": "2026-01-12T00:00:00",
+      "maxGameStartDate": "2026-01-18T23:59:59",
+      "datesFormmated": "Jan 12-18, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 21,
+      "index": 21,
+      "name": "Round 21",
+      "minGameStartDate": "2026-01-08T00:00:00",
+      "maxGameStartDate": "2026-01-11T23:59:59",
+      "datesFormmated": "Jan 08-11, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 20,
+      "index": 20,
+      "name": "Round 20",
+      "minGameStartDate": "2026-01-05T00:00:00",
+      "maxGameStartDate": "2026-01-07T23:59:59",
+      "datesFormmated": "Jan 05-07, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 19,
+      "index": 19,
+      "name": "Round 19",
+      "minGameStartDate": "2025-12-29T00:00:00",
+      "maxGameStartDate": "2026-01-04T23:59:59",
+      "datesFormmated": "Dec 29, 2025 - Jan 04, 2026"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 18,
+      "index": 18,
+      "name": "Round 18",
+      "minGameStartDate": "2025-12-22T00:00:00",
+      "maxGameStartDate": "2025-12-28T23:59:59",
+      "datesFormmated": "Dec 22-28, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 17,
+      "index": 17,
+      "name": "Round 17",
+      "minGameStartDate": "2025-12-18T00:00:00",
+      "maxGameStartDate": "2025-12-21T23:59:59",
+      "datesFormmated": "Dec 18-21, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 16,
+      "index": 16,
+      "name": "Round 16",
+      "minGameStartDate": "2025-12-15T00:00:00",
+      "maxGameStartDate": "2025-12-17T23:59:59",
+      "datesFormmated": "Dec 15-17, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 15,
+      "index": 15,
+      "name": "Round 15",
+      "minGameStartDate": "2025-12-08T00:00:00",
+      "maxGameStartDate": "2025-12-14T23:59:59",
+      "datesFormmated": "Dec 08-14, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 14,
+      "index": 14,
+      "name": "Round 14",
+      "minGameStartDate": "2025-12-01T00:00:00",
+      "maxGameStartDate": "2025-12-07T23:59:59",
+      "datesFormmated": "Dec 01-07, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 13,
+      "index": 13,
+      "name": "Round 13",
+      "minGameStartDate": "2025-11-24T00:00:00",
+      "maxGameStartDate": "2025-11-30T23:59:59",
+      "datesFormmated": "Nov 24-30, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 12,
+      "index": 12,
+      "name": "Round 12",
+      "minGameStartDate": "2025-11-17T00:00:00",
+      "maxGameStartDate": "2025-11-23T23:59:59",
+      "datesFormmated": "Nov 17-23, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 11,
+      "index": 11,
+      "name": "Round 11",
+      "minGameStartDate": "2025-11-13T00:00:00",
+      "maxGameStartDate": "2025-11-16T23:59:59",
+      "datesFormmated": "Nov 13-16, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 10,
+      "index": 10,
+      "name": "Round 10",
+      "minGameStartDate": "2025-11-10T00:00:00",
+      "maxGameStartDate": "2025-11-12T23:59:59",
+      "datesFormmated": "Nov 10-12, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 9,
+      "index": 9,
+      "name": "Round 9",
+      "minGameStartDate": "2025-11-03T00:00:00",
+      "maxGameStartDate": "2025-11-09T23:59:59",
+      "datesFormmated": "Nov 03-09, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 8,
+      "index": 8,
+      "name": "Round 8",
+      "minGameStartDate": "2025-10-30T00:00:00",
+      "maxGameStartDate": "2025-11-02T23:59:59",
+      "datesFormmated": "Oct 30 - Nov 02, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 7,
+      "index": 7,
+      "name": "Round 7",
+      "minGameStartDate": "2025-10-27T00:00:00",
+      "maxGameStartDate": "2025-10-29T23:59:59",
+      "datesFormmated": "Oct 27-29, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 6,
+      "index": 6,
+      "name": "Round 6",
+      "minGameStartDate": "2025-10-20T00:00:00",
+      "maxGameStartDate": "2025-10-26T23:59:59",
+      "datesFormmated": "Oct 20-26, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 5,
+      "index": 5,
+      "name": "Round 5",
+      "minGameStartDate": "2025-10-16T00:00:00",
+      "maxGameStartDate": "2025-10-19T23:59:59",
+      "datesFormmated": "Oct 16-19, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 4,
+      "index": 4,
+      "name": "Round 4",
+      "minGameStartDate": "2025-10-13T00:00:00",
+      "maxGameStartDate": "2025-10-15T23:59:59",
+      "datesFormmated": "Oct 13-15, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 3,
+      "index": 3,
+      "name": "Round 3",
+      "minGameStartDate": "2025-10-06T00:00:00",
+      "maxGameStartDate": "2025-10-12T23:59:59",
+      "datesFormmated": "Oct 06-12, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 2,
+      "index": 2,
+      "name": "Round 2",
+      "minGameStartDate": "2025-10-02T00:00:00",
+      "maxGameStartDate": "2025-10-05T23:59:59",
+      "datesFormmated": "Oct 02-05, 2025"
+    },
+    {
+      "seasonCode": "E2025",
+      "phaseTypeCode": "RS",
+      "round": 1,
+      "index": 1,
+      "name": "Round 1",
+      "minGameStartDate": "2025-07-17T00:00:00",
+      "maxGameStartDate": "2025-10-01T23:59:59",
+      "datesFormmated": "Jul 17 - Oct 01, 2025"
+    }
+  ],
+  "total": 47
+}

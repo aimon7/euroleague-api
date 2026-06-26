@@ -8,6 +8,7 @@ import { PeopleService } from "./resources/people";
 import { PhasesService } from "./resources/phases";
 import { PlayByPlayService } from "./resources/play-by-play";
 import { PlayersService } from "./resources/players";
+import { RoundsService } from "./resources/rounds";
 import { ScheduleService } from "./resources/schedule";
 import { SeasonsService } from "./resources/seasons";
 import { ShotsService } from "./resources/shots";
@@ -23,6 +24,7 @@ export class EuroleagueClient {
   readonly phases: PhasesService;
   readonly playByPlay: PlayByPlayService;
   readonly players: PlayersService;
+  readonly rounds: RoundsService;
   readonly schedule: ScheduleService;
   readonly seasons: SeasonsService;
   readonly shots: ShotsService;
@@ -42,6 +44,7 @@ export class EuroleagueClient {
     this.phases = new PhasesService(this.#http);
     this.playByPlay = new PlayByPlayService(this.#http);
     this.players = new PlayersService(this.#http);
+    this.rounds = new RoundsService(this.#http);
     this.schedule = new ScheduleService(this.#http);
     this.seasons = new SeasonsService(this.#http);
     this.shots = new ShotsService(this.#http);
