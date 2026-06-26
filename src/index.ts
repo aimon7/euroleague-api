@@ -11,9 +11,16 @@ export { euroleague, EuroleagueClient } from "./euroleague-client";
 export type {
   Boxscore,
   BoxscoreGameParams,
+  BoxscoreRosterParams,
   BoxscoreRoundParams,
   BoxscoreSeasonParams,
   BoxscoreSeasonsParams,
+  BoxscoreStats,
+  BoxscoreStatsCoach,
+  BoxscoreStatsLine,
+  BoxscoreStatsPlayer,
+  BoxscoreStatsTeam,
+  GameRosterPlayer,
   PlayerBoxscore,
   QuarterScore,
   QuarterScoresGameParams,
@@ -23,6 +30,7 @@ export type {
   QuarterScoreType
 } from "./resources/boxscore";
 export type { Club, ClubParams, ClubRosterMember, ClubRosterParams, ClubsListParams } from "./resources/clubs";
+export type { CompetitionInfo } from "./resources/competitions";
 export type {
   GameMetadata,
   GameMetadataGameParams,
@@ -31,13 +39,17 @@ export type {
   GameMetadataSeasonsParams
 } from "./resources/game-metadata";
 export type {
+  GameComparison,
+  GameInfo,
   GameRef,
   GameReport,
   GameRoundParams,
   GameSeasonParams,
   GameSeasonsParams,
   GameStats,
-  GameTeamsComparison
+  GameTeamsComparison,
+  PointsBreakdown,
+  ScoreEvolution
 } from "./resources/games";
 export type {
   PeoplePhaseType,
@@ -57,6 +69,7 @@ export type {
   PersonStats,
   PersonStatsLine
 } from "./resources/people";
+export type { Phase, PhaseParams, PhasesListParams, PhaseType } from "./resources/phases";
 export type {
   PlayByPlayEvent,
   PlayByPlayGameParams,
@@ -78,13 +91,14 @@ export type {
   PlayerStatsRangeParams,
   PlayerStatsType
 } from "./resources/players";
+export type { Round, RoundParams, RoundsListParams } from "./resources/rounds";
 export type {
   ScheduleGame,
   ScheduleRoundParams,
   ScheduleSeasonParams,
   ScheduleSeasonsParams
 } from "./resources/schedule";
-export type { Season, SeasonsListParams } from "./resources/seasons";
+export type { Season, SeasonGetParams, SeasonsListParams } from "./resources/seasons";
 export type {
   ShotEvent,
   ShotGameParams,

@@ -35,5 +35,8 @@ export const ClubSchema = z
 
 export const ClubRosterMemberSchema = RegistrationSchema;
 
+// The wapi/Team logo endpoint returns a bare JSON string (the image path).
+export const ClubLogoSchema = z.string();
+
 export type Club = z.infer<typeof ClubSchema>;
 export type ClubRosterMember = Registration;

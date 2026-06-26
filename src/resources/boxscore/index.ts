@@ -1,5 +1,6 @@
 export type {
   BoxscoreGameParams,
+  BoxscoreRosterParams,
   BoxscoreRoundParams,
   BoxscoreSeasonParams,
   BoxscoreSeasonsParams,
@@ -9,5 +10,15 @@ export type {
   QuarterScoresSeasonsParams,
   QuarterScoreType
 } from "./boxscore.dto";
-export type { Boxscore, PlayerBoxscore, QuarterScore } from "./boxscore.schema";
+export type {
+  Boxscore,
+  BoxscoreStats,
+  BoxscoreStatsCoach,
+  BoxscoreStatsLine,
+  BoxscoreStatsPlayer,
+  BoxscoreStatsTeam,
+  GameRosterPlayer,
+  PlayerBoxscore,
+  QuarterScore
+} from "./boxscore.schema";
 export { BoxscoreService } from "./boxscore.service";

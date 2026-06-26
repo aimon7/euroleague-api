@@ -1,0 +1,66 @@
+[
+  {
+    "season": {
+      "name": "EuroLeague 2025-26",
+      "code": "E2025",
+      "alias": "2025-26",
+      "competitionCode": "E",
+      "year": 2025,
+      "startDate": "2025-07-01T00:00:00"
+    },
+    "phaseType": { "code": "FF", "alias": "FINAL FOUR", "name": "Final Four", "isGroupPhase": false },
+    "startDate": "2026-05-15T00:00:00",
+    "endDate": "2026-05-31T23:59:59",
+    "order": 4,
+    "hasPlayedGames": true,
+    "hasGames": true
+  },
+  {
+    "season": {
+      "name": "EuroLeague 2025-26",
+      "code": "E2025",
+      "alias": "2025-26",
+      "competitionCode": "E",
+      "year": 2025,
+      "startDate": "2025-07-01T00:00:00"
+    },
+    "phaseType": { "code": "PO", "alias": "PLAYOFFS", "name": "Playoffs", "isGroupPhase": false },
+    "startDate": "2026-04-25T00:00:00",
+    "endDate": "2026-05-14T23:59:59",
+    "order": 3,
+    "hasPlayedGames": true,
+    "hasGames": true
+  },
+  {
+    "season": {
+      "name": "EuroLeague 2025-26",
+      "code": "E2025",
+      "alias": "2025-26",
+      "competitionCode": "E",
+      "year": 2025,
+      "startDate": "2025-07-01T00:00:00"
+    },
+    "phaseType": { "code": "PI", "alias": "PLAY-IN", "name": "Play-In", "isGroupPhase": false },
+    "startDate": "2026-04-18T00:00:00",
+    "endDate": "2026-04-24T23:59:59",
+    "order": 2,
+    "hasPlayedGames": true,
+    "hasGames": true
+  },
+  {
+    "season": {
+      "name": "EuroLeague 2025-26",
+      "code": "E2025",
+      "alias": "2025-26",
+      "competitionCode": "E",
+      "year": 2025,
+      "startDate": "2025-07-01T00:00:00"
+    },
+    "phaseType": { "code": "RS", "alias": "REGULAR SEASON", "name": "Regular Season", "isGroupPhase": true },
+    "startDate": "2025-07-01T00:00:00",
+    "endDate": "2026-04-18T23:59:59",
+    "order": 1,
+    "hasPlayedGames": true,
+    "hasGames": true
+  }
+]

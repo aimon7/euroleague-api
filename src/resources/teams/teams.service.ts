@@ -1,6 +1,7 @@
 import { BaseResource } from "../../core/base-resource";
 import { seasonCode } from "../../core/config";
 import type { HttpClient } from "../../core/http-client";
+import { rankByStatistic } from "../../core/ranking";
 import { ensureOneOf } from "../../core/validation";
 
 import {
@@ -12,7 +13,7 @@ import {
   type TeamStatsParams,
   type TeamStatsRangeParams
 } from "./teams.dto";
-import { type TeamLeader, TeamLeaderSchema, type TeamStat, TeamStatSchema } from "./teams.schema";
+import { type TeamLeader, type TeamStat, TeamStatSchema } from "./teams.schema";
 
 const DEFAULT_STATS_TYPE = "traditional";
 const DEFAULT_STATS_MODE = "PerGame";
@@ -47,25 +48,27 @@ export class TeamsService extends BaseResource {
   }
 
   async getLeaders(params: TeamLeadersParams): Promise<TeamLeader[]> {
-    const type = ensureOneOf(params.type ?? DEFAULT_STATS_TYPE, TEAM_STATS_TYPES, "team stats type");
-    const endpoint = `/statistics/teams/${type}/leaders`;
-    const data = await this.http.getApi("v2", endpoint, {
-      limit: params.limit ?? DEFAULT_LIMIT,
-      phaseTypeCode: params.phase,
-      seasonCode: seasonCode(this.http.competition, params.season),
-      statisticMode: params.mode ?? DEFAULT_STATS_MODE
-    });
+    const { statistic, ...statsParams } = params;
+    const rows = await this.getStats(statsParams);
 
-    return this.parseArray(TeamLeaderSchema, data, endpoint);
+    return rankByStatistic(rows, statistic);
   }
 
+  /**
+   * Leaders for each season in the range, concatenated. Ranking is applied
+   * per season — this is not a single global ranking across all seasons.
+   */
   async getLeadersRange(params: TeamLeadersRangeParams): Promise<TeamLeader[]> {
     const { from, to, ...rest } = params;
 
     return this.collectSeasonRange(from, to, (season) => this.getLeaders({ ...rest, season }));
   }
 
-  async getLeadersAllSeasons(params: TeamLeadersAllSeasonsParams = {}): Promise<TeamLeader[]> {
+  /**
+   * Leaders for every season, concatenated. Ranking is applied per season —
+   * this is not a single global ranking across all seasons.
+   */
+  async getLeadersAllSeasons(params: TeamLeadersAllSeasonsParams): Promise<TeamLeader[]> {
     return this.collectAllSeasons((season) => this.getLeaders({ ...params, season }));
   }
 }

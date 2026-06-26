@@ -20,6 +20,21 @@ export function ensureOneOf<T extends string>(value: T, allowed: readonly T[], l
 }
 
 /**
+ * Validates a caller-provided integer before it is interpolated into a request
+ * URL path. The TypeScript types already guarantee a number, but a caller
+ * bypassing the types (e.g. via `as any`) could otherwise inject path-traversal
+ * segments, so reject anything that is not a finite integer. Returns the value
+ * for convenient inline use.
+ */
+export function ensureInteger(value: number, label: string): number {
+  if (!Number.isInteger(value)) {
+    throw new EuroleagueValidationError(`Expected ${label} to be a finite integer. Received: ${String(value)}`);
+  }
+
+  return value;
+}
+
+/**
  * Validates an open-ended caller-provided URL path segment. Use this for API
  * path params that cannot be represented as a closed allow-list.
  */

@@ -1,0 +1,16 @@
+{
+  "season": {
+    "name": "EuroLeague 2025-26",
+    "code": "E2025",
+    "alias": "2025-26",
+    "competitionCode": "E",
+    "year": 2025,
+    "startDate": "2025-07-01T00:00:00"
+  },
+  "phaseType": { "code": "RS", "alias": "REGULAR SEASON", "name": "Regular Season", "isGroupPhase": true },
+  "startDate": "2025-07-01T00:00:00",
+  "endDate": "2026-04-18T23:59:59",
+  "order": 1,
+  "hasPlayedGames": true,
+  "hasGames": true
+}

@@ -48,18 +48,27 @@ describe("TeamsService", () => {
     expect(url.pathname).toBe("/v3/competitions/E/statistics/teams/opponentsTraditional");
   });
 
-  it("builds the team leaders URL on the v2 API", async () => {
+  it("derives leaders from the v3 stats list, ranked by the statistic", async () => {
     const { calls, fetch } = createFetch(leadersFixture);
     const client = new EuroleagueClient({ competition: "eurocup", fetch });
 
-    const leaders = await client.teams.getLeaders({ season: 2022 });
+    const leaders = await client.teams.getLeaders({ season: 2022, statistic: "points" });
 
     const url = new URL(calls[0] ?? "");
     expect(url.origin + url.pathname).toBe(
-      "https://api-live.euroleague.net/v2/competitions/U/statistics/teams/traditional/leaders"
+      "https://api-live.euroleague.net/v3/competitions/U/statistics/teams/traditional"
     );
     expect(url.searchParams.get("seasonCode")).toBe("U2022");
-    expect(leaders[0]).toMatchObject({ rank: 1, statValue: 85.4, team: "Real Madrid" });
+    expect(leaders.map((row) => row.teamName)).toEqual(["Beta", "Alpha"]);
+  });
+
+  it("rejects an unknown statistic", async () => {
+    const { fetch } = createFetch(leadersFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    await expect(client.teams.getLeaders({ season: 2023, statistic: "nope" })).rejects.toBeInstanceOf(
+      EuroleagueValidationError
+    );
   });
 
   it("aggregates stats across a season range", async () => {
@@ -78,7 +87,7 @@ describe("TeamsService", () => {
     const leaders = createFetch(leadersFixture);
     const client = new EuroleagueClient({ fetch: leaders.fetch });
 
-    const range = await client.teams.getLeadersRange({ from: 2021, to: 2022 });
+    const range = await client.teams.getLeadersRange({ from: 2021, statistic: "points", to: 2022 });
     expect(range).toHaveLength(4);
 
     const stats = createFetch(statsFixture);
@@ -89,7 +98,7 @@ describe("TeamsService", () => {
 
     const allLeaders = createFetch(leadersFixture);
     const leadersClient = new EuroleagueClient({ fetch: allLeaders.fetch });
-    const everySeason = await leadersClient.teams.getLeadersAllSeasons();
+    const everySeason = await leadersClient.teams.getLeadersAllSeasons({ statistic: "points" });
     expect(everySeason).toHaveLength(allLeaders.calls.length * 2);
   });
 

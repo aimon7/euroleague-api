@@ -3,13 +3,22 @@ import { EuroleagueValidationError } from "./errors";
 export type Competition = "euroleague" | "eurocup";
 export type CompetitionCode = "E" | "U";
 export type ApiVersion = "v1" | "v2" | "v3";
-export type LiveFeed = "Boxscore" | "Header" | "PlaybyPlay" | "Points";
+export type LiveFeed =
+  | "Boxscore"
+  | "Comparison"
+  | "Evolution"
+  | "Header"
+  | "PlaybyPlay"
+  | "Players"
+  | "Points"
+  | "ShootingGraphic";
 
 export interface ApiHosts {
   live: string;
   v1: string;
   v2: string;
   v3: string;
+  wapi: string;
 }
 
 export interface EuroleagueClientOptions {
@@ -24,7 +33,8 @@ export const DEFAULT_HOSTS: ApiHosts = {
   live: "https://live.euroleague.net/api",
   v1: "https://api-live.euroleague.net/v1/results",
   v2: "https://api-live.euroleague.net/v2",
-  v3: "https://api-live.euroleague.net/v3"
+  v3: "https://api-live.euroleague.net/v3",
+  wapi: "https://live.euroleague.net/wapi"
 };
 
 const COMPETITION_CODES = {

@@ -1,16 +1,24 @@
 import { BaseResource } from "../../core/base-resource";
 import { seasonCode } from "../../core/config";
 import type { HttpClient } from "../../core/http-client";
-import { ensureOneOf } from "../../core/validation";
+import { ensureInteger, ensureOneOf } from "../../core/validation";
 
 import type { GameRef, GameRoundParams, GameSeasonParams, GameSeasonsParams } from "./games.dto";
 import {
+  type GameComparison,
+  GameComparisonSchema,
+  type GameInfo,
+  GameInfoSchema,
   type GameReport,
   GameReportSchema,
   type GameStats,
   GameStatsSchema,
   type GameTeamsComparison,
-  GameTeamsComparisonSchema
+  GameTeamsComparisonSchema,
+  type PointsBreakdown,
+  PointsBreakdownSchema,
+  type ScoreEvolution,
+  ScoreEvolutionSchema
 } from "./games.schema";
 
 const GAME_ENDPOINTS = ["report", "stats", "teamsComparison"] as const;
@@ -19,6 +27,43 @@ type GameEndpoint = (typeof GAME_ENDPOINTS)[number];
 export class GamesService extends BaseResource {
   constructor(http: HttpClient) {
     super(http);
+  }
+
+  async getGame({ gameCode, season }: GameRef): Promise<GameInfo> {
+    const endpoint = `/seasons/${seasonCode(this.http.competition, season)}/games/${ensureInteger(gameCode, "gameCode")}`;
+    const data = await this.http.getApi("v2", endpoint);
+
+    return this.parseRecord(GameInfoSchema, data, endpoint);
+  }
+
+  async getGameRound({ round, season }: GameRoundParams): Promise<GameInfo[]> {
+    return this.collectRoundGames(season, round, (s, code) => this.loadGameInfoAsArray(s, code));
+  }
+
+  async getGameSeason({ season }: GameSeasonParams): Promise<GameInfo[]> {
+    return this.collectSeasonGames(season, (s, code) => this.loadGameInfoAsArray(s, code));
+  }
+
+  async getGameSeasons({ from, to }: GameSeasonsParams): Promise<GameInfo[]> {
+    return this.collectSeasonsGames(from, to, (s, code) => this.loadGameInfoAsArray(s, code));
+  }
+
+  async getPointsBreakdown({ gameCode, season }: GameRef): Promise<PointsBreakdown> {
+    const data = await this.http.getLiveFeed("ShootingGraphic", { gameCode, season });
+
+    return this.parseRecord(PointsBreakdownSchema, data, "ShootingGraphic");
+  }
+
+  async getComparison({ gameCode, season }: GameRef): Promise<GameComparison> {
+    const data = await this.http.getLiveFeed("Comparison", { gameCode, season });
+
+    return this.parseRecord(GameComparisonSchema, data, "Comparison");
+  }
+
+  async getScoreEvolution({ gameCode, season }: GameRef): Promise<ScoreEvolution> {
+    const data = await this.http.getLiveFeed("Evolution", { gameCode, season });
+
+    return this.parseRecord(ScoreEvolutionSchema, data, "Evolution");
   }
 
   async getReport({ gameCode, season }: GameRef): Promise<GameReport> {
@@ -71,6 +116,7 @@ export class GamesService extends BaseResource {
 
   private async loadGame(season: number, gameCode: number, type: GameEndpoint): Promise<GameReport> {
     ensureOneOf(type, GAME_ENDPOINTS, "game endpoint");
+    ensureInteger(gameCode, "gameCode");
     const endpoint = `/seasons/${seasonCode(this.http.competition, season)}/games/${gameCode}/${type}`;
     const data = await this.http.getApi("v3", endpoint);
 
@@ -79,6 +125,10 @@ export class GamesService extends BaseResource {
 
   private async loadGameAsArray(season: number, gameCode: number, type: GameEndpoint): Promise<GameReport[]> {
     return [await this.loadGame(season, gameCode, type)];
+  }
+
+  private async loadGameInfoAsArray(season: number, gameCode: number): Promise<GameInfo[]> {
+    return [await this.getGame({ gameCode, season })];
   }
 }
 

@@ -1,14 +1,16 @@
 {
   "Rows": [
     {
-      "Rank": "1",
-      "Team": "Real Madrid",
-      "StatValue": "85.4"
+      "TeamCode": "AAA",
+      "TeamName": "Alpha",
+      "GamesPlayed": "34",
+      "Points": "78.5"
     },
     {
-      "Rank": "2",
-      "Team": "Panathinaikos",
-      "StatValue": "82.1"
+      "TeamCode": "BBB",
+      "TeamName": "Beta",
+      "GamesPlayed": "34",
+      "Points": "88.1"
     }
   ]
 }

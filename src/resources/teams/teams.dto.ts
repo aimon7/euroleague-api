@@ -18,6 +18,14 @@ export interface TeamStatsRangeParams extends Omit<TeamStatsParams, "season"> {
 
 export type TeamStatsAllSeasonsParams = Omit<TeamStatsParams, "season">;
 
-export type TeamLeadersParams = TeamStatsParams;
-export type TeamLeadersRangeParams = TeamStatsRangeParams;
-export type TeamLeadersAllSeasonsParams = TeamStatsAllSeasonsParams;
+export interface TeamLeadersParams extends TeamStatsParams {
+  statistic: string;
+}
+
+export interface TeamLeadersRangeParams extends TeamStatsRangeParams {
+  statistic: string;
+}
+
+export type TeamLeadersAllSeasonsParams = TeamStatsAllSeasonsParams & {
+  statistic: string;
+};

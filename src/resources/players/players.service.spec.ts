@@ -39,22 +39,30 @@ describe("PlayersService", () => {
     });
   });
 
-  it("builds the player leaders URL on the v2 API", async () => {
+  it("derives leaders from the v3 stats list, ranked by the statistic", async () => {
     const { calls, fetch } = createFetch(leadersFixture);
     const client = new EuroleagueClient({ competition: "eurocup", fetch });
 
-    const leaders = await client.players.getLeaders({ season: 2022 });
+    const leaders = await client.players.getLeaders({ season: 2022, statistic: "points" });
 
     const url = new URL(calls[0] ?? "");
     expect(url.origin + url.pathname).toBe(
-      "https://api-live.euroleague.net/v2/competitions/U/statistics/players/traditional/leaders"
+      "https://api-live.euroleague.net/v3/competitions/U/statistics/players/traditional"
     );
     expect(url.searchParams.get("seasonCode")).toBe("U2022");
-    expect(leaders[0]).toMatchObject({
-      player: "Facundo Campazzo",
-      rank: 1,
-      statValue: 6.5
-    });
+    expect(leaders.map((row) => row.player)).toEqual(["Bucket Getter", "Floor General"]);
+  });
+
+  it("ranks by an alternate statistic and rejects unknown ones", async () => {
+    const { fetch } = createFetch(leadersFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    const byAssists = await client.players.getLeaders({ season: 2023, statistic: "assists" });
+    expect(byAssists[0]?.player).toBe("Floor General");
+
+    await expect(client.players.getLeaders({ season: 2023, statistic: "nope" })).rejects.toBeInstanceOf(
+      EuroleagueValidationError
+    );
   });
 
   it("aggregates stats across a season range", async () => {
@@ -73,8 +81,8 @@ describe("PlayersService", () => {
     const leaders = createFetch(leadersFixture);
     const client = new EuroleagueClient({ fetch: leaders.fetch });
 
-    const range = await client.players.getLeadersRange({ from: 2021, to: 2022 });
-    expect(range).toHaveLength(2);
+    const range = await client.players.getLeadersRange({ from: 2021, statistic: "points", to: 2022 });
+    expect(range).toHaveLength(4);
 
     const stats = createFetch(statsFixture);
     const statsClient = new EuroleagueClient({ fetch: stats.fetch });
@@ -84,8 +92,8 @@ describe("PlayersService", () => {
 
     const allLeaders = createFetch(leadersFixture);
     const leadersClient = new EuroleagueClient({ fetch: allLeaders.fetch });
-    const everySeason = await leadersClient.players.getLeadersAllSeasons();
-    expect(everySeason).toHaveLength(allLeaders.calls.length);
+    const everySeason = await leadersClient.players.getLeadersAllSeasons({ statistic: "points" });
+    expect(everySeason).toHaveLength(allLeaders.calls.length * 2);
   });
 
   it("validates the stats type and rejects an injected path segment", async () => {

@@ -1,0 +1,10 @@
+{
+  "seasonCode": "E2025",
+  "phaseTypeCode": "RS",
+  "round": 1,
+  "index": 1,
+  "name": "Round 1",
+  "minGameStartDate": "2025-07-17T00:00:00",
+  "maxGameStartDate": "2025-10-01T23:59:59",
+  "datesFormmated": "Jul 17 - Oct 01, 2025"
+}
