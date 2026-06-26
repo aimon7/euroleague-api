@@ -1,0 +1,58 @@
+{
+  "data": [
+    {
+      "name": "EuroLeague 2024-25",
+      "code": "E2024",
+      "alias": "2024-25",
+      "competitionCode": "E",
+      "year": 2024,
+      "startDate": "2024-06-29T00:00:00",
+      "activationDate": "2024-06-29T00:00:00",
+      "endDate": "2025-06-30T23:59:59",
+      "winner": {
+        "code": "ULK",
+        "name": "Fenerbahce Beko Istanbul",
+        "abbreviatedName": "Fenerbahce",
+        "editorialName": "",
+        "tvCode": "FBB",
+        "isVirtual": false,
+        "images": {
+          "crest": "https://media-cdn.cortextech.io/3b7f020e-5b39-49a1-b4b2-efea918edab7.png"
+        }
+      }
+    },
+    {
+      "name": "EuroLeague 2023-24",
+      "code": "E2023",
+      "alias": "2023-24",
+      "competitionCode": "E",
+      "year": 2023,
+      "startDate": "2023-06-29T00:00:00",
+      "activationDate": "2023-06-29T00:00:00",
+      "endDate": "2024-07-01T23:59:59",
+      "winner": {
+        "code": "PAN",
+        "name": "Panathinaikos AKTOR Athens",
+        "abbreviatedName": "Panathinaikos",
+        "editorialName": "Panathinaikos",
+        "tvCode": "PAO",
+        "isVirtual": false,
+        "images": {
+          "crest": "https://media-cdn.incrowdsports.com/e3dff28a-9ec6-4faf-9d96-ecbc68f75780.png"
+        }
+      }
+    },
+    {
+      "name": "EuroLeague 2019-20",
+      "code": "E2019",
+      "alias": "2019-20",
+      "competitionCode": "E",
+      "year": 2019,
+      "startDate": "2019-09-01T00:00:00",
+      "activationDate": "2019-07-01T00:00:00",
+      "endDate": "2020-05-31T23:59:59",
+      "winner": null
+    }
+  ],
+  "total": 3
+}

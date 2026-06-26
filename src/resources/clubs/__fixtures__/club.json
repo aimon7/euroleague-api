@@ -1,0 +1,26 @@
+{
+  "code": "OLY",
+  "name": "Olympiacos Piraeus",
+  "abbreviatedName": "Olympiacos",
+  "editorialName": "Olympiacos",
+  "tvCode": "OLY",
+  "isVirtual": false,
+  "images": {
+    "crest": "https://media-cdn.incrowdsports.com/789423ac-3cdf-4b89-b11c-b458aa5f59a6.png"
+  },
+  "sponsor": "Olympiacos Piraeus",
+  "clubPermanentName": "Olympiacos BC",
+  "clubPermanentAlias": "Olympiacos",
+  "country": {
+    "code": "GRE",
+    "name": "Greece"
+  },
+  "address": "Ethnarchou Makariou 1 Av., 18547 Neo Faliro / Piraeus - Greece",
+  "website": "http://www.olympiacosbc.gr",
+  "ticketsUrl": "https://www.olympiacosbc.gr/el/tickets-el.html",
+  "twitterAccount": "Olympiacos_BC",
+  "venueCode": "ASF",
+  "city": "PIRAEUS",
+  "president": "Panagiotis and Georgios Angelopoulos",
+  "phone": "+30 210 452 7600"
+}

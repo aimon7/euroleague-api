@@ -22,6 +22,7 @@ export type {
   QuarterScoresSeasonsParams,
   QuarterScoreType
 } from "./resources/boxscore";
+export type { Club, ClubParams, ClubRosterMember, ClubRosterParams, ClubsListParams } from "./resources/clubs";
 export type {
   GameMetadata,
   GameMetadataGameParams,
@@ -38,6 +39,24 @@ export type {
   GameStats,
   GameTeamsComparison
 } from "./resources/games";
+export type {
+  PeoplePhaseType,
+  PersonCareerParams,
+  PersonCareerStatsParams,
+  PersonCodeParams,
+  PersonGame,
+  PersonGameStat,
+  PersonProfile,
+  PersonProfileParams,
+  PersonRecord,
+  PersonRecordsParams,
+  PersonRegistration,
+  PersonSeasonParams,
+  PersonSeasonRegistrationParams,
+  PersonSeasonStatsParams,
+  PersonStats,
+  PersonStatsLine
+} from "./resources/people";
 export type {
   PlayByPlayEvent,
   PlayByPlayGameParams,
@@ -65,6 +84,7 @@ export type {
   ScheduleSeasonParams,
   ScheduleSeasonsParams
 } from "./resources/schedule";
+export type { Season, SeasonsListParams } from "./resources/seasons";
 export type {
   ShotEvent,
   ShotGameParams,
