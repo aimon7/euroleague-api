@@ -20,6 +20,10 @@ export interface BoxscoreSeasonsParams {
   to: number;
 }
 
+export interface BoxscoreRosterParams extends BoxscoreGameParams {
+  clubCode: string;
+}
+
 export interface QuarterScoresGameParams extends BoxscoreGameParams {
   type?: QuarterScoreType;
 }

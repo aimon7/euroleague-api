@@ -1,5 +1,6 @@
 export type {
   BoxscoreGameParams,
+  BoxscoreRosterParams,
   BoxscoreRoundParams,
   BoxscoreSeasonParams,
   BoxscoreSeasonsParams,
@@ -16,6 +17,7 @@ export type {
   BoxscoreStatsLine,
   BoxscoreStatsPlayer,
   BoxscoreStatsTeam,
+  GameRosterPlayer,
   PlayerBoxscore,
   QuarterScore
 } from "./boxscore.schema";

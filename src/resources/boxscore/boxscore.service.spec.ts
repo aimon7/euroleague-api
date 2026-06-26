@@ -9,6 +9,7 @@ import {
 } from "../../index";
 
 import boxscoreFixture from "./__fixtures__/boxscore.json";
+import gameRosterFixture from "./__fixtures__/game-roster.json";
 import gameStatsFixture from "./__fixtures__/game-stats.json";
 
 const gamesIndex = {
@@ -116,6 +117,20 @@ describe("BoxscoreService", () => {
     expect(indexCall.searchParams.get("roundNumber")).toBe("1");
     expect(stats).toHaveLength(2);
     expect(stats[0]?.road.coach?.name).toBe("KATTASH, ODED");
+  });
+
+  it("builds the Players roster feed URL with equipo/temp and parses the roster", async () => {
+    const { calls, fetch } = createFetch(gameRosterFixture);
+    const client = new EuroleagueClient({ competition: "euroleague", fetch });
+
+    const roster = await client.boxscore.getGameRoster({ clubCode: "IST", gameCode: 1, season: 2025 });
+
+    const url = new URL(calls[0] ?? "");
+    expect(url.origin + url.pathname).toBe("https://live.euroleague.net/api/Players");
+    expect(url.searchParams.get("equipo")).toBe("IST");
+    expect(url.searchParams.get("temp")).toBe("E2025");
+    expect(roster).toHaveLength(15);
+    expect(roster[0]).toMatchObject({ ac: "P007200", c: "IST", st: 1 });
   });
 
   it("validates the quarter score type and rejects an injected feed key", async () => {

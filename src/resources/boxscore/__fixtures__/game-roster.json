@@ -1,0 +1,167 @@
+[
+  {
+    "c": "IST",
+    "ac": "P007200",
+    "na": "LARKIN, SHANE",
+    "nu": "0",
+    "st": 1,
+    "sl": 1,
+    "nn": 1,
+    "p": "Guard",
+    "im": "https://media-cdn.cortextech.io/8ad5b8f2-3bf2-4ae4-9a49-91160d75f3bb.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P006590",
+    "na": "BEAUBOIS, RODRIGUE",
+    "nu": "1",
+    "st": 0,
+    "sl": 1,
+    "nn": 0,
+    "p": "Guard",
+    "im": "https://media-cdn.cortextech.io/281e3d42-9999-46b7-bbe4-4b03c18af2c5.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P011201",
+    "na": "HAZER, SEHMUS",
+    "nu": "2",
+    "st": 0,
+    "sl": 1,
+    "nn": 1,
+    "p": "Guard",
+    "im": "https://media-cdn.cortextech.io/4ddb1fa4-97c7-4e34-9d0b-eaf23f9bf632.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P009754",
+    "na": "LOYD, JORDAN",
+    "nu": "3",
+    "st": 0,
+    "sl": 1,
+    "nn": 1,
+    "p": "Guard",
+    "im": "https://media-cdn.cortextech.io/f21f9f12-b440-41a3-87d7-aa3bbe6a36f3.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P010391",
+    "na": "WEILER-BABB, NICK",
+    "nu": "8",
+    "st": 1,
+    "sl": 1,
+    "nn": 1,
+    "p": "Guard",
+    "im": "https://media-cdn.cortextech.io/e23682a9-5374-4706-b343-36f49f61236d.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P005844",
+    "na": "PAPAGIANNIS, GEORGIOS",
+    "nu": "9",
+    "st": 0,
+    "sl": 1,
+    "nn": 1,
+    "p": "Center",
+    "im": "https://media-cdn.cortextech.io/7410bb12-8f97-491b-96e4-264f048acc27.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P009549",
+    "na": "CORDINIER, ISAIA",
+    "nu": "10",
+    "st": 1,
+    "sl": 1,
+    "nn": 1,
+    "p": "Guard",
+    "im": "https://media-cdn.cortextech.io/b9885dd5-53ca-4f41-96f7-4b7f1c8c4d5a.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P007109",
+    "na": "SMITS, ROLANDS",
+    "nu": "11",
+    "st": 0,
+    "sl": 1,
+    "nn": 1,
+    "p": "Forward",
+    "im": "https://media-cdn.cortextech.io/d4e2115d-e8a8-497e-9522-f11f7d7d0336.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P010318",
+    "na": "DESSERT, BRICE",
+    "nu": "13",
+    "st": 0,
+    "sl": 0,
+    "nn": 0,
+    "p": "Center",
+    "im": "https://media-cdn.cortextech.io/c8e7af8c-604f-4412-bcea-f9519c87c1f7.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P012742",
+    "na": "DOZIER, PJ",
+    "nu": "15",
+    "st": 0,
+    "sl": 0,
+    "nn": 0,
+    "p": "Guard",
+    "im": "https://media-cdn.cortextech.io/ac43e15a-c08d-42ed-a896-599ef9c4c3fc.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P014025",
+    "na": "SWIDER, COLE",
+    "nu": "21",
+    "st": 0,
+    "sl": 1,
+    "nn": 1,
+    "p": "Forward",
+    "im": "https://media-cdn.cortextech.io/56eccbef-38b7-4f73-be3d-d85cd69b5074.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P008176",
+    "na": "MUTAF, DAVID",
+    "nu": "23",
+    "st": 0,
+    "sl": 0,
+    "nn": 0,
+    "p": "Guard",
+    "im": "https://media-cdn.cortextech.io/b65e611b-63ea-4448-9c87-6bc97a0510ee.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P012710",
+    "na": "OSMANI, ERCAN",
+    "nu": "24",
+    "st": 1,
+    "sl": 1,
+    "nn": 1,
+    "p": "Forward",
+    "im": "https://media-cdn.cortextech.io/dee92a82-6870-48dc-8b39-9f8250620951.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P006372",
+    "na": "YILMAZ, ERKAN",
+    "nu": "33",
+    "st": 0,
+    "sl": 1,
+    "nn": 1,
+    "p": "Forward",
+    "im": "https://media-cdn.cortextech.io/e977e837-fa39-4c82-bc35-7053d75b6c18.png"
+  },
+  {
+    "c": "IST",
+    "ac": "P014102",
+    "na": "JONES, KAI",
+    "nu": "88",
+    "st": 1,
+    "sl": 1,
+    "nn": 1,
+    "p": "Center",
+    "im": "https://media-cdn.cortextech.io/522b9410-d389-464c-9af6-be0e1c7e5111.png"
+  }
+]

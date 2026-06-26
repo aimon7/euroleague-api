@@ -95,3 +95,21 @@ export type BoxscoreStatsCoach = z.infer<typeof BoxscoreStatsCoachSchema>;
 export type BoxscoreStatsPlayer = z.infer<typeof BoxscoreStatsPlayerSchema>;
 export type BoxscoreStatsTeam = z.infer<typeof BoxscoreStatsTeamSchema>;
 export type BoxscoreStats = z.infer<typeof BoxscoreStatsSchema>;
+
+// --- live game roster (B4: live/Players?gamecode=&seasoncode=&equipo=&temp=) ---
+
+export const GameRosterPlayerSchema = z
+  .object({
+    ac: OptionalApiStringSchema,
+    c: OptionalApiStringSchema,
+    im: OptionalApiStringSchema,
+    na: OptionalApiStringSchema,
+    nn: OptionalApiNumberSchema,
+    nu: OptionalApiStringSchema,
+    p: OptionalApiStringSchema,
+    sl: OptionalApiNumberSchema,
+    st: OptionalApiNumberSchema
+  })
+  .catchall(z.unknown());
+
+export type GameRosterPlayer = z.infer<typeof GameRosterPlayerSchema>;

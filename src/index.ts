@@ -11,6 +11,7 @@ export { euroleague, EuroleagueClient } from "./euroleague-client";
 export type {
   Boxscore,
   BoxscoreGameParams,
+  BoxscoreRosterParams,
   BoxscoreRoundParams,
   BoxscoreSeasonParams,
   BoxscoreSeasonsParams,
@@ -19,6 +20,7 @@ export type {
   BoxscoreStatsLine,
   BoxscoreStatsPlayer,
   BoxscoreStatsTeam,
+  GameRosterPlayer,
   PlayerBoxscore,
   QuarterScore,
   QuarterScoresGameParams,

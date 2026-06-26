@@ -6,6 +6,7 @@ import { ensureOneOf } from "../../core/validation";
 
 import {
   type BoxscoreGameParams,
+  type BoxscoreRosterParams,
   type BoxscoreRoundParams,
   type BoxscoreSeasonParams,
   type BoxscoreSeasonsParams,
@@ -21,6 +22,8 @@ import {
   BoxscoreSchema,
   type BoxscoreStats,
   BoxscoreStatsSchema,
+  type GameRosterPlayer,
+  GameRosterPlayerSchema,
   type PlayerBoxscore,
   PlayerBoxscoreSchema,
   type QuarterScore,
@@ -102,6 +105,16 @@ export class BoxscoreService extends BaseResource {
 
   async getSeasonsStats({ from, to }: BoxscoreSeasonsParams): Promise<BoxscoreStats[]> {
     return this.collectSeasonsGames(from, to, (s, code) => this.loadGameStatsAsArray(s, code));
+  }
+
+  async getGameRoster({ clubCode, gameCode, season }: BoxscoreRosterParams): Promise<GameRosterPlayer[]> {
+    const data = await this.http.getLiveFeed(
+      "Players",
+      { gameCode, season },
+      { equipo: clubCode, temp: seasonCode(this.http.competition, season) }
+    );
+
+    return this.parseArray(GameRosterPlayerSchema, data, "Players");
   }
 
   private async loadGameAsArray(season: number, gameCode: number): Promise<Boxscore[]> {
