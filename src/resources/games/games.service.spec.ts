@@ -2,10 +2,33 @@ import { describe, expect, it, vi } from "vitest";
 
 import { EuroleagueApiError, EuroleagueClient, EuroleagueSchemaError } from "../../index";
 
+import gameFixture from "./__fixtures__/game.json";
 import gameReportFixture from "./__fixtures__/game-report.json";
 import gamesIndexFixture from "./__fixtures__/games-index.json";
 
 describe("GamesService", () => {
+  it("builds the single-game info URL and parses the v2 payload", async () => {
+    const { calls, fetch } = createFetch(gameFixture);
+    const client = new EuroleagueClient({ competition: "euroleague", fetch });
+
+    const game = await client.games.getGame({ gameCode: 1, season: 2025 });
+
+    const url = new URL(calls[0] ?? "");
+    expect(url.origin + url.pathname).toBe("https://api-live.euroleague.net/v2/competitions/E/seasons/E2025/games/1");
+    expect(game).toMatchObject({
+      gameCode: 1,
+      identifier: "E2025_1",
+      gameStatus: "Confirmed",
+      round: 1,
+      season: { code: "E2025", year: 2025 }
+    });
+    expect(game.local?.club).toMatchObject({ code: "IST", name: "Anadolu Efes Istanbul" });
+    expect(game.local?.score).toBe(85);
+    expect(game.road?.club).toMatchObject({ code: "TEL" });
+    expect(game.venue?.name).toBe("MORACA");
+    expect(game.referee1?.code).toBe("OJFC");
+  });
+
   it("builds the single-game report URL and deep-normalizes the response", async () => {
     const { calls, fetch } = createFetch(gameReportFixture);
     const client = new EuroleagueClient({ competition: "euroleague", fetch });

@@ -5,6 +5,8 @@ import { ensureOneOf } from "../../core/validation";
 
 import type { GameRef, GameRoundParams, GameSeasonParams, GameSeasonsParams } from "./games.dto";
 import {
+  type GameInfo,
+  GameInfoSchema,
   type GameReport,
   GameReportSchema,
   type GameStats,
@@ -19,6 +21,13 @@ type GameEndpoint = (typeof GAME_ENDPOINTS)[number];
 export class GamesService extends BaseResource {
   constructor(http: HttpClient) {
     super(http);
+  }
+
+  async getGame({ gameCode, season }: GameRef): Promise<GameInfo> {
+    const endpoint = `/seasons/${seasonCode(this.http.competition, season)}/games/${gameCode}`;
+    const data = await this.http.getApi("v2", endpoint);
+
+    return this.parseRecord(GameInfoSchema, data, endpoint);
   }
 
   async getReport({ gameCode, season }: GameRef): Promise<GameReport> {

@@ -32,6 +32,7 @@ export type {
   GameMetadataSeasonsParams
 } from "./resources/game-metadata";
 export type {
+  GameInfo,
   GameRef,
   GameReport,
   GameRoundParams,
