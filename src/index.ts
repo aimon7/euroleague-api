@@ -30,7 +30,7 @@ export type {
   QuarterScoreType
 } from "./resources/boxscore";
 export type { Club, ClubParams, ClubRosterMember, ClubRosterParams, ClubsListParams } from "./resources/clubs";
-export type { CompetitionGetParams, CompetitionInfo, CompetitionsListParams } from "./resources/competitions";
+export type { CompetitionInfo } from "./resources/competitions";
 export type {
   GameMetadata,
   GameMetadataGameParams,
