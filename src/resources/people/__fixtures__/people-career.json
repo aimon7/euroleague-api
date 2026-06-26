@@ -1,0 +1,68 @@
+{
+  "data": [
+    {
+      "person": {
+        "code": "013380",
+        "name": "FOURNIER, EVAN",
+        "alias": "FOURNIER, EVAN",
+        "aliasRaw": "FOURNIER, EVAN",
+        "passportName": "EVAN , MEHDI",
+        "passportSurname": "FOURNIER",
+        "jerseyName": "FOURNIER",
+        "abbreviatedName": "",
+        "country": {
+          "code": "FRA",
+          "name": "France"
+        },
+        "height": 200,
+        "weight": 92,
+        "birthDate": "1992-10-29T00:00:00",
+        "birthCountry": {
+          "code": "SUI",
+          "name": "Switzerland"
+        },
+        "twitterAccount": "",
+        "instagramAccount": "",
+        "facebookAccount": "",
+        "isReferee": false,
+        "images": {}
+      },
+      "type": "J",
+      "typeName": "Player",
+      "active": true,
+      "startDate": "2024-10-02T11:52:46.425",
+      "endDate": "2025-06-30T00:00:00",
+      "order": 0,
+      "dorsal": "94",
+      "dorsalRaw": "94",
+      "position": 2,
+      "positionName": "Forward",
+      "lastTeam": "DETROIT PISTONS",
+      "externalId": 49914,
+      "images": {
+        "action": "https://media-cdn.incrowdsports.com/eefac20f-c371-476e-8294-f052e98bf0f3.png",
+        "headshot": "https://media-cdn.incrowdsports.com/eefac20f-c371-476e-8294-f052e98bf0f3.png"
+      },
+      "club": {
+        "code": "OLY",
+        "name": "Olympiacos Piraeus",
+        "abbreviatedName": "Olympiacos",
+        "editorialName": "",
+        "tvCode": "OLY",
+        "isVirtual": false,
+        "images": {
+          "crest": "https://media-cdn.incrowdsports.com/789423ac-3cdf-4b89-b11c-b458aa5f59a6.png"
+        }
+      },
+      "season": {
+        "name": "EuroLeague 2024-25",
+        "code": "E2024",
+        "alias": "2024-25",
+        "competitionCode": "E",
+        "year": 2024,
+        "startDate": "2024-06-29T00:00:00"
+      }
+    }
+  ],
+  "total": 1
+}

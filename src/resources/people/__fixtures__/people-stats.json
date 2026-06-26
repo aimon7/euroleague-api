@@ -1,0 +1,176 @@
+{
+  "games": [
+    {
+      "game": {
+        "gameCode": 7,
+        "season": {
+          "name": "EuroLeague 2024-25",
+          "code": "E2024",
+          "alias": "2024-25",
+          "competitionCode": "E",
+          "year": 2024,
+          "startDate": "2024-06-29T00:00:00"
+        },
+        "group": {
+          "id": "653ea5d2-0ed0-4edf-9445-176b766c6b7a",
+          "order": 1,
+          "name": "Group Regular Season",
+          "rawName": "Regular Season"
+        },
+        "phaseType": {
+          "code": "RS",
+          "alias": "REGULAR SEASON",
+          "name": "Regular Season",
+          "isGroupPhase": true
+        },
+        "round": 1,
+        "roundAlias": "Round 1",
+        "roundName": "Round 1",
+        "played": true,
+        "date": "2024-10-04T19:30:00",
+        "confirmedDate": true,
+        "confirmedHour": true,
+        "localTimeZone": 1,
+        "localDate": "2024-10-04T20:30:00",
+        "utcDate": "2024-10-04T17:30:00Z",
+        "local": {
+          "club": {
+            "code": "ULK",
+            "name": "Fenerbahce Beko Istanbul",
+            "abbreviatedName": "Fenerbahce",
+            "editorialName": "",
+            "tvCode": "FBB",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.cortextech.io/3b7f020e-5b39-49a1-b4b2-efea918edab7.png"
+            }
+          },
+          "score": 82,
+          "standingsScore": 82
+        },
+        "road": {
+          "club": {
+            "code": "OLY",
+            "name": "Olympiacos Piraeus",
+            "abbreviatedName": "Olympiacos",
+            "editorialName": "",
+            "tvCode": "OLY",
+            "isVirtual": false,
+            "images": {
+              "crest": "https://media-cdn.incrowdsports.com/789423ac-3cdf-4b89-b11c-b458aa5f59a6.png"
+            }
+          },
+          "score": 71,
+          "standingsScore": 71
+        },
+        "isNeutralVenue": false,
+        "gameStatus": "Confirmed",
+        "winner": {
+          "code": "ULK",
+          "name": "Fenerbahce Beko Istanbul",
+          "abbreviatedName": "Fenerbahce",
+          "editorialName": "",
+          "tvCode": "FBB",
+          "isVirtual": false,
+          "images": {
+            "crest": "https://media-cdn.cortextech.io/3b7f020e-5b39-49a1-b4b2-efea918edab7.png"
+          }
+        }
+      },
+      "stats": {
+        "timePlayed": 1345,
+        "valuation": 0,
+        "points": 5,
+        "fieldGoalsMade2": 0,
+        "fieldGoalsAttempted2": 1,
+        "fieldGoalsMade3": 1,
+        "fieldGoalsAttempted3": 2,
+        "freeThrowsMade": 2,
+        "freeThrowsAttempted": 2,
+        "fieldGoalsMadeTotal": 1,
+        "fieldGoalsAttemptedTotal": 3,
+        "accuracyMade": 5,
+        "accuracyAttempted": 10,
+        "totalRebounds": 0,
+        "defensiveRebounds": 0,
+        "offensiveRebounds": 0,
+        "assistances": 1,
+        "steals": 0,
+        "turnovers": 2,
+        "blocksFavour": 0,
+        "blocksAgainst": 0,
+        "foulsCommited": 4,
+        "foulsReceived": 2,
+        "plusMinus": -7,
+        "dorsal": 0,
+        "startFive": true,
+        "startFive2": false
+      },
+      "playerClubCode": "OLY"
+    }
+  ],
+  "accumulated": {
+    "timePlayed": 49034,
+    "valuation": 395,
+    "points": 506,
+    "fieldGoalsMade2": 89,
+    "fieldGoalsAttempted2": 183,
+    "fieldGoalsMade3": 82,
+    "fieldGoalsAttempted3": 220,
+    "freeThrowsMade": 82,
+    "freeThrowsAttempted": 115,
+    "fieldGoalsMadeTotal": 171,
+    "fieldGoalsAttemptedTotal": 403,
+    "accuracyMade": 506,
+    "accuracyAttempted": 1141,
+    "totalRebounds": 69,
+    "defensiveRebounds": 49,
+    "offensiveRebounds": 20,
+    "assistances": 84,
+    "steals": 33,
+    "turnovers": 54,
+    "blocksFavour": 5,
+    "blocksAgainst": 10,
+    "foulsCommited": 64,
+    "foulsReceived": 91,
+    "plusMinus": 78,
+    "gamesPlayed": 32,
+    "gamesStarted": 31,
+    "totalGamesStarted": 31,
+    "threePointShootingPercentage": "37.3%",
+    "twoPointShootingPercentage": "48.6%",
+    "freeThrowShootingPercentage": "71.3%"
+  },
+  "averagePerGame": {
+    "timePlayed": 1532.3,
+    "valuation": 12.3,
+    "points": 15.8,
+    "fieldGoalsMade2": 2.8,
+    "fieldGoalsAttempted2": 5.7,
+    "fieldGoalsMade3": 2.6,
+    "fieldGoalsAttempted3": 6.9,
+    "freeThrowsMade": 2.6,
+    "freeThrowsAttempted": 3.6,
+    "fieldGoalsMadeTotal": 5.3,
+    "fieldGoalsAttemptedTotal": 12.6,
+    "accuracyMade": 15.8,
+    "accuracyAttempted": 35.7,
+    "totalRebounds": 2.2,
+    "defensiveRebounds": 1.5,
+    "offensiveRebounds": 0.6,
+    "assistances": 2.6,
+    "steals": 1,
+    "turnovers": 1.7,
+    "blocksFavour": 0.2,
+    "blocksAgainst": 0.3,
+    "foulsCommited": 2,
+    "foulsReceived": 2.8,
+    "plusMinus": 2.4,
+    "gamesPlayed": 32,
+    "gamesStarted": 1,
+    "totalGamesStarted": 31,
+    "threePointShootingPercentage": "37.3%",
+    "twoPointShootingPercentage": "48.6%",
+    "freeThrowShootingPercentage": "71.3%"
+  }
+}
