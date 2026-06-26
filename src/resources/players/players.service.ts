@@ -1,6 +1,7 @@
 import { BaseResource } from "../../core/base-resource";
 import { seasonCode } from "../../core/config";
 import type { HttpClient } from "../../core/http-client";
+import { rankByStatistic } from "../../core/ranking";
 import { ensureOneOf } from "../../core/validation";
 
 import {
@@ -50,7 +51,7 @@ export class PlayersService extends BaseResource {
     const { statistic, ...statsParams } = params;
     const rows = await this.getStats(statsParams);
 
-    return this.rankByStatistic(rows, statistic);
+    return rankByStatistic(rows, statistic);
   }
 
   async getLeadersRange(params: PlayerLeadersRangeParams): Promise<PlayerLeader[]> {
