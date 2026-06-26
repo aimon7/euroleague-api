@@ -93,7 +93,7 @@ export type {
   ScheduleSeasonParams,
   ScheduleSeasonsParams
 } from "./resources/schedule";
-export type { Season, SeasonsListParams } from "./resources/seasons";
+export type { Season, SeasonGetParams, SeasonsListParams } from "./resources/seasons";
 export type {
   ShotEvent,
   ShotGameParams,

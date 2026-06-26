@@ -4,6 +4,7 @@ import type { Competition } from "../../core/config";
 import { EuroleagueApiError, EuroleagueSchemaError } from "../../core/errors";
 import { HttpClient } from "../../core/http-client";
 
+import seasonFixture from "./__fixtures__/season.json";
 import seasonsFixture from "./__fixtures__/seasons.json";
 import { SeasonsService } from "./index";
 
@@ -44,6 +45,38 @@ describe("SeasonsService", () => {
     const service = new SeasonsService(new HttpClient({ competition: "euroleague", fetch }));
 
     await expect(service.list()).rejects.toBeInstanceOf(EuroleagueApiError);
+  });
+
+  it("builds the single-season URL and parses the record", async () => {
+    const { calls, service } = createService(seasonFixture);
+
+    const season = await service.get({ season: 2025 });
+
+    const url = new URL(calls[0] ?? "");
+    expect(url.origin + url.pathname).toBe("https://api-live.euroleague.net/v2/competitions/E/seasons/E2025");
+    expect(season).toMatchObject({
+      alias: "2025-26",
+      code: "E2025",
+      competitionCode: "E",
+      name: "EuroLeague 2025-26",
+      winner: { code: "OLY", images: { crest: expect.any(String) } },
+      year: 2025
+    });
+  });
+
+  it("uses the configured EuroCup competition code for a single season", async () => {
+    const { calls, service } = createService(seasonFixture, "eurocup");
+
+    await service.get({ season: 2025 });
+
+    const url = new URL(calls[0] ?? "");
+    expect(url.origin + url.pathname).toBe("https://api-live.euroleague.net/v2/competitions/U/seasons/U2025");
+  });
+
+  it("throws EuroleagueSchemaError when the single-season payload is invalid", async () => {
+    const { service } = createService({ code: "E2025" });
+
+    await expect(service.get({ season: 2025 })).rejects.toBeInstanceOf(EuroleagueSchemaError);
   });
 });
 
