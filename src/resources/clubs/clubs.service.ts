@@ -4,7 +4,7 @@ import type { HttpClient } from "../../core/http-client";
 import { ensurePathSegment } from "../../core/validation";
 
 import type { ClubParams, ClubRosterParams, ClubsListParams } from "./clubs.dto";
-import { type Club, type ClubRosterMember, ClubRosterMemberSchema, ClubSchema } from "./clubs.schema";
+import { type Club, ClubLogoSchema, type ClubRosterMember, ClubRosterMemberSchema, ClubSchema } from "./clubs.schema";
 
 export class ClubsService extends BaseResource {
   constructor(http: HttpClient) {
@@ -36,5 +36,15 @@ export class ClubsService extends BaseResource {
     const data = await this.http.getApi("v2", endpoint);
 
     return this.parseArray(ClubRosterMemberSchema, data, endpoint);
+  }
+
+  async getLogo({ clubCode, season }: ClubParams): Promise<string> {
+    const url = new URL(`${this.http.hosts.wapi}/Team`);
+    url.searchParams.set("code", clubCode);
+    url.searchParams.set("season", seasonCode(this.http.competition, season));
+    const endpoint = "wapi/Team";
+    const data = await this.http.getUrl(url.toString());
+
+    return this.parseRecord(ClubLogoSchema, data, endpoint);
   }
 }

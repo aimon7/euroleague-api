@@ -65,6 +65,18 @@ describe("ClubsService", () => {
     });
   });
 
+  it("builds the wapi logo URL and returns the logo path string", async () => {
+    const { calls, service } = createService("/Content/img/team-logos/EL/MAD.png", "euroleague");
+
+    const logo = await service.getLogo({ clubCode: "MAD", season: 2025 });
+
+    const url = new URL(calls[0] ?? "");
+    expect(url.origin + url.pathname).toBe("https://live.euroleague.net/wapi/Team");
+    expect(url.searchParams.get("code")).toBe("MAD");
+    expect(url.searchParams.get("season")).toBe("E2025");
+    expect(logo).toBe("/Content/img/team-logos/EL/MAD.png");
+  });
+
   it("rejects injected club codes before making a request", async () => {
     const { calls, service } = createService(clubFixture, "euroleague");
 

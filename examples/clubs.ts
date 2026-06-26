@@ -8,7 +8,9 @@ const clubCode = "OLY";
 const clubList = await client.clubs.list({ season });
 const club = await client.clubs.get({ clubCode, season });
 const roster = await client.clubs.getRoster({ clubCode, season });
+const logo = await client.clubs.getLogo({ clubCode, season });
 
 console.log(clubList.slice(0, 5));
 console.log(club);
 console.log(roster.slice(0, 5));
+console.log(logo);
