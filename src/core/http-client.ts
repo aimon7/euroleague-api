@@ -56,11 +56,16 @@ export class HttpClient {
     return this.getUrl(buildUrl(basePath, query));
   }
 
-  async getLiveFeed(feed: LiveFeed, params: { gameCode: number; season: number }): Promise<unknown> {
+  async getLiveFeed(
+    feed: LiveFeed,
+    params: { gameCode: number; season: number },
+    extraQuery?: QueryParams
+  ): Promise<unknown> {
     return this.getUrl(
       buildUrl(`${this.hosts.live}/${feed}`, {
         gamecode: params.gameCode,
-        seasoncode: seasonCode(this.competition, params.season)
+        seasoncode: seasonCode(this.competition, params.season),
+        ...extraQuery
       })
     );
   }
