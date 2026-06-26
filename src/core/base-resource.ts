@@ -46,6 +46,21 @@ export abstract class BaseResource {
     return extractRows(data).map((row) => normalizeApiRecord(row as Record<string, unknown>));
   }
 
+  // Rank already-parsed rows by a (normalized) statistic key, descending. Used by
+  // the players/teams leader boards, which the upstream /leaders endpoint no longer
+  // serves: leaders are now derived client-side from the v3 statistics list.
+  protected rankByStatistic<T extends Record<string, unknown>>(rows: T[], statistic: string): T[] {
+    const sample = rows[0];
+
+    if (sample && !(statistic in sample)) {
+      throw new EuroleagueValidationError(
+        `Unknown statistic "${statistic}". Available statistics: ${Object.keys(sample).join(", ")}.`
+      );
+    }
+
+    return [...rows].sort((a, b) => statisticValue(b[statistic]) - statisticValue(a[statistic]));
+  }
+
   protected async listGameCodes(season: number, round?: number): Promise<number[]> {
     const data = await this.http.getApi(
       "v2",
@@ -144,6 +159,12 @@ function extractRows(data: unknown): unknown[] {
   }
 
   return rows;
+}
+
+function statisticValue(value: unknown): number {
+  const parsed = typeof value === "number" ? value : typeof value === "string" ? Number(value) : Number.NaN;
+
+  return Number.isFinite(parsed) ? parsed : Number.NEGATIVE_INFINITY;
 }
 
 function extractGameCodes(data: unknown): number[] {

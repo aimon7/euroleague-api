@@ -1,10 +1,18 @@
 {
   "Rows": [
     {
-      "Rank": "1",
-      "Player": "Facundo Campazzo",
-      "Team": "Real Madrid",
-      "StatValue": "6.5"
+      "Player": "Floor General",
+      "Team": "Alpha",
+      "GamesPlayed": "30",
+      "Points": "9.2",
+      "Assists": "8.7"
+    },
+    {
+      "Player": "Bucket Getter",
+      "Team": "Beta",
+      "GamesPlayed": "31",
+      "Points": "24.6",
+      "Assists": "1.8"
     }
   ]
 }

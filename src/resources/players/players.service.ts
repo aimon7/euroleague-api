@@ -12,7 +12,7 @@ import {
   type PlayerStatsParams,
   type PlayerStatsRangeParams
 } from "./players.dto";
-import { type PlayerLeader, PlayerLeaderSchema, type PlayerStat, PlayerStatSchema } from "./players.schema";
+import { type PlayerLeader, type PlayerStat, PlayerStatSchema } from "./players.schema";
 
 const DEFAULT_STATS_TYPE = "traditional";
 const DEFAULT_STATS_MODE = "PerGame";
@@ -47,16 +47,10 @@ export class PlayersService extends BaseResource {
   }
 
   async getLeaders(params: PlayerLeadersParams): Promise<PlayerLeader[]> {
-    const type = ensureOneOf(params.type ?? DEFAULT_STATS_TYPE, PLAYER_STATS_TYPES, "player stats type");
-    const endpoint = `/statistics/players/${type}/leaders`;
-    const data = await this.http.getApi("v2", endpoint, {
-      limit: params.limit ?? DEFAULT_LIMIT,
-      phaseTypeCode: params.phase,
-      seasonCode: seasonCode(this.http.competition, params.season),
-      statisticMode: params.mode ?? DEFAULT_STATS_MODE
-    });
+    const { statistic, ...statsParams } = params;
+    const rows = await this.getStats(statsParams);
 
-    return this.parseArray(PlayerLeaderSchema, data, endpoint);
+    return this.rankByStatistic(rows, statistic);
   }
 
   async getLeadersRange(params: PlayerLeadersRangeParams): Promise<PlayerLeader[]> {
@@ -65,7 +59,9 @@ export class PlayersService extends BaseResource {
     return this.collectSeasonRange(from, to, (season) => this.getLeaders({ ...rest, season }));
   }
 
-  async getLeadersAllSeasons(params: PlayerLeadersAllSeasonsParams = {}): Promise<PlayerLeader[]> {
-    return this.collectAllSeasons((season) => this.getLeaders({ ...params, season }));
+  async getLeadersAllSeasons(params: PlayerLeadersAllSeasonsParams): Promise<PlayerLeader[]> {
+    const { statistic, ...rest } = params;
+
+    return this.collectAllSeasons((season) => this.getLeaders({ ...rest, season, statistic }));
   }
 }

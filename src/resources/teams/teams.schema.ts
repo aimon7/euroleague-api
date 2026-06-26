@@ -4,7 +4,8 @@ import { NormalizedRowSchema } from "../../core/schema";
 
 export const TeamStatSchema = NormalizedRowSchema;
 
-export const TeamLeaderSchema = NormalizedRowSchema;
-
 export type TeamStat = z.infer<typeof TeamStatSchema>;
-export type TeamLeader = z.infer<typeof TeamLeaderSchema>;
+
+// Leaders are derived from the same v3 statistics rows (the dedicated /leaders
+// endpoint is gone), so a leader row is shaped exactly like a stat row.
+export type TeamLeader = TeamStat;

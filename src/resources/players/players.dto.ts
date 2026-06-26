@@ -18,6 +18,14 @@ export interface PlayerStatsRangeParams extends Omit<PlayerStatsParams, "season"
 
 export type PlayerStatsAllSeasonsParams = Omit<PlayerStatsParams, "season">;
 
-export type PlayerLeadersParams = PlayerStatsParams;
-export type PlayerLeadersRangeParams = PlayerStatsRangeParams;
-export type PlayerLeadersAllSeasonsParams = PlayerStatsAllSeasonsParams;
+export interface PlayerLeadersParams extends PlayerStatsParams {
+  statistic: string;
+}
+
+export interface PlayerLeadersRangeParams extends PlayerStatsRangeParams {
+  statistic: string;
+}
+
+export type PlayerLeadersAllSeasonsParams = PlayerStatsAllSeasonsParams & {
+  statistic: string;
+};
