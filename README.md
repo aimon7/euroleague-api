@@ -112,6 +112,19 @@ const allTime = await client.players.getStats({ season: 2025, seasonMode: "All",
 
 `minutesPlayed` stays in decimal minutes, matching the v3 rows.
 
+Stats and leaders calls also send `limit=400` by default (the API caps list
+length). Pass a higher `limit` when using `seasonMode: "All"` or other
+all-time queries so rows are not silently truncated:
+
+```ts
+const allTime = await client.players.getStats({
+  season: 2025,
+  seasonMode: "All",
+  mode: "Accumulated",
+  limit: 1000
+});
+```
+
 ### Standings
 
 ```ts
