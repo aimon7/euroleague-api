@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { EuroleagueApiError, EuroleagueNetworkError, EuroleagueParseError, EuroleagueTimeoutError } from "./errors";
+import { EuroleagueApiError, EuroleagueNetworkError, EuroleagueParseError, EuroleagueTimeoutError, EuroleagueValidationError } from "./errors";
 import { HttpClient } from "./http-client";
 
 const FEED_URL = "https://live.euroleague.net/api/Boxscore";
@@ -88,6 +88,16 @@ describe("HttpClient", () => {
 
     await expect(clientClient.getUrl(FEED_URL)).rejects.toBeInstanceOf(EuroleagueApiError);
     expect(clientFetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("rejects a non-integer gameCode before calling the live feed", async () => {
+    const fetch = vi.fn<typeof globalThis.fetch>();
+    const client = new HttpClient({ competition: "euroleague", fetch });
+
+    await expect(client.getLiveFeed("Boxscore", { gameCode: 1.5, season: 2023 })).rejects.toBeInstanceOf(
+      EuroleagueValidationError
+    );
+    expect(fetch).not.toHaveBeenCalled();
   });
 });
 

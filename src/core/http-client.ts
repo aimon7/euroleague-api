@@ -15,6 +15,7 @@ import {
   EuroleagueTimeoutError,
   EuroleagueValidationError
 } from "./errors";
+import { ensureInteger } from "./validation";
 
 const BODY_SNIPPET_LIMIT = 200;
 
@@ -61,9 +62,11 @@ export class HttpClient {
     params: { gameCode: number; season: number },
     extraQuery?: QueryParams
   ): Promise<unknown> {
+    const gameCode = ensureInteger(params.gameCode, "gameCode");
+
     return this.getUrl(
       buildUrl(`${this.hosts.live}/${feed}`, {
-        gamecode: params.gameCode,
+        gamecode: gameCode,
         seasoncode: seasonCode(this.competition, params.season),
         ...extraQuery
       })
