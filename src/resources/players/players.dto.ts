@@ -8,8 +8,7 @@ export type PhaseTypeCode = "FF" | "PO" | "RS";
 // career/all-time aggregates. (The upstream "Range" mode needs from/to season
 // codes the SDK does not send, so it is intentionally not exposed — use
 // getStatsRange for multi-season queries.)
-export const PLAYER_SEASON_MODES = ["All", "Single"] as const;
-export type PlayerSeasonMode = (typeof PLAYER_SEASON_MODES)[number];
+export type PlayerSeasonMode = "All" | "Single";
 
 export interface PlayerStatsParams {
   limit?: number;

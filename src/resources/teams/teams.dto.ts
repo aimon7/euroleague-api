@@ -8,8 +8,7 @@ export type TeamPhaseTypeCode = "FF" | "PO" | "RS";
 // all-time aggregates. (The upstream "Range" mode needs from/to season codes the
 // SDK does not send, so it is intentionally not exposed — use getStatsRange for
 // multi-season queries.)
-export const TEAM_SEASON_MODES = ["All", "Single"] as const;
-export type TeamSeasonMode = (typeof TEAM_SEASON_MODES)[number];
+export type TeamSeasonMode = "All" | "Single";
 
 export interface TeamStatsParams {
   limit?: number;
