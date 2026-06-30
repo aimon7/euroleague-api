@@ -31,12 +31,24 @@ describe("PlayersService", () => {
     expect(url.searchParams.get("statisticMode")).toBe("PerGame");
     expect(url.searchParams.get("phaseTypeCode")).toBe("RS");
     expect(url.searchParams.get("limit")).toBe("400");
+    expect(url.searchParams.get("SeasonMode")).toBe("Single");
     expect(stats[0]).toMatchObject({
       assists: 5.1,
       gamesPlayed: 39,
       player: "Mike James",
       team: "Monaco"
     });
+  });
+
+  it("defaults to single-season scoping and lets callers override the season mode", async () => {
+    const { calls, fetch } = createFetch(statsFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    await client.players.getStats({ season: 2025, type: "traditional" });
+    expect(new URL(calls[0] ?? "").searchParams.get("SeasonMode")).toBe("Single");
+
+    await client.players.getStats({ season: 2025, seasonMode: "All", type: "traditional" });
+    expect(new URL(calls[1] ?? "").searchParams.get("SeasonMode")).toBe("All");
   });
 
   it("derives leaders from the v3 stats list, ranked by the statistic", async () => {

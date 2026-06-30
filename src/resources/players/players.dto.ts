@@ -3,11 +3,18 @@ export type PlayerStatsType = (typeof PLAYER_STATS_TYPES)[number];
 export type PlayerStatsMode = "Accumulated" | "PerGame";
 export type PhaseTypeCode = "FF" | "PO" | "RS";
 
+// The v3 statistics endpoint aggregates across all seasons unless told otherwise;
+// "Single" scopes the response to the requested seasonCode, while "All" returns
+// career/all-time aggregates. "Range" is accepted upstream for completeness.
+export const PLAYER_SEASON_MODES = ["All", "Range", "Single"] as const;
+export type PlayerSeasonMode = (typeof PLAYER_SEASON_MODES)[number];
+
 export interface PlayerStatsParams {
   limit?: number;
   mode?: PlayerStatsMode;
   phase?: PhaseTypeCode;
   season: number;
+  seasonMode?: PlayerSeasonMode;
   type?: PlayerStatsType;
 }
 

@@ -84,6 +84,7 @@ export type {
   PlayerLeadersAllSeasonsParams,
   PlayerLeadersParams,
   PlayerLeadersRangeParams,
+  PlayerSeasonMode,
   PlayerStat,
   PlayerStatsAllSeasonsParams,
   PlayerStatsMode,
