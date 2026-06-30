@@ -114,6 +114,7 @@ export type {
   TeamLeadersParams,
   TeamLeadersRangeParams,
   TeamPhaseTypeCode,
+  TeamSeasonMode,
   TeamStat,
   TeamStatsAllSeasonsParams,
   TeamStatsMode,

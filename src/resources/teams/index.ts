@@ -3,6 +3,7 @@ export type {
   TeamLeadersParams,
   TeamLeadersRangeParams,
   TeamPhaseTypeCode,
+  TeamSeasonMode,
   TeamStatsAllSeasonsParams,
   TeamStatsMode,
   TeamStatsParams,
