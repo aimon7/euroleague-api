@@ -15,6 +15,7 @@ import {
   EuroleagueTimeoutError,
   EuroleagueValidationError
 } from "./errors";
+import { ensureInteger } from "./validation";
 
 const BODY_SNIPPET_LIMIT = 200;
 
@@ -61,9 +62,11 @@ export class HttpClient {
     params: { gameCode: number; season: number },
     extraQuery?: QueryParams
   ): Promise<unknown> {
+    const gameCode = ensureInteger(params.gameCode, "gameCode");
+
     return this.getUrl(
       buildUrl(`${this.hosts.live}/${feed}`, {
-        gamecode: params.gameCode,
+        gamecode: gameCode,
         seasoncode: seasonCode(this.competition, params.season),
         ...extraQuery
       })
@@ -72,14 +75,11 @@ export class HttpClient {
 
   async getUrl(url: string): Promise<unknown> {
     let attempt = 0;
-    let lastError: unknown;
 
-    while (attempt <= this.retries) {
+    while (true) {
       try {
         return await this.fetchJson(url);
       } catch (error) {
-        lastError = error;
-
         if (!isRetryable(error) || attempt === this.retries) {
           throw error;
         }
@@ -87,8 +87,6 @@ export class HttpClient {
         attempt += 1;
       }
     }
-
-    throw lastError;
   }
 
   private async fetchJson(url: string): Promise<unknown> {

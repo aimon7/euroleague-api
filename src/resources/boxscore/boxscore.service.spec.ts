@@ -133,6 +133,16 @@ describe("BoxscoreService", () => {
     expect(roster[0]).toMatchObject({ ac: "P007200", c: "IST", st: 1 });
   });
 
+  it("rejects an invalid clubCode before calling the roster feed", async () => {
+    const { calls, fetch } = createFetch(gameRosterFixture);
+    const client = new EuroleagueClient({ competition: "euroleague", fetch });
+
+    await expect(
+      client.boxscore.getGameRoster({ clubCode: "../evil", gameCode: 1, season: 2025 })
+    ).rejects.toBeInstanceOf(EuroleagueValidationError);
+    expect(calls).toHaveLength(0);
+  });
+
   it("validates the quarter score type and rejects an injected feed key", async () => {
     const { calls, fetch } = createFetch(boxscoreFixture);
     const client = new EuroleagueClient({ fetch });
