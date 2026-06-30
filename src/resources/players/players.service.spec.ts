@@ -52,7 +52,14 @@ describe("PlayersService", () => {
     expect(new URL(calls[1] ?? "").searchParams.get("seasonMode")).toBe("All");
   });
 
-  it("returns season-scoped totals for the requested season, not career aggregates", async () => {
+  it("requests single-season scoping and shapes a season fixture into findable rows", async () => {
+    // This is a contract test over a season-shaped fixture: it pins the request
+    // (seasonMode=Single, default limit) and how the SDK exposes nested player
+    // rows. It cannot prove the upstream returned season — rather than career —
+    // data, since the mock echoes the fixture; that guarantee is covered by the
+    // opt-in live smoke test. `player` is a nested object that shallow
+    // normalization renders as a JSON string, so codes/clubs are matched as
+    // substrings.
     const { calls, fetch } = createFetch(seasonScopedFixture);
     const client = new EuroleagueClient({ fetch });
 
@@ -62,26 +69,26 @@ describe("PlayersService", () => {
       type: "traditional"
     });
 
-    // The default call must scope to a single season and not pass a manual limit.
+    // The default call scopes to a single season and does not pass a manual limit.
     const url = new URL(calls[0] ?? "");
     expect(url.searchParams.get("seasonMode")).toBe("Single");
     expect(url.searchParams.get("limit")).toBe("400");
 
-    // All four flagged players are present without the consumer raising the limit.
+    // All four flagged players survive parsing/normalization and are findable.
     const codeOf = (row: (typeof stats)[number]): string => String(row.player ?? "");
     for (const code of ["004088", "012774", "003941", "009849"]) {
       expect(stats.some((row) => codeOf(row).includes(code))).toBe(true);
     }
 
-    // Cedi Osman's row is his single E2025 season (39 GP / 502 PTS), not the
-    // career aggregate (176 GP / 1537 PTS) the endpoint returns without SeasonMode.
+    // Numeric stat fields pass through untouched, and a season row carries a
+    // single club code (no multi-team "IST;PAN" string).
     const cedi = stats.find((row) => codeOf(row).includes("004088"));
+    expect(cedi).toBeDefined();
     expect(cedi?.gamesPlayed).toBe(39);
     expect(cedi?.pointsScored).toBe(502);
-
-    // A single-season row carries a single club, never a multi-team string like "IST;PAN".
-    expect(codeOf(cedi as (typeof stats)[number])).toContain("PAN");
-    expect(codeOf(cedi as (typeof stats)[number])).not.toContain(";");
+    const cediCode = cedi ? codeOf(cedi) : "";
+    expect(cediCode).toContain("PAN");
+    expect(cediCode).not.toContain(";");
   });
 
   it("derives leaders from the v3 stats list, ranked by the statistic", async () => {

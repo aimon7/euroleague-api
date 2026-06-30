@@ -62,7 +62,12 @@ describe("TeamsService", () => {
     expect(new URL(calls[1] ?? "").searchParams.get("seasonMode")).toBe("All");
   });
 
-  it("returns season-scoped team totals, not all-time aggregates", async () => {
+  it("requests single-season scoping and shapes a season fixture into findable team rows", async () => {
+    // Contract test over a season-shaped fixture: it pins seasonMode=Single and
+    // the row shape. The "season vs all-time" guarantee is covered by the opt-in
+    // live smoke test (the mock just echoes the fixture). `team` is a nested
+    // object rendered as a JSON string by shallow normalization, so codes are
+    // matched as substrings.
     const { calls, fetch } = createFetch(seasonScopedFixture);
     const client = new EuroleagueClient({ fetch });
 
@@ -77,13 +82,11 @@ describe("TeamsService", () => {
     const teamOf = (row: (typeof stats)[number]): string => String(row.team ?? "");
     const pan = stats.find((row) => teamOf(row).includes("PAN"));
     const oly = stats.find((row) => teamOf(row).includes("OLY"));
-
-    // PAN/OLY are scoped to E2025 (44 / 43 games), not the 704 / 722-game all-time rows.
     expect(pan?.gamesPlayed).toBe(44);
     expect(oly?.gamesPlayed).toBe(43);
   });
 
-  it("returns season-scoped opponent totals for opponentsTraditional", async () => {
+  it("requests opponentsTraditional with single-season scoping", async () => {
     const { calls, fetch } = createFetch(opponentsSeasonScopedFixture);
     const client = new EuroleagueClient({ fetch });
 
