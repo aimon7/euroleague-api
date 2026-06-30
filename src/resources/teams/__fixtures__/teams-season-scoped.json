@@ -1,0 +1,19 @@
+{
+  "total": 2,
+  "teams": [
+    {
+      "teamRanking": 1,
+      "team": { "code": "PAN", "name": "Panathinaikos AKTOR Athens" },
+      "gamesPlayed": 44,
+      "minutesPlayed": 1765.0,
+      "pointsScored": 3813
+    },
+    {
+      "teamRanking": 2,
+      "team": { "code": "OLY", "name": "Olympiacos Piraeus" },
+      "gamesPlayed": 43,
+      "minutesPlayed": 1725.0,
+      "pointsScored": 3891
+    }
+  ]
+}

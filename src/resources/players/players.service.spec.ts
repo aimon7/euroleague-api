@@ -9,6 +9,7 @@ import {
 } from "../../index";
 
 import leadersFixture from "./__fixtures__/players-leaders.json";
+import seasonScopedFixture from "./__fixtures__/players-season-scoped.json";
 import statsFixture from "./__fixtures__/players-stats.json";
 
 describe("PlayersService", () => {
@@ -49,6 +50,38 @@ describe("PlayersService", () => {
 
     await client.players.getStats({ season: 2025, seasonMode: "All", type: "traditional" });
     expect(new URL(calls[1] ?? "").searchParams.get("SeasonMode")).toBe("All");
+  });
+
+  it("returns season-scoped totals for the requested season, not career aggregates", async () => {
+    const { calls, fetch } = createFetch(seasonScopedFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    const stats = await client.players.getStats({
+      mode: "Accumulated",
+      season: 2025,
+      type: "traditional"
+    });
+
+    // The default call must scope to a single season and not pass a manual limit.
+    const url = new URL(calls[0] ?? "");
+    expect(url.searchParams.get("SeasonMode")).toBe("Single");
+    expect(url.searchParams.get("limit")).toBe("400");
+
+    // All four flagged players are present without the consumer raising the limit.
+    const codeOf = (row: (typeof stats)[number]): string => String(row.player ?? "");
+    for (const code of ["004088", "012774", "003941", "009849"]) {
+      expect(stats.some((row) => codeOf(row).includes(code))).toBe(true);
+    }
+
+    // Cedi Osman's row is his single E2025 season (39 GP / 502 PTS), not the
+    // career aggregate (176 GP / 1537 PTS) the endpoint returns without SeasonMode.
+    const cedi = stats.find((row) => codeOf(row).includes("004088"));
+    expect(cedi?.gamesPlayed).toBe(39);
+    expect(cedi?.pointsScored).toBe(502);
+
+    // A single-season row carries a single club, never a multi-team string like "IST;PAN".
+    expect(codeOf(cedi as (typeof stats)[number])).toContain("PAN");
+    expect(codeOf(cedi as (typeof stats)[number])).not.toContain(";");
   });
 
   it("derives leaders from the v3 stats list, ranked by the statistic", async () => {

@@ -9,6 +9,8 @@ import {
 } from "../../index";
 
 import leadersFixture from "./__fixtures__/teams-leaders.json";
+import opponentsSeasonScopedFixture from "./__fixtures__/teams-opponents-season-scoped.json";
+import seasonScopedFixture from "./__fixtures__/teams-season-scoped.json";
 import statsFixture from "./__fixtures__/teams-stats.json";
 
 describe("TeamsService", () => {
@@ -58,6 +60,45 @@ describe("TeamsService", () => {
 
     await client.teams.getStats({ season: 2025, seasonMode: "All", type: "traditional" });
     expect(new URL(calls[1] ?? "").searchParams.get("SeasonMode")).toBe("All");
+  });
+
+  it("returns season-scoped team totals, not all-time aggregates", async () => {
+    const { calls, fetch } = createFetch(seasonScopedFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    const stats = await client.teams.getStats({
+      mode: "Accumulated",
+      season: 2025,
+      type: "traditional"
+    });
+
+    expect(new URL(calls[0] ?? "").searchParams.get("SeasonMode")).toBe("Single");
+
+    const teamOf = (row: (typeof stats)[number]): string => String(row.team ?? "");
+    const pan = stats.find((row) => teamOf(row).includes("PAN"));
+    const oly = stats.find((row) => teamOf(row).includes("OLY"));
+
+    // PAN/OLY are scoped to E2025 (44 / 43 games), not the 704 / 722-game all-time rows.
+    expect(pan?.gamesPlayed).toBe(44);
+    expect(oly?.gamesPlayed).toBe(43);
+  });
+
+  it("returns season-scoped opponent totals for opponentsTraditional", async () => {
+    const { calls, fetch } = createFetch(opponentsSeasonScopedFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    const stats = await client.teams.getStats({
+      mode: "Accumulated",
+      season: 2025,
+      type: "opponentsTraditional"
+    });
+
+    const url = new URL(calls[0] ?? "");
+    expect(url.pathname).toBe("/v3/competitions/E/statistics/teams/opponentsTraditional");
+    expect(url.searchParams.get("SeasonMode")).toBe("Single");
+
+    const pan = stats.find((row) => String(row.team ?? "").includes("PAN"));
+    expect(pan?.gamesPlayed).toBe(44);
   });
 
   it("derives leaders from the v3 stats list, ranked by the statistic", async () => {

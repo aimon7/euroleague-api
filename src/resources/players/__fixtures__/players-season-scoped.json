@@ -1,0 +1,53 @@
+{
+  "total": 4,
+  "players": [
+    {
+      "playerRanking": 1,
+      "player": {
+        "code": "004088",
+        "name": "OSMAN, CEDI",
+        "team": { "code": "PAN", "name": "Panathinaikos AKTOR Athens" }
+      },
+      "gamesPlayed": 39,
+      "gamesStarted": 30,
+      "minutesPlayed": 1100.5,
+      "pointsScored": 502
+    },
+    {
+      "playerRanking": 2,
+      "player": {
+        "code": "012774",
+        "name": "NUNN, KENDRICK",
+        "team": { "code": "PAN", "name": "Panathinaikos AKTOR Athens" }
+      },
+      "gamesPlayed": 37,
+      "gamesStarted": 35,
+      "minutesPlayed": 1080.0,
+      "pointsScored": 676
+    },
+    {
+      "playerRanking": 3,
+      "player": {
+        "code": "003941",
+        "name": "MILUTINOV, NIKOLA",
+        "team": { "code": "OLY", "name": "Olympiacos Piraeus" }
+      },
+      "gamesPlayed": 40,
+      "gamesStarted": 38,
+      "minutesPlayed": 920.0,
+      "pointsScored": 407
+    },
+    {
+      "playerRanking": 4,
+      "player": {
+        "code": "009849",
+        "name": "DORSEY, TYLER",
+        "team": { "code": "OLY", "name": "Olympiacos Piraeus" }
+      },
+      "gamesPlayed": 43,
+      "gamesStarted": 25,
+      "minutesPlayed": 1010.0,
+      "pointsScored": 682
+    }
+  ]
+}
