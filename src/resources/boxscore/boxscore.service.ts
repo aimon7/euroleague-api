@@ -2,7 +2,7 @@ import { BaseResource } from "../../core/base-resource";
 import { seasonCode } from "../../core/config";
 import type { HttpClient } from "../../core/http-client";
 import { isRecord } from "../../core/normalize";
-import { ensureInteger, ensureOneOf } from "../../core/validation";
+import { ensureInteger, ensureOneOf, ensurePathSegment } from "../../core/validation";
 
 import {
   type BoxscoreGameParams,
@@ -111,7 +111,7 @@ export class BoxscoreService extends BaseResource {
     const data = await this.http.getLiveFeed(
       "Players",
       { gameCode, season },
-      { equipo: clubCode, temp: seasonCode(this.http.competition, season) }
+      { equipo: ensurePathSegment(clubCode, "clubCode"), temp: seasonCode(this.http.competition, season) }
     );
 
     return this.parseArray(GameRosterPlayerSchema, data, "Players");
