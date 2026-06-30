@@ -17,6 +17,7 @@ import { type PlayerLeader, type PlayerStat, PlayerStatSchema } from "./players.
 
 const DEFAULT_STATS_TYPE = "traditional";
 const DEFAULT_STATS_MODE = "PerGame";
+const DEFAULT_SEASON_MODE = "Single";
 const DEFAULT_LIMIT = 400;
 
 export class PlayersService extends BaseResource {
@@ -31,6 +32,7 @@ export class PlayersService extends BaseResource {
       limit: params.limit ?? DEFAULT_LIMIT,
       phaseTypeCode: params.phase,
       seasonCode: seasonCode(this.http.competition, params.season),
+      seasonMode: params.seasonMode ?? DEFAULT_SEASON_MODE,
       statisticMode: params.mode ?? DEFAULT_STATS_MODE
     });
 

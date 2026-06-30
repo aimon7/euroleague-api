@@ -9,6 +9,8 @@ import {
 } from "../../index";
 
 import leadersFixture from "./__fixtures__/teams-leaders.json";
+import opponentsSeasonScopedFixture from "./__fixtures__/teams-opponents-season-scoped.json";
+import seasonScopedFixture from "./__fixtures__/teams-season-scoped.json";
 import statsFixture from "./__fixtures__/teams-stats.json";
 
 describe("TeamsService", () => {
@@ -31,6 +33,7 @@ describe("TeamsService", () => {
     expect(url.searchParams.get("statisticMode")).toBe("Accumulated");
     expect(url.searchParams.get("phaseTypeCode")).toBe("RS");
     expect(url.searchParams.get("limit")).toBe("400");
+    expect(url.searchParams.get("seasonMode")).toBe("Single");
     expect(stats[0]).toMatchObject({
       gamesPlayed: 34,
       teamCode: "MAD",
@@ -46,6 +49,59 @@ describe("TeamsService", () => {
 
     const url = new URL(calls[0] ?? "");
     expect(url.pathname).toBe("/v3/competitions/E/statistics/teams/opponentsTraditional");
+  });
+
+  it("defaults to single-season scoping and lets callers override the season mode", async () => {
+    const { calls, fetch } = createFetch(statsFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    await client.teams.getStats({ season: 2025, type: "traditional" });
+    expect(new URL(calls[0] ?? "").searchParams.get("seasonMode")).toBe("Single");
+
+    await client.teams.getStats({ season: 2025, seasonMode: "All", type: "traditional" });
+    expect(new URL(calls[1] ?? "").searchParams.get("seasonMode")).toBe("All");
+  });
+
+  it("requests single-season scoping and shapes a season fixture into findable team rows", async () => {
+    // Contract test over a season-shaped fixture: it pins seasonMode=Single and
+    // the row shape. The "season vs all-time" guarantee is covered by the opt-in
+    // live smoke test (the mock just echoes the fixture). `team` is a nested
+    // object rendered as a JSON string by shallow normalization, so codes are
+    // matched as substrings.
+    const { calls, fetch } = createFetch(seasonScopedFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    const stats = await client.teams.getStats({
+      mode: "Accumulated",
+      season: 2025,
+      type: "traditional"
+    });
+
+    expect(new URL(calls[0] ?? "").searchParams.get("seasonMode")).toBe("Single");
+
+    const teamOf = (row: (typeof stats)[number]): string => String(row.team ?? "");
+    const pan = stats.find((row) => teamOf(row).includes("PAN"));
+    const oly = stats.find((row) => teamOf(row).includes("OLY"));
+    expect(pan?.gamesPlayed).toBe(44);
+    expect(oly?.gamesPlayed).toBe(43);
+  });
+
+  it("requests opponentsTraditional with single-season scoping", async () => {
+    const { calls, fetch } = createFetch(opponentsSeasonScopedFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    const stats = await client.teams.getStats({
+      mode: "Accumulated",
+      season: 2025,
+      type: "opponentsTraditional"
+    });
+
+    const url = new URL(calls[0] ?? "");
+    expect(url.pathname).toBe("/v3/competitions/E/statistics/teams/opponentsTraditional");
+    expect(url.searchParams.get("seasonMode")).toBe("Single");
+
+    const pan = stats.find((row) => String(row.team ?? "").includes("PAN"));
+    expect(pan?.gamesPlayed).toBe(44);
   });
 
   it("derives leaders from the v3 stats list, ranked by the statistic", async () => {

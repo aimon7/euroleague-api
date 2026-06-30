@@ -27,6 +27,29 @@ describe.runIf(live)("live smoke tests", () => {
   );
 
   it(
+    "scopes player stats to a single season rather than career aggregates",
+    async () => {
+      const season = await client.players.getStats({ season: LIVE_SEASON, mode: "Accumulated" });
+      // A high limit so the all-time list is not capped by the default limit=400.
+      const career = await client.players.getStats({
+        limit: 5000,
+        mode: "Accumulated",
+        season: LIVE_SEASON,
+        seasonMode: "All"
+      });
+
+      // The default (seasonMode=Single) lists only players active in this season
+      // — a few hundred — whereas the all-time list spans every player ever
+      // (thousands). The size gap is the reliable season-vs-career signal.
+      // (Per-player club codes are not: a mid-season transfer legitimately yields
+      // a "TEAM1;TEAM2" code within a single season.)
+      expect(season.length).toBeGreaterThan(0);
+      expect(season.length * 2).toBeLessThan(career.length);
+    },
+    LIVE_TIMEOUT
+  );
+
+  it(
     "fetches standings for a round",
     async () => {
       const standings = await client.standings.getRound({ season: LIVE_SEASON, round: 1 });

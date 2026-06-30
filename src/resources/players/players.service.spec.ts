@@ -9,6 +9,7 @@ import {
 } from "../../index";
 
 import leadersFixture from "./__fixtures__/players-leaders.json";
+import seasonScopedFixture from "./__fixtures__/players-season-scoped.json";
 import statsFixture from "./__fixtures__/players-stats.json";
 
 describe("PlayersService", () => {
@@ -31,12 +32,63 @@ describe("PlayersService", () => {
     expect(url.searchParams.get("statisticMode")).toBe("PerGame");
     expect(url.searchParams.get("phaseTypeCode")).toBe("RS");
     expect(url.searchParams.get("limit")).toBe("400");
+    expect(url.searchParams.get("seasonMode")).toBe("Single");
     expect(stats[0]).toMatchObject({
       assists: 5.1,
       gamesPlayed: 39,
       player: "Mike James",
       team: "Monaco"
     });
+  });
+
+  it("defaults to single-season scoping and lets callers override the season mode", async () => {
+    const { calls, fetch } = createFetch(statsFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    await client.players.getStats({ season: 2025, type: "traditional" });
+    expect(new URL(calls[0] ?? "").searchParams.get("seasonMode")).toBe("Single");
+
+    await client.players.getStats({ season: 2025, seasonMode: "All", type: "traditional" });
+    expect(new URL(calls[1] ?? "").searchParams.get("seasonMode")).toBe("All");
+  });
+
+  it("requests single-season scoping and shapes a season fixture into findable rows", async () => {
+    // This is a contract test over a season-shaped fixture: it pins the request
+    // (seasonMode=Single, default limit) and how the SDK exposes nested player
+    // rows. It cannot prove the upstream returned season — rather than career —
+    // data, since the mock echoes the fixture; that guarantee is covered by the
+    // opt-in live smoke test. `player` is a nested object that shallow
+    // normalization renders as a JSON string, so codes/clubs are matched as
+    // substrings.
+    const { calls, fetch } = createFetch(seasonScopedFixture);
+    const client = new EuroleagueClient({ fetch });
+
+    const stats = await client.players.getStats({
+      mode: "Accumulated",
+      season: 2025,
+      type: "traditional"
+    });
+
+    // The default call scopes to a single season and does not pass a manual limit.
+    const url = new URL(calls[0] ?? "");
+    expect(url.searchParams.get("seasonMode")).toBe("Single");
+    expect(url.searchParams.get("limit")).toBe("400");
+
+    // All four flagged players survive parsing/normalization and are findable.
+    const codeOf = (row: (typeof stats)[number]): string => String(row.player ?? "");
+    for (const code of ["004088", "012774", "003941", "009849"]) {
+      expect(stats.some((row) => codeOf(row).includes(code))).toBe(true);
+    }
+
+    // Numeric stat fields pass through untouched, and a season row carries a
+    // single club code (no multi-team "IST;PAN" string).
+    const cedi = stats.find((row) => codeOf(row).includes("004088"));
+    expect(cedi).toBeDefined();
+    expect(cedi?.gamesPlayed).toBe(39);
+    expect(cedi?.pointsScored).toBe(502);
+    const cediCode = cedi ? codeOf(cedi) : "";
+    expect(cediCode).toContain("PAN");
+    expect(cediCode).not.toContain(";");
   });
 
   it("derives leaders from the v3 stats list, ranked by the statistic", async () => {

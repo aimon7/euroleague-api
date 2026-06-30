@@ -100,6 +100,18 @@ const leaders = await client.teams.getLeaders({ season: 2023, type: "traditional
 const range = await client.players.getStatsRange({ from: 2021, to: 2023, type: "scoring" });
 ```
 
+`getStats` returns totals scoped to the requested `season`. The v3 statistics
+endpoint otherwise aggregates **across all seasons** (career/all-time rows), so
+the SDK sends `seasonMode=Single` by default. To opt into the all-time aggregate
+pass `seasonMode: "All"` (for multi-season queries use `getStatsRange`):
+
+```ts
+// Career/all-time totals for the whole stats list:
+const allTime = await client.players.getStats({ season: 2025, seasonMode: "All", mode: "Accumulated" });
+```
+
+`minutesPlayed` stays in decimal minutes, matching the v3 rows.
+
 ### Standings
 
 ```ts
