@@ -1,6 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { EuroleagueApiError, EuroleagueNetworkError, EuroleagueParseError, EuroleagueTimeoutError, EuroleagueValidationError } from "./errors";
+import {
+  EuroleagueApiError,
+  EuroleagueNetworkError,
+  EuroleagueParseError,
+  EuroleagueTimeoutError,
+  EuroleagueValidationError
+} from "./errors";
 import { HttpClient } from "./http-client";
 
 const FEED_URL = "https://live.euroleague.net/api/Boxscore";

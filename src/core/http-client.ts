@@ -75,14 +75,11 @@ export class HttpClient {
 
   async getUrl(url: string): Promise<unknown> {
     let attempt = 0;
-    let lastError: unknown;
 
-    while (attempt <= this.retries) {
+    while (true) {
       try {
         return await this.fetchJson(url);
       } catch (error) {
-        lastError = error;
-
         if (!isRetryable(error) || attempt === this.retries) {
           throw error;
         }
@@ -90,8 +87,6 @@ export class HttpClient {
         attempt += 1;
       }
     }
-
-    throw lastError;
   }
 
   private async fetchJson(url: string): Promise<unknown> {
