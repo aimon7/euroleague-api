@@ -5,6 +5,14 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-06-30
+
+### Added
+
+- **Live demo links in README.** Points SDK evaluators to the hosted showcase at
+  [aimon7.github.io/euroleague-api-demo](https://aimon7.github.io/euroleague-api-demo/)
+  and its source repo [github.com/aimon7/euroleague-api-demo](https://github.com/aimon7/euroleague-api-demo).
+
 ## [1.1.0] - 2026-06-30
 
 ### Fixed
