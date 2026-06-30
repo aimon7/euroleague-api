@@ -5,7 +5,6 @@ import { rankByStatistic } from "../../core/ranking";
 import { ensureOneOf } from "../../core/validation";
 
 import {
-  TEAM_SEASON_MODES,
   TEAM_STATS_TYPES,
   type TeamLeadersAllSeasonsParams,
   type TeamLeadersParams,
@@ -32,8 +31,8 @@ export class TeamsService extends BaseResource {
     const data = await this.http.getApi("v3", endpoint, {
       limit: params.limit ?? DEFAULT_LIMIT,
       phaseTypeCode: params.phase,
-      SeasonMode: ensureOneOf(params.seasonMode ?? DEFAULT_SEASON_MODE, TEAM_SEASON_MODES, "team season mode"),
       seasonCode: seasonCode(this.http.competition, params.season),
+      seasonMode: params.seasonMode ?? DEFAULT_SEASON_MODE,
       statisticMode: params.mode ?? DEFAULT_STATS_MODE
     });
 

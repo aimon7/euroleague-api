@@ -33,7 +33,7 @@ describe("TeamsService", () => {
     expect(url.searchParams.get("statisticMode")).toBe("Accumulated");
     expect(url.searchParams.get("phaseTypeCode")).toBe("RS");
     expect(url.searchParams.get("limit")).toBe("400");
-    expect(url.searchParams.get("SeasonMode")).toBe("Single");
+    expect(url.searchParams.get("seasonMode")).toBe("Single");
     expect(stats[0]).toMatchObject({
       gamesPlayed: 34,
       teamCode: "MAD",
@@ -56,10 +56,10 @@ describe("TeamsService", () => {
     const client = new EuroleagueClient({ fetch });
 
     await client.teams.getStats({ season: 2025, type: "traditional" });
-    expect(new URL(calls[0] ?? "").searchParams.get("SeasonMode")).toBe("Single");
+    expect(new URL(calls[0] ?? "").searchParams.get("seasonMode")).toBe("Single");
 
     await client.teams.getStats({ season: 2025, seasonMode: "All", type: "traditional" });
-    expect(new URL(calls[1] ?? "").searchParams.get("SeasonMode")).toBe("All");
+    expect(new URL(calls[1] ?? "").searchParams.get("seasonMode")).toBe("All");
   });
 
   it("returns season-scoped team totals, not all-time aggregates", async () => {
@@ -72,7 +72,7 @@ describe("TeamsService", () => {
       type: "traditional"
     });
 
-    expect(new URL(calls[0] ?? "").searchParams.get("SeasonMode")).toBe("Single");
+    expect(new URL(calls[0] ?? "").searchParams.get("seasonMode")).toBe("Single");
 
     const teamOf = (row: (typeof stats)[number]): string => String(row.team ?? "");
     const pan = stats.find((row) => teamOf(row).includes("PAN"));
@@ -95,7 +95,7 @@ describe("TeamsService", () => {
 
     const url = new URL(calls[0] ?? "");
     expect(url.pathname).toBe("/v3/competitions/E/statistics/teams/opponentsTraditional");
-    expect(url.searchParams.get("SeasonMode")).toBe("Single");
+    expect(url.searchParams.get("seasonMode")).toBe("Single");
 
     const pan = stats.find((row) => String(row.team ?? "").includes("PAN"));
     expect(pan?.gamesPlayed).toBe(44);

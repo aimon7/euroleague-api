@@ -32,7 +32,7 @@ describe("PlayersService", () => {
     expect(url.searchParams.get("statisticMode")).toBe("PerGame");
     expect(url.searchParams.get("phaseTypeCode")).toBe("RS");
     expect(url.searchParams.get("limit")).toBe("400");
-    expect(url.searchParams.get("SeasonMode")).toBe("Single");
+    expect(url.searchParams.get("seasonMode")).toBe("Single");
     expect(stats[0]).toMatchObject({
       assists: 5.1,
       gamesPlayed: 39,
@@ -46,10 +46,10 @@ describe("PlayersService", () => {
     const client = new EuroleagueClient({ fetch });
 
     await client.players.getStats({ season: 2025, type: "traditional" });
-    expect(new URL(calls[0] ?? "").searchParams.get("SeasonMode")).toBe("Single");
+    expect(new URL(calls[0] ?? "").searchParams.get("seasonMode")).toBe("Single");
 
     await client.players.getStats({ season: 2025, seasonMode: "All", type: "traditional" });
-    expect(new URL(calls[1] ?? "").searchParams.get("SeasonMode")).toBe("All");
+    expect(new URL(calls[1] ?? "").searchParams.get("seasonMode")).toBe("All");
   });
 
   it("returns season-scoped totals for the requested season, not career aggregates", async () => {
@@ -64,7 +64,7 @@ describe("PlayersService", () => {
 
     // The default call must scope to a single season and not pass a manual limit.
     const url = new URL(calls[0] ?? "");
-    expect(url.searchParams.get("SeasonMode")).toBe("Single");
+    expect(url.searchParams.get("seasonMode")).toBe("Single");
     expect(url.searchParams.get("limit")).toBe("400");
 
     // All four flagged players are present without the consumer raising the limit.
