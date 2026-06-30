@@ -11,11 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **`players.getStats` / `teams.getStats` season scoping.** The v3 statistics
   endpoint aggregates across **all** seasons (returning career/all-time rows and
-  ~3075 player rows) unless `SeasonMode=Single` is sent alongside `seasonCode`.
+  ~3075 player rows) unless `seasonMode=Single` is sent alongside `seasonCode`.
   The SDK never sent it, so a single-season call returned career totals — e.g.
   Cedi Osman as `IST;PAN` with 176 GP / 1537 PTS instead of his E2025 season
   (`PAN`, 39 GP / 502 PTS) — and the default `limit=400` silently dropped active
-  players from the oversized list. `getStats` now sends `SeasonMode=Single` by
+  players from the oversized list. `getStats` now sends `seasonMode=Single` by
   default for both players and teams (and `traditional` / `opponentsTraditional` /
   `advanced` / `opponentsAdvanced`), so a single-season call returns that season's
   totals. This also corrects `getStatsRange` / `getStatsAllSeasons` / `getLeaders*`,
@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Optional `seasonMode` on `players.getStats` / `teams.getStats`** (`PlayerSeasonMode`
-  / `TeamSeasonMode`: `"Single" | "Range" | "All"`, default `"Single"`). Pass
+  / `TeamSeasonMode`: `"Single" | "All"`, default `"Single"`). Pass
   `seasonMode: "All"` to retrieve the career/all-time aggregate the endpoint
   returns without season scoping.
 
