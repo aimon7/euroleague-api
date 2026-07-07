@@ -46,6 +46,7 @@ const standings = await euroleague.standings.getRound({ season: 2023, round: 10 
 - **Landing** — pick EuroLeague or EuroCup and a season (kept in the URL); browse the **clubs** grid and sort the **standings** table.
 - **Team pages** (`/team/$clubCode`) — club info, full **roster** (players + staff), and team **stats** including advanced metrics from the API plus ones computed in the app (labeled `From API` vs `Calculated`).
 - **Player pages** (`/player/$personCode`) — profile, season stat cards, a per-game **trend chart**, and computed advanced stats with their formulas.
+- **SDK docs** ([`/docs`](https://aimon7.github.io/euroleague-api-demo/docs)) — install guide, browsable method reference, and a live **playground** to try every resource against the real API from your browser.
 
 The TanStack Query sections below show the core data-fetching patterns the demo uses.
 
