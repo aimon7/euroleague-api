@@ -15,6 +15,14 @@ import {
   EuroleagueTimeoutError,
   EuroleagueValidationError
 } from "./errors";
+import {
+  computeRetryDelayMs,
+  isRetryableError,
+  parseRetryAfter,
+  resolveRetryPolicy,
+  type RetryPolicy,
+  sleep
+} from "./retry";
 import { ensureInteger } from "./validation";
 
 const BODY_SNIPPET_LIMIT = 200;
@@ -25,6 +33,8 @@ export type QueryParams = Record<string, QueryValue | QueryValue[]>;
 
 export interface HttpClientOptions extends EuroleagueClientOptions {
   competition: Competition;
+  /** Internal test hook for deterministic jitter. Defaults to `Math.random`. */
+  random?: () => number;
 }
 
 export class HttpClient {
@@ -34,13 +44,17 @@ export class HttpClient {
   readonly timeoutMs: number;
 
   readonly #fetch: typeof fetch;
+  readonly #random: () => number;
+  readonly #retry: RetryPolicy;
 
   constructor(options: HttpClientOptions) {
     this.competition = options.competition;
     this.hosts = mergeHosts(options.hosts);
-    this.retries = options.retries ?? 0;
+    this.#retry = resolveRetryPolicy(options.retry, options.retries);
+    this.retries = this.#retry.retries;
     this.timeoutMs = options.timeoutMs ?? 60_000;
     this.#fetch = options.fetch ?? globalThis.fetch;
+    this.#random = options.random ?? Math.random;
 
     if (!this.#fetch) {
       throw new EuroleagueValidationError("No fetch implementation is available.");
@@ -74,17 +88,19 @@ export class HttpClient {
   }
 
   async getUrl(url: string): Promise<unknown> {
-    let attempt = 0;
-
-    while (true) {
+    for (let attempt = 0; ; attempt += 1) {
       try {
         return await this.fetchJson(url);
       } catch (error) {
-        if (!isRetryable(error) || attempt === this.retries) {
+        if (attempt >= this.#retry.retries || !isRetryableError(error)) {
           throw error;
         }
 
-        attempt += 1;
+        const delayMs = computeRetryDelayMs(attempt, retryAfterMsFrom(error), this.#retry, this.#random);
+
+        if (delayMs > 0) {
+          await sleep(delayMs);
+        }
       }
     }
   }
@@ -112,7 +128,13 @@ export class HttpClient {
     }
 
     if (!response.ok) {
-      throw new EuroleagueApiError(`Euroleague API returned ${response.status} for ${url}`, response.status, url, body);
+      throw new EuroleagueApiError(
+        `Euroleague API returned ${response.status} for ${url}`,
+        response.status,
+        url,
+        body,
+        parseRetryAfter(response.headers.get("retry-after"))
+      );
     }
 
     if (body.length === 0) {
@@ -123,16 +145,8 @@ export class HttpClient {
   }
 }
 
-function isRetryable(error: unknown): boolean {
-  if (error instanceof EuroleagueApiError) {
-    return error.status >= 500;
-  }
-
-  if (error instanceof EuroleagueParseError) {
-    return false;
-  }
-
-  return true;
+function retryAfterMsFrom(error: unknown): number | undefined {
+  return error instanceof EuroleagueApiError ? error.retryAfterMs : undefined;
 }
 
 function toTransportError(error: unknown, url: string, aborted: boolean): EuroleagueNetworkError {

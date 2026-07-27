@@ -11,13 +11,22 @@ export class EuroleagueValidationError extends Error {
 export class EuroleagueApiError extends Error {
   override readonly name = "EuroleagueApiError";
 
+  /**
+   * Server-requested wait before retrying, in milliseconds, parsed from the
+   * `Retry-After` response header (supports delta-seconds and HTTP-date).
+   * `undefined` when the header is absent or malformed.
+   */
+  readonly retryAfterMs?: number | undefined;
+
   constructor(
     message: string,
     readonly status: number,
     readonly url: string,
-    readonly body: string
+    readonly body: string,
+    retryAfterMs?: number
   ) {
     super(message);
+    this.retryAfterMs = retryAfterMs;
   }
 }
 

@@ -1,4 +1,5 @@
 import { EuroleagueValidationError } from "./errors";
+import type { RetryOptions } from "./retry";
 
 export type Competition = "euroleague" | "eurocup";
 export type CompetitionCode = "E" | "U";
@@ -25,7 +26,20 @@ export interface EuroleagueClientOptions {
   competition?: Competition;
   fetch?: typeof fetch;
   hosts?: Partial<ApiHosts>;
+  /**
+   * Minimum spacing in milliseconds between requests to the live-feed origin
+   * (`live.euroleague.net`, i.e. the `live` and `wapi` hosts). Protects
+   * season-wide fan-out methods from tripping upstream rate limits.
+   * Default 250; set 0 to disable. Standard API hosts are never paced.
+   */
+  liveFeedIntervalMs?: number;
+  /**
+   * Additional attempts after the initial request (default 0). Shorthand for
+   * `retry.retries`; kept for backward compatibility.
+   */
   retries?: number;
+  /** Fine-grained retry/backoff configuration. See {@link RetryOptions}. */
+  retry?: RetryOptions;
   timeoutMs?: number;
 }
 

@@ -7,6 +7,7 @@ export {
   EuroleagueTimeoutError,
   EuroleagueValidationError
 } from "./core/errors";
+export type { RetryOptions } from "./core/retry";
 export { euroleague, EuroleagueClient } from "./euroleague-client";
 export type {
   Boxscore,
