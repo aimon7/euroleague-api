@@ -49,7 +49,8 @@ export async function mapWithConcurrency<T, R>(
       nextIndex += 1;
 
       try {
-        results[index] = await fn(items[index] as T, index);
+        const item = items[index]!;
+        results[index] = await fn(item, index);
       } catch (error) {
         failed = true;
         throw error;
