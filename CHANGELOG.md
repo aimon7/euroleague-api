@@ -5,6 +5,37 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Exponential backoff with jitter for retries.** Retries (still opt-in via
+  `retries`, default 0) now wait `baseDelayMs * 2^attempt` (500ms base, 10s cap,
+  equal jitter in `[delay / 2, delay]`) instead of retrying immediately. A new
+  `retry` client option (`RetryOptions`: `retries`, `baseDelayMs`, `maxDelayMs`,
+  `jitter`) tunes the policy; the existing `retries` shorthand keeps its
+  semantics (additional attempts after the first request) and keeps working.
+- **HTTP 429 is now retryable and `Retry-After` is honored.** Rate-limited
+  responses retry after the server-requested wait (delta-seconds and HTTP-date
+  supported, capped at `maxDelayMs`, never below the computed backoff; malformed
+  values fall back to plain backoff). The parsed value is exposed as
+  `EuroleagueApiError.retryAfterMs`.
+- **Live-feed pacing and bounded fan-out.** Requests to the rate-limited
+  `live.euroleague.net` origin (the `live` and `wapi` hosts) are spaced at least
+  `liveFeedIntervalMs` apart (new client option, default 250ms, `0` disables).
+  Season-wide fan-out helpers (`getRound` / `getSeason` / `getSeasons` across
+  `shots`, `playByPlay`, `boxscore`, `games`, `gameMetadata`) now load games with
+  at most 4 requests in flight, preserving result order and fail-fast error
+  behavior. Standard API hosts (`api-live.euroleague.net`) are never paced.
+
+### Changed
+
+- **Network/CORS failures no longer retry instantly.** In browsers, an upstream
+  429 without CORS headers surfaces as an opaque network error; those are now
+  retried with full backoff instead of immediately, so a hidden rate limit can
+  no longer be amplified into a burst of requests (previously `retries: 2`
+  turned one hidden 429 into three back-to-back requests).
+
 ## [1.1.1] - 2026-06-30
 
 ### Added
