@@ -14,7 +14,7 @@ const gamesIndex = {
 describe("ShotsService", () => {
   it("builds the Points live-feed URL and normalizes shot rows", async () => {
     const { calls, fetch } = createFetch(shotsFixture);
-    const client = new EuroleagueClient({ competition: "euroleague", fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, competition: "euroleague", fetch });
 
     const shots = await client.shots.getGame({ gameCode: 1, season: 2023 });
 
@@ -27,7 +27,7 @@ describe("ShotsService", () => {
 
   it("skips validation when validate is false but still normalizes", async () => {
     const { fetch } = createFetch(shotsFixture);
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     const shots = await client.shots.getGame({ gameCode: 1, season: 2023, validate: false });
 
@@ -37,7 +37,7 @@ describe("ShotsService", () => {
 
   it("aggregates shots across a round", async () => {
     const { calls, fetch } = createRouter();
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     const shots = await client.shots.getRound({ round: 1, season: 2023 });
 
@@ -47,7 +47,7 @@ describe("ShotsService", () => {
 
   it("aggregates shots across a season and a season range", async () => {
     const { fetch } = createRouter();
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     expect(await client.shots.getSeason({ season: 2023 })).toHaveLength(4);
     expect(await client.shots.getSeasons({ from: 2022, to: 2023 })).toHaveLength(8);
@@ -55,14 +55,14 @@ describe("ShotsService", () => {
 
   it("throws EuroleagueSchemaError on invalid rows when validating", async () => {
     const { fetch } = createFetch({ Rows: [123] });
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     await expect(client.shots.getGame({ gameCode: 1, season: 2023 })).rejects.toBeInstanceOf(EuroleagueSchemaError);
   });
 
   it("throws EuroleagueApiError for non-2xx responses", async () => {
     const fetch = vi.fn<typeof globalThis.fetch>().mockResolvedValue(new Response("nope", { status: 500 }));
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     await expect(client.shots.getGame({ gameCode: 1, season: 2023 })).rejects.toBeInstanceOf(EuroleagueApiError);
   });

@@ -55,14 +55,66 @@ The TanStack Query sections below show the core data-fetching patterns the demo 
 ```ts
 const client = new EuroleagueClient({
   competition: "euroleague", // "euroleague" -> "E" | "eurocup" -> "U" (default: "euroleague")
-  timeoutMs: 60_000, // optional request timeout (default 60s)
-  retries: 0, // optional retries on 5xx/network errors (default 0)
+  timeoutMs: 60_000, // optional per-attempt request timeout (default 60s)
+  retries: 0, // additional attempts after the first request (default 0)
+  retry: { baseDelayMs: 500, maxDelayMs: 10_000, jitter: true }, // optional backoff tuning
+  liveFeedIntervalMs: 250, // min spacing between live-feed requests (default 250ms, 0 disables)
   fetch: customFetch // optional injectable fetch (handy for tests/runtime overrides)
 });
 ```
 
 - **Competition** is a friendly union `"euroleague" | "eurocup"`, mapped to `E`/`U` internally.
 - **Season** is the start year as a `number` (e.g. `2023`); the seasoncode (`E2023`/`U2023`) is built internally.
+
+## Retries, backoff & rate limiting
+
+Retries are **off by default** (`retries: 0`). `retries` counts **additional attempts after the initial
+request**, so `retries: 2` issues at most 3 requests. It is a shorthand for `retry.retries`; when both are
+set, `retry.retries` wins.
+
+**What is retried:** HTTP `429`, HTTP `5xx`, and transport failures (`EuroleagueNetworkError` /
+`EuroleagueTimeoutError`). Ordinary `4xx` responses and deterministic failures (JSON parse, schema
+validation, invalid input) are **never** retried.
+
+**Backoff:** each retry waits `baseDelayMs * 2^attempt` (default 500ms → 1s → 2s → …), capped at
+`maxDelayMs` (default 10s). With `jitter` enabled (the default) the delay is drawn uniformly from
+`[delay / 2, delay]` to avoid synchronized retry storms. No delay is added after the final failed attempt.
+
+**`Retry-After`:** when a `429`/`5xx` response carries a `Retry-After` header (delta-seconds or HTTP-date),
+the SDK waits at least that long — never less than the computed backoff — still capped at `maxDelayMs`.
+Malformed values are ignored and plain backoff applies. The parsed value is also exposed as
+`EuroleagueApiError.retryAfterMs`.
+
+**Timeouts:** `timeoutMs` applies per attempt; each retry gets a fresh timeout. Backoff sleeps are not
+counted against it.
+
+```ts
+// A resilient browser client:
+const client = new EuroleagueClient({
+  retries: 3,
+  retry: { baseDelayMs: 1000, maxDelayMs: 15_000 }
+});
+```
+
+### Live-feed pacing & fan-out
+
+The game feeds (`shots`, `playByPlay`, `boxscore`, `gameMetadata`, and the per-game live endpoints) share
+the rate-limited `live.euroleague.net` origin. To keep season-wide aggregations (`getRound` / `getSeason` /
+`getSeasons`) from tripping upstream rate limits (Cloudflare error 1015 / HTTP 429), the SDK:
+
+- spaces requests to the live-feed origin at least `liveFeedIntervalMs` apart (default 250ms; set `0` to
+  disable, e.g. against your own proxy or cache);
+- fans out per-game loads with at most 4 requests in flight, preserving result order and failing fast on
+  the first error.
+
+Requests to the standard API hosts (`api-live.euroleague.net`) are never paced or serialized.
+
+### Browser note: CORS can hide a 429
+
+When the upstream rate limiter rejects a request, the error response may omit CORS headers. Browsers then
+surface it as an opaque network failure, so the SDK sees an `EuroleagueNetworkError` instead of the real
+`429` — and cannot read `Retry-After`. Such failures are still retried with full exponential backoff (never
+immediately), which prevents a hidden 429 from turning into a burst of instant retries.
 
 ## Method scheme
 
@@ -204,10 +256,10 @@ import {
 } from "euroleague-api";
 ```
 
-- `EuroleagueApiError` — a non-2xx HTTP response (`status`, `url`, `body`).
+- `EuroleagueApiError` — a non-2xx HTTP response (`status`, `url`, `body`, and `retryAfterMs` parsed from a `Retry-After` header when present). `429` and `5xx` are retried with backoff per the retry options; other statuses are not.
 - `EuroleagueParseError` — a 2xx response whose body is not valid JSON (`url`, `status`, `bodySnippet`, original error as `cause`). Deterministic, so it is never retried.
-- `EuroleagueNetworkError` — a transport-level failure such as a refused connection or DNS error (`url`, original error as `cause`). Retried per the `retries` option.
-- `EuroleagueTimeoutError` — the request was aborted after `timeoutMs` (`url`, original error as `cause`). Subclass of `EuroleagueNetworkError`; retried per the `retries` option.
+- `EuroleagueNetworkError` — a transport-level failure such as a refused connection or DNS error (`url`, original error as `cause`). Retried with backoff per the retry options.
+- `EuroleagueTimeoutError` — the request was aborted after `timeoutMs` (`url`, original error as `cause`). Subclass of `EuroleagueNetworkError`; retried with backoff per the retry options.
 - `EuroleagueSchemaError` — the response failed validation (`endpoint`, Zod `issues`).
 - `EuroleagueValidationError` — invalid input params (e.g. a bad season/competition).
 

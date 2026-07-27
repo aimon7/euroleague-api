@@ -15,9 +15,19 @@ import {
   EuroleagueTimeoutError,
   EuroleagueValidationError
 } from "./errors";
+import { RequestPacer } from "./pacing";
+import {
+  computeRetryDelayMs,
+  isRetryableError,
+  parseRetryAfter,
+  resolveRetryPolicy,
+  type RetryPolicy,
+  sleep
+} from "./retry";
 import { ensureInteger } from "./validation";
 
 const BODY_SNIPPET_LIMIT = 200;
+const DEFAULT_LIVE_FEED_INTERVAL_MS = 250;
 
 type QueryValue = boolean | number | string | null | undefined;
 
@@ -25,6 +35,8 @@ export type QueryParams = Record<string, QueryValue | QueryValue[]>;
 
 export interface HttpClientOptions extends EuroleagueClientOptions {
   competition: Competition;
+  /** Internal test hook for deterministic jitter. Defaults to `Math.random`. */
+  random?: () => number;
 }
 
 export class HttpClient {
@@ -34,13 +46,21 @@ export class HttpClient {
   readonly timeoutMs: number;
 
   readonly #fetch: typeof fetch;
+  readonly #livePacer: RequestPacer;
+  readonly #paceOrigins: ReadonlySet<string>;
+  readonly #random: () => number;
+  readonly #retry: RetryPolicy;
 
   constructor(options: HttpClientOptions) {
     this.competition = options.competition;
     this.hosts = mergeHosts(options.hosts);
-    this.retries = options.retries ?? 0;
+    this.#retry = resolveRetryPolicy(options.retry, options.retries);
+    this.retries = this.#retry.retries;
     this.timeoutMs = options.timeoutMs ?? 60_000;
     this.#fetch = options.fetch ?? globalThis.fetch;
+    this.#random = options.random ?? Math.random;
+    this.#livePacer = new RequestPacer(options.liveFeedIntervalMs ?? DEFAULT_LIVE_FEED_INTERVAL_MS);
+    this.#paceOrigins = collectOrigins(this.hosts.live, this.hosts.wapi);
 
     if (!this.#fetch) {
       throw new EuroleagueValidationError("No fetch implementation is available.");
@@ -74,17 +94,29 @@ export class HttpClient {
   }
 
   async getUrl(url: string): Promise<unknown> {
-    let attempt = 0;
+    // Pace requests to the shared live-feed origin so fan-out helpers (and
+    // consumer-driven bursts) do not trip upstream rate limits. Every attempt
+    // is paced, so concurrent fan-out retries waking from backoff at the same
+    // time cannot burst past the pacer either.
+    const paced = this.#paceOrigins.has(originOf(url) ?? "");
 
-    while (true) {
+    for (let attempt = 0; ; attempt += 1) {
+      if (paced) {
+        await this.#livePacer.acquire();
+      }
+
       try {
         return await this.fetchJson(url);
       } catch (error) {
-        if (!isRetryable(error) || attempt === this.retries) {
+        if (attempt >= this.#retry.retries || !isRetryableError(error)) {
           throw error;
         }
 
-        attempt += 1;
+        const delayMs = computeRetryDelayMs(attempt, retryAfterMsFrom(error), this.#retry, this.#random);
+
+        if (delayMs > 0) {
+          await sleep(delayMs);
+        }
       }
     }
   }
@@ -112,7 +144,13 @@ export class HttpClient {
     }
 
     if (!response.ok) {
-      throw new EuroleagueApiError(`Euroleague API returned ${response.status} for ${url}`, response.status, url, body);
+      throw new EuroleagueApiError(
+        `Euroleague API returned ${response.status} for ${url}`,
+        response.status,
+        url,
+        body,
+        parseRetryAfter(response.headers.get("retry-after"))
+      );
     }
 
     if (body.length === 0) {
@@ -123,16 +161,30 @@ export class HttpClient {
   }
 }
 
-function isRetryable(error: unknown): boolean {
-  if (error instanceof EuroleagueApiError) {
-    return error.status >= 500;
+function retryAfterMsFrom(error: unknown): number | undefined {
+  return error instanceof EuroleagueApiError ? error.retryAfterMs : undefined;
+}
+
+function collectOrigins(...hosts: string[]): ReadonlySet<string> {
+  const origins = new Set<string>();
+
+  for (const host of hosts) {
+    const origin = originOf(host);
+
+    if (origin !== null) {
+      origins.add(origin);
+    }
   }
 
-  if (error instanceof EuroleagueParseError) {
-    return false;
-  }
+  return origins;
+}
 
-  return true;
+function originOf(url: string): string | null {
+  try {
+    return new URL(url).origin;
+  } catch {
+    return null;
+  }
 }
 
 function toTransportError(error: unknown, url: string, aborted: boolean): EuroleagueNetworkError {

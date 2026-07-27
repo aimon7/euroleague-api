@@ -16,7 +16,7 @@ const gamesIndex = {
 describe("PlayByPlayService", () => {
   it("merges every period into a single event list with a period marker", async () => {
     const { calls, fetch } = createFetch(pbpFixture);
-    const client = new EuroleagueClient({ competition: "euroleague", fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, competition: "euroleague", fetch });
 
     const events = await client.playByPlay.getGame({ gameCode: 1, season: 2023 });
 
@@ -29,7 +29,7 @@ describe("PlayByPlayService", () => {
 
   it("skips validation when validate is false", async () => {
     const { fetch } = createFetch(pbpFixture);
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     const events = await client.playByPlay.getGame({ gameCode: 1, season: 2023, validate: false });
 
@@ -39,7 +39,7 @@ describe("PlayByPlayService", () => {
 
   it("reconstructs on-court lineups from boxscore starters and substitutions", async () => {
     const { fetch } = createRouter();
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     const lineups = await client.playByPlay.getLineups({ gameCode: 1, season: 2023 });
 
@@ -52,7 +52,7 @@ describe("PlayByPlayService", () => {
 
   it("attributes starters to the correct side when the boxscore team order is reversed", async () => {
     const { fetch } = createRouter(reversedBoxscoreFixture);
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     const lineups = await client.playByPlay.getLineups({ gameCode: 1, season: 2023 });
 
@@ -111,7 +111,7 @@ describe("PlayByPlayService", () => {
         status: 200
       });
     });
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     const lineups = await client.playByPlay.getLineups({ gameCode: 1, season: 2023 });
 
@@ -128,7 +128,7 @@ describe("PlayByPlayService", () => {
 
   it("aggregates events and lineups across rounds, seasons, and ranges", async () => {
     const { fetch } = createRouter();
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     expect(await client.playByPlay.getRound({ round: 1, season: 2023 })).toHaveLength(8);
     expect(await client.playByPlay.getSeason({ season: 2023 })).toHaveLength(8);
@@ -140,14 +140,14 @@ describe("PlayByPlayService", () => {
 
   it("returns an empty list when the feed has no period data", async () => {
     const { fetch } = createFetch({ CodeTeamA: "MAD", CodeTeamB: "BAR" });
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     await expect(client.playByPlay.getGame({ gameCode: 1, season: 2023 })).resolves.toEqual([]);
   });
 
   it("throws EuroleagueApiError for non-2xx responses", async () => {
     const fetch = vi.fn<typeof globalThis.fetch>().mockResolvedValue(new Response("nope", { status: 500 }));
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     await expect(client.playByPlay.getGame({ gameCode: 1, season: 2023 })).rejects.toBeInstanceOf(EuroleagueApiError);
   });
