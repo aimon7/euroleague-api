@@ -14,7 +14,7 @@ const gamesIndex = {
 describe("GameMetadataService", () => {
   it("builds the Header live-feed URL and normalizes the metadata", async () => {
     const { calls, fetch } = createFetch(headerFixture);
-    const client = new EuroleagueClient({ competition: "euroleague", fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, competition: "euroleague", fetch });
 
     const metadata = await client.gameMetadata.getGame({ gameCode: 1, season: 2023 });
 
@@ -33,7 +33,7 @@ describe("GameMetadataService", () => {
 
   it("aggregates metadata across a season", async () => {
     const { calls, fetch } = createRouter();
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     const metadata = await client.gameMetadata.getSeason({ season: 2023 });
 
@@ -43,7 +43,7 @@ describe("GameMetadataService", () => {
 
   it("aggregates metadata across a round and a season range", async () => {
     const { fetch } = createRouter();
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     expect(await client.gameMetadata.getRound({ round: 1, season: 2023 })).toHaveLength(2);
     expect(await client.gameMetadata.getSeasons({ from: 2022, to: 2023 })).toHaveLength(4);
@@ -51,7 +51,7 @@ describe("GameMetadataService", () => {
 
   it("throws EuroleagueSchemaError when the payload is not an object", async () => {
     const { fetch } = createFetch("unexpected");
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     await expect(client.gameMetadata.getGame({ gameCode: 1, season: 2023 })).rejects.toBeInstanceOf(
       EuroleagueSchemaError
@@ -60,7 +60,7 @@ describe("GameMetadataService", () => {
 
   it("throws EuroleagueApiError for non-2xx responses", async () => {
     const fetch = vi.fn<typeof globalThis.fetch>().mockResolvedValue(new Response("nope", { status: 503 }));
-    const client = new EuroleagueClient({ fetch });
+    const client = new EuroleagueClient({ liveFeedIntervalMs: 0, fetch });
 
     await expect(client.gameMetadata.getGame({ gameCode: 1, season: 2023 })).rejects.toBeInstanceOf(EuroleagueApiError);
   });

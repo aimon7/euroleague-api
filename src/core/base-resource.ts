@@ -4,6 +4,12 @@ import { assertSeasonRange, currentSeason, FIRST_SUPPORTED_SEASON, seasonCode } 
 import { EuroleagueSchemaError, EuroleagueValidationError } from "./errors";
 import type { HttpClient } from "./http-client";
 import { normalizeApiRecord, type NormalizedRecord } from "./normalize";
+import { mapWithConcurrency } from "./pacing";
+
+// Per-game fan-out (round/season/seasons helpers) keeps at most this many
+// requests in flight. The HttpClient's live-feed pacer caps the actual request
+// rate; this bound only limits overlap.
+const GAME_FANOUT_CONCURRENCY = 4;
 
 export abstract class BaseResource {
   protected constructor(protected readonly http: HttpClient) {}
@@ -88,10 +94,11 @@ export abstract class BaseResource {
     codes: number[],
     loadGame: (season: number, gameCode: number) => Promise<T[]>
   ): Promise<T[]> {
+    const feeds = await mapWithConcurrency(codes, GAME_FANOUT_CONCURRENCY, (code) => loadGame(season, code));
     const output: T[] = [];
 
-    for (const code of codes) {
-      appendAll(output, await loadGame(season, code));
+    for (const feed of feeds) {
+      appendAll(output, feed);
     }
 
     return output;

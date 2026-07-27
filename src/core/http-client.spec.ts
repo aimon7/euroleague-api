@@ -296,6 +296,40 @@ describe("HttpClient", () => {
     expect(fetch).toHaveBeenCalledTimes(3);
   });
 
+  it("paces consecutive live-feed requests by liveFeedIntervalMs", async () => {
+    vi.useFakeTimers();
+    const fetch = jsonFetch({});
+    const client = new HttpClient({ competition: "euroleague", fetch, liveFeedIntervalMs: 250 });
+
+    const first = client.getUrl(FEED_URL);
+    const second = client.getUrl("https://live.euroleague.net/wapi/Team");
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(fetch).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(249);
+    expect(fetch).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(1);
+    expect(fetch).toHaveBeenCalledTimes(2);
+    await expect(first).resolves.toEqual({});
+    await expect(second).resolves.toEqual({});
+  });
+
+  it("does not pace standard API requests", async () => {
+    vi.useFakeTimers();
+    const fetch = jsonFetch({});
+    const client = new HttpClient({ competition: "euroleague", fetch, liveFeedIntervalMs: 250 });
+
+    const first = client.getApi("v3", "/players");
+    const second = client.getApi("v2", "/seasons");
+
+    await vi.advanceTimersByTimeAsync(0);
+    expect(fetch).toHaveBeenCalledTimes(2);
+    await first;
+    await second;
+  });
+
   it("rejects a non-integer gameCode before calling the live feed", async () => {
     const fetch = vi.fn<typeof globalThis.fetch>();
     const client = createClient({ fetch });
@@ -308,11 +342,12 @@ describe("HttpClient", () => {
 });
 
 function jsonFetch(payload: unknown): typeof globalThis.fetch {
-  return vi.fn<typeof globalThis.fetch>().mockResolvedValue(
-    new Response(JSON.stringify(payload), {
-      headers: { "content-type": "application/json" },
-      status: 200
-    })
+  return vi.fn<typeof globalThis.fetch>().mockImplementation(
+    async () =>
+      new Response(JSON.stringify(payload), {
+        headers: { "content-type": "application/json" },
+        status: 200
+      })
   );
 }
 
