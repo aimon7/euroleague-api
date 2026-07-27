@@ -316,6 +316,32 @@ describe("HttpClient", () => {
     await expect(second).resolves.toEqual({});
   });
 
+  it("paces retry attempts against the live feed even when backoff is zero", async () => {
+    vi.useFakeTimers();
+    const fetch = vi
+      .fn<typeof globalThis.fetch>()
+      .mockResolvedValueOnce(new Response("boom", { status: 503 }))
+      .mockResolvedValue(new Response("{}", { status: 200 }));
+    const client = new HttpClient({
+      competition: "euroleague",
+      fetch,
+      liveFeedIntervalMs: 250,
+      retry: { baseDelayMs: 0, jitter: false, retries: 1 }
+    });
+
+    const pending = client.getUrl(FEED_URL);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(fetch).toHaveBeenCalledTimes(1);
+
+    // No backoff delay, but the retry still may not burst past the pacer.
+    await vi.advanceTimersByTimeAsync(249);
+    expect(fetch).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(1);
+    expect(fetch).toHaveBeenCalledTimes(2);
+    await expect(pending).resolves.toEqual({});
+  });
+
   it("does not pace standard API requests", async () => {
     vi.useFakeTimers();
     const fetch = jsonFetch({});

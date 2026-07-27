@@ -95,13 +95,16 @@ export class HttpClient {
 
   async getUrl(url: string): Promise<unknown> {
     // Pace requests to the shared live-feed origin so fan-out helpers (and
-    // consumer-driven bursts) do not trip upstream rate limits. Retries are
-    // not re-paced: backoff already spaces them out.
-    if (this.#paceOrigins.has(originOf(url) ?? "")) {
-      await this.#livePacer.acquire();
-    }
+    // consumer-driven bursts) do not trip upstream rate limits. Every attempt
+    // is paced, so concurrent fan-out retries waking from backoff at the same
+    // time cannot burst past the pacer either.
+    const paced = this.#paceOrigins.has(originOf(url) ?? "");
 
     for (let attempt = 0; ; attempt += 1) {
+      if (paced) {
+        await this.#livePacer.acquire();
+      }
+
       try {
         return await this.fetchJson(url);
       } catch (error) {

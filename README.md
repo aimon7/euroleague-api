@@ -56,7 +56,7 @@ The TanStack Query sections below show the core data-fetching patterns the demo 
 const client = new EuroleagueClient({
   competition: "euroleague", // "euroleague" -> "E" | "eurocup" -> "U" (default: "euroleague")
   timeoutMs: 60_000, // optional per-attempt request timeout (default 60s)
-  retries: 2, // additional attempts after the first request (default 0)
+  retries: 0, // additional attempts after the first request (default 0)
   retry: { baseDelayMs: 500, maxDelayMs: 10_000, jitter: true }, // optional backoff tuning
   liveFeedIntervalMs: 250, // min spacing between live-feed requests (default 250ms, 0 disables)
   fetch: customFetch // optional injectable fetch (handy for tests/runtime overrides)
