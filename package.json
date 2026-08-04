@@ -1,6 +1,6 @@
 {
   "name": "euroleague-api",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Unofficial TypeScript SDK for EuroLeague and EuroCup public APIs — browser and Node 20+, Zod-validated, live demo at aimon7.github.io/euroleague-api-demo/docs.",
   "type": "module",
   "sideEffects": false,

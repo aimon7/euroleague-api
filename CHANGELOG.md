@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-08-04
+
+### Added
+
+- **MIT LICENSE file** in the repository root so npm and GitHub can detect the
+  license automatically.
+
+### Changed
+
+- **README onboarding and discoverability.** Clarifies unofficial status and
+  browser/Node support; adds a live-demo/docs/source table; updates quick-start
+  examples (current season, sample output, typing note); expands the resource
+  table to cover all 15 resources and their key methods.
+- **package.json metadata.** Description, keywords, and homepage now point SDK
+  evaluators to the live docs and playground at
+  [aimon7.github.io/euroleague-api-demo/docs](https://aimon7.github.io/euroleague-api-demo/docs).
+
 ## [1.2.0] - 2026-07-27
 
 ### Added
