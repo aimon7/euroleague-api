@@ -5,9 +5,15 @@
 [![license](https://img.shields.io/npm/l/euroleague-api.svg)](https://www.npmjs.com/package/euroleague-api)
 [![provenance](https://img.shields.io/badge/provenance-attested-blueviolet)](https://www.npmjs.com/package/euroleague-api#provenance)
 
-A strongly-typed, dependency-light TypeScript SDK for the (undocumented) Euroleague and EuroCup public APIs.
-Works in both **ESM** and **CommonJS** projects, ships its own types, runtime-validates every response with
-[Zod](https://zod.dev), and keeps Zod as the only runtime dependency.
+A strongly-typed, dependency-light **unofficial** TypeScript SDK for the public EuroLeague and EuroCup APIs used by the official web experience. **Not affiliated with or endorsed by Euroleague Basketball**; endpoint availability can change without notice.
+
+Works in **Node.js ≥ 20** and **the browser** (CORS-friendly, no proxy). Ships ESM + CommonJS, runtime-validates responses with [Zod](https://zod.dev), and keeps Zod as the only runtime dependency.
+
+|                       |                                                                                                                             |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Live demo**         | [aimon7.github.io/euroleague-api-demo](https://aimon7.github.io/euroleague-api-demo/) — typed dashboard built with this SDK |
+| **Docs & playground** | [/docs](https://aimon7.github.io/euroleague-api-demo/docs) — install guide, recipes, try every method in your browser       |
+| **Source**            | [github.com/aimon7/euroleague-api](https://github.com/aimon7/euroleague-api)                                                |
 
 This package is inspired by and credits the original Python package,
 [`giasemidis/euroleague_api`](https://github.com/giasemidis/euroleague_api).
@@ -27,17 +33,22 @@ import { EuroleagueClient } from "euroleague-api";
 
 const client = new EuroleagueClient({ competition: "euroleague" });
 
-const stats = await client.players.getStats({ season: 2023, type: "traditional", mode: "PerGame" });
-const shots = await client.shots.getGame({ season: 2023, gameCode: 1 });
+const stats = await client.players.getStats({ season: 2025, type: "traditional", mode: "PerGame" });
+console.log(stats[0]);
+// → { player: "…", team: "…", gamesPlayed: 28, points: 14.2, … }  (camelCase NormalizedRow)
 ```
+
+**Next steps:** open the [live playground](https://aimon7.github.io/euroleague-api-demo/docs?tab=playground) or browse [task recipes](https://aimon7.github.io/euroleague-api-demo/docs) for standings, rosters, game feeds, and safe aggregation patterns.
 
 For quick scripts there is a preconfigured Euroleague singleton:
 
 ```ts
 import { euroleague } from "euroleague-api";
 
-const standings = await euroleague.standings.getRound({ season: 2023, round: 10 });
+const standings = await euroleague.standings.getRound({ season: 2025, round: 10 });
 ```
+
+> **Typing note:** stat rows are validated `Record<string, string | number | boolean | null>` with camelCased keys. Map them into your view shape with `select` (TanStack Query) or a small mapper — see framework sections below.
 
 ## Live demo
 
@@ -134,20 +145,23 @@ schemas stay internal.
 
 ## Resources
 
-| Resource              | Key methods                                                                                                |
-| --------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `client.players`      | `getStats`, `getStatsRange`, `getStatsAllSeasons`, `getLeaders`, `getLeadersRange`, `getLeadersAllSeasons` |
-| `client.teams`        | `getStats`, `getStatsRange`, `getStatsAllSeasons`, `getLeaders`, `getLeadersRange`, `getLeadersAllSeasons` |
-| `client.seasons`      | `list`                                                                                                     |
-| `client.clubs`        | `list`, `get`, `getRoster`                                                                                 |
-| `client.people`       | `getProfile`, `getCareer`, `getSeasonRegistration`, `getCareerStats`, `getSeasonStats`, `getRecords`       |
-| `client.standings`    | `getRound`                                                                                                 |
-| `client.schedule`     | `getSeason`, `getRound`, `getSeasons`                                                                      |
-| `client.games`        | `getReport*`, `getStats*`, `getTeamsComparison*` (single + round/season/seasons)                           |
-| `client.shots`        | `getGame`, `getRound`, `getSeason`, `getSeasons`                                                           |
-| `client.boxscore`     | `getGame*`, `getQuarterScores*`, `getPlayerStats*`                                                         |
-| `client.playByPlay`   | `getGame*`, `getLineups*`                                                                                  |
-| `client.gameMetadata` | `getGame`, `getRound`, `getSeason`, `getSeasons`                                                           |
+| Resource              | Key methods                                                                                                          |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `client.players`      | `getStats`, `getStatsRange`, `getStatsAllSeasons`, `getLeaders`, `getLeadersRange`, `getLeadersAllSeasons`           |
+| `client.teams`        | `getStats`, `getStatsRange`, `getStatsAllSeasons`, `getLeaders`, `getLeadersRange`, `getLeadersAllSeasons`           |
+| `client.seasons`      | `list`, `get`                                                                                                        |
+| `client.clubs`        | `list`, `get`, `getRoster`, `getLogo`                                                                                |
+| `client.people`       | `getProfile`, `getCareer`, `getSeasonRegistration`, `getCareerStats`, `getSeasonStats`, `getRecords`                 |
+| `client.competitions` | `list`, `get`                                                                                                        |
+| `client.phases`       | `list`, `get`                                                                                                        |
+| `client.rounds`       | `list`, `get`                                                                                                        |
+| `client.standings`    | `getRound`                                                                                                           |
+| `client.schedule`     | `getSeason`, `getRound`, `getSeasons`                                                                                |
+| `client.games`        | `getGame`, `getReport*`, `getStats*`, `getTeamsComparison*`, `getPointsBreakdown`, … (single + round/season/seasons) |
+| `client.shots`        | `getGame`, `getRound`, `getSeason`, `getSeasons`                                                                     |
+| `client.boxscore`     | `getGame`, `getGameStats`, `getGameRoster`, `getQuarterScores`, `getPlayerStats`, …                                  |
+| `client.playByPlay`   | `getGame`, `getLineups`, …                                                                                           |
+| `client.gameMetadata` | `getGame`, `getRound`, `getSeason`, `getSeasons`                                                                     |
 
 ### Players & teams
 
